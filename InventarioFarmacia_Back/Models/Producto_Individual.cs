@@ -1,0 +1,19 @@
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace InventarioFarmacia_Back;
+
+public class Producto_Individual
+{
+    public int Id { get; set; }
+    public int Id_Producto { get; set; }
+    public int Id_Inventario { get; set; }
+    public DateOnly Fecha_Vencimiento { get; set; }
+    public string? Nro_Lote { get; set; }
+    public Estados_ProductosIndividuales Estado { get; set; }
+
+
+    public Producto Producto { get; set; } = null!;
+    public Lote? Lote { get; set; }
+    public Inventario Inventario { get; set; } = new Inventario();
+    public Detalle_Compra DetalleCompras { get; set; } = new Detalle_Compra();
+}

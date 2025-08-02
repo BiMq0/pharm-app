@@ -1,0 +1,19 @@
+@page "/productos"
+
+<PageTitle>Productos</PageTitle>
+
+<h1 class="fw-bold position-sticky top-0 bg-white">Productos</h1>
+
+<div>
+    @foreach (var producto in productos)
+    {
+        <CardItem Nombre="Producto" Precio_Unitario="100" Precio_Caja="200" Nombre_Clinico="Nombre Clinico"/>
+    }
+</div>
+
+@code {
+    List<string> productos = new List<string>
+    {
+        "1","2", "3", "4", "5", "6", "7", "8", "9", "10"
+    };
+}

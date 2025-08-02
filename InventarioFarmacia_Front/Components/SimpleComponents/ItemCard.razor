@@ -1,0 +1,25 @@
+@namespace Components.Pages.SimpleComponentsa
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3cg5fcagVF0a7eBdbJZZyImPW5aGohVo_Nw&s" class="card-img-top" alt="Imagen del producto">
+        <h5 class="card-title">@Nombre</h5>
+        <h5 class="card-text">@Nombre_Clinico</h5>
+        <p class="card-text">Precio: Bs. @Precio_Unitario.ToString()</p>
+        <p class="card-text">Precio por caja: Bs. @Precio_Caja.ToString()</p>
+    </div>
+</div>
+
+
+@code{
+    [Parameter]
+    public string? Nombre { get; set; }
+    
+    [Parameter]
+    public string? Nombre_Clinico { get; set; }
+    
+    [Parameter]
+    public decimal Precio_Unitario { get; set; }
+    
+    [Parameter]
+    public decimal Precio_Caja { get; set; }
+}
