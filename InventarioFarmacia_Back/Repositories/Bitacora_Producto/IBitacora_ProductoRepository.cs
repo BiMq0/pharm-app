@@ -1,4 +1,8 @@
-﻿namespace InventarioFarmacia_Back;
+﻿using InventarioFarmacia_Domain.Models;
+
+namespace InventarioFarmacia_Back;
+
+using InventarioFarmacia_Domain.Models;
 
 public interface IBitacora_ProductoRepository
 {

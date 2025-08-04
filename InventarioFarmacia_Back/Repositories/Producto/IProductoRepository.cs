@@ -1,4 +1,7 @@
-﻿namespace InventarioFarmacia_Back;
+﻿
+using InventarioFarmacia_Domain.Models;
+
+namespace InventarioFarmacia_Back;
 
 public interface IProductoRepository
 {

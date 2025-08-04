@@ -1,4 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using InventarioFarmacia_Domain.Models;
+using InventarioFarmacia_Domain.Constants;
 
 namespace InventarioFarmacia_Back;
 

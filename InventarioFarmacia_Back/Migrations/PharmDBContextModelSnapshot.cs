@@ -32,7 +32,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Categoria_Productos", (string)null);
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Bitacora_Inventario", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Bitacora_Inventario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -68,7 +68,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Bitacora_Inventarios");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Bitacora_Producto", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Bitacora_Producto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -105,7 +105,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Bitacora_Productos");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Categoria", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Categoria", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -114,12 +114,15 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Property<string>("Nombre")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Ruta_Imagen")
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
                     b.ToTable("Categorias");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Detalle_Compra", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Detalle_Compra", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -144,7 +147,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Detalle_Compras");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Detalle_Venta", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Detalle_Venta", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -175,7 +178,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Detalle_Ventas");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Inventario", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Inventario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -195,7 +198,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Inventarios");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Lote", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Lote", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -210,7 +213,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Lotes");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Orden_Compra", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Orden_Compra", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -230,7 +233,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Orden_Compras");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Producto", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Producto", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -256,7 +259,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Productos");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Producto_Individual", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Producto_Individual", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -289,7 +292,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Productos_Individuales");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Usuario", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Usuario", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -306,7 +309,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Usuarios");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Venta", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Venta", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -333,34 +336,34 @@ namespace InventarioFarmacia_Back.Migrations
 
             modelBuilder.Entity("CategoriaProducto", b =>
                 {
-                    b.HasOne("InventarioFarmacia_Back.Categoria", null)
+                    b.HasOne("InventarioFarmacia_Domain.Models.Categoria", null)
                         .WithMany()
                         .HasForeignKey("CategoriasId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Producto", null)
+                    b.HasOne("InventarioFarmacia_Domain.Models.Producto", null)
                         .WithMany()
                         .HasForeignKey("ProductosId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Bitacora_Inventario", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Bitacora_Inventario", b =>
                 {
-                    b.HasOne("InventarioFarmacia_Back.Inventario", null)
+                    b.HasOne("InventarioFarmacia_Domain.Models.Inventario", null)
                         .WithMany("BitacoraInventarios")
                         .HasForeignKey("Id_Inventario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Usuario", null)
+                    b.HasOne("InventarioFarmacia_Domain.Models.Usuario", null)
                         .WithMany("BitacoraInventarios")
                         .HasForeignKey("Id_Usuario")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Inventario", "Inventario")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Inventario", "Inventario")
                         .WithMany()
                         .HasForeignKey("InventarioId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -369,32 +372,32 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Navigation("Inventario");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Bitacora_Producto", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Bitacora_Producto", b =>
                 {
-                    b.HasOne("InventarioFarmacia_Back.Producto", null)
+                    b.HasOne("InventarioFarmacia_Domain.Models.Producto", null)
                         .WithMany("BitacoraProductos")
                         .HasForeignKey("Id_Producto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Usuario", null)
+                    b.HasOne("InventarioFarmacia_Domain.Models.Usuario", null)
                         .WithMany("BitacoraProductos")
                         .HasForeignKey("Id_Usuario")
                         .OnDelete(DeleteBehavior.SetNull)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Detalle_Compra", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Detalle_Compra", b =>
                 {
-                    b.HasOne("InventarioFarmacia_Back.Orden_Compra", "OrdenCompra")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Orden_Compra", "OrdenCompra")
                         .WithMany("DetalleCompras")
                         .HasForeignKey("Id_OrdenDeCompra")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Producto_Individual", "ProductoIndividual")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Producto_Individual", "ProductoIndividual")
                         .WithOne("DetalleCompras")
-                        .HasForeignKey("InventarioFarmacia_Back.Detalle_Compra", "Id_ProductoIndividual")
+                        .HasForeignKey("InventarioFarmacia_Domain.Models.Detalle_Compra", "Id_ProductoIndividual")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -403,15 +406,15 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Navigation("ProductoIndividual");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Detalle_Venta", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Detalle_Venta", b =>
                 {
-                    b.HasOne("InventarioFarmacia_Back.Producto", "Producto")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Producto", "Producto")
                         .WithMany()
                         .HasForeignKey("Id_Producto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Venta", "Venta")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Venta", "Venta")
                         .WithMany("DetalleVentas")
                         .HasForeignKey("Id_Venta")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -422,21 +425,21 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Navigation("Venta");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Producto_Individual", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Producto_Individual", b =>
                 {
-                    b.HasOne("InventarioFarmacia_Back.Inventario", "Inventario")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Inventario", "Inventario")
                         .WithMany("ProductosIndividuales")
                         .HasForeignKey("Id_Inventario")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Producto", "Producto")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Producto", "Producto")
                         .WithMany("ProductosIndividuales")
                         .HasForeignKey("Id_Producto")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("InventarioFarmacia_Back.Lote", "Lote")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Lote", "Lote")
                         .WithMany("ProductosIndividuales")
                         .HasForeignKey("Nro_Lote")
                         .HasPrincipalKey("Nro_Lote")
@@ -449,9 +452,9 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Navigation("Producto");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Venta", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Venta", b =>
                 {
-                    b.HasOne("InventarioFarmacia_Back.Usuario", "Usuario")
+                    b.HasOne("InventarioFarmacia_Domain.Models.Usuario", "Usuario")
                         .WithMany("Ventas")
                         .HasForeignKey("Id_Usuario")
                         .OnDelete(DeleteBehavior.SetNull);
@@ -459,37 +462,37 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Navigation("Usuario");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Inventario", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Inventario", b =>
                 {
                     b.Navigation("BitacoraInventarios");
 
                     b.Navigation("ProductosIndividuales");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Lote", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Lote", b =>
                 {
                     b.Navigation("ProductosIndividuales");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Orden_Compra", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Orden_Compra", b =>
                 {
                     b.Navigation("DetalleCompras");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Producto", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Producto", b =>
                 {
                     b.Navigation("BitacoraProductos");
 
                     b.Navigation("ProductosIndividuales");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Producto_Individual", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Producto_Individual", b =>
                 {
                     b.Navigation("DetalleCompras")
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Usuario", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Usuario", b =>
                 {
                     b.Navigation("BitacoraInventarios");
 
@@ -498,7 +501,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Navigation("Ventas");
                 });
 
-            modelBuilder.Entity("InventarioFarmacia_Back.Venta", b =>
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Venta", b =>
                 {
                     b.Navigation("DetalleVentas");
                 });

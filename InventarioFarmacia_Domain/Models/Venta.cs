@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace InventarioFarmacia_Back;
+namespace InventarioFarmacia_Domain.Models;
 
 public class Venta
 {

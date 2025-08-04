@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-
+using InventarioFarmacia_Domain.Models;
 namespace InventarioFarmacia_Back;
 
 public class InventarioRepository : IInventarioRepository

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace InventarioFarmacia_Back;
+using InventarioFarmacia_Domain.Constants;
+namespace InventarioFarmacia_Domain.Models;
 
 public class Lote
 {

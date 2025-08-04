@@ -1,5 +1,6 @@
-﻿namespace InventarioFarmacia_Back;
+﻿namespace InventarioFarmacia_Domain.Models;
 
+using InventarioFarmacia_Domain.Constants;
 public class Orden_Compra
 {
     public int Id { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace InventarioFarmacia_Back;
+﻿namespace InventarioFarmacia_Domain.Models;
 
 public class Bitacora_Inventario
 {

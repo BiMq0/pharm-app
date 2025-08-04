@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using InventarioFarmacia_Domain.Constants;
 
-namespace InventarioFarmacia_Back;
+namespace InventarioFarmacia_Domain.Models;
 
 public class Producto_Individual
 {

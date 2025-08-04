@@ -1,4 +1,4 @@
-﻿namespace InventarioFarmacia_Back;
+﻿namespace InventarioFarmacia_Domain.Constants;
 
 public static class Tipo_Accion_Inventario
 {

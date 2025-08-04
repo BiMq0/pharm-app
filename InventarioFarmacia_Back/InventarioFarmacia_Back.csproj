@@ -17,4 +17,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.4" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\InventarioFarmacia_Shared\InventarioFarmacia_Shared.csproj" />
+    <ProjectReference Include="..\InventarioFarmacia_Domain\InventarioFarmacia_Domain.csproj" />
+  </ItemGroup>
+
 </Project>
