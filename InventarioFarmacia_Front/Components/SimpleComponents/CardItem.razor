@@ -2,10 +2,11 @@
 
 <div class="card shadow m-3 d-inline-block border-0">
     <div class="card-body">
-        <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3cg5fcagVF0a7eBdbJZZyImPW5aGohVo_Nw&s" class="card-img" alt="Imagen del producto" style="width: 200px;">
+        <div style="visible:none;">@Id</div>
+        <img src="@Ruta_Imagen" class="card-img" alt="Imagen del producto" style="width: 200px;">
         <div class="d-flex flex-column mt-3">
             <h5 class="card-text fw-bold">@Nombre</h5>
-            <h6 class="card-text fw-bold text-muted">@Nombre_Clinico</h6>
+            <h6 class="card-text fw-bold text-muted">Stock: @StockTotal</h6>
             <span class="card-text">Precio: Bs. @Precio_Unitario.ToString()</span>
             <span class="card-text">Precio por caja: Bs. @Precio_Caja.ToString()</span>
         </div>
@@ -15,14 +16,15 @@
 
 @code{
     [Parameter]
-    public string? Nombre { get; set; }
-    
+    public int Id { get; set; }
     [Parameter]
-    public string? Nombre_Clinico { get; set; }
-    
+    public string? Nombre { get; set; }
     [Parameter]
     public decimal Precio_Unitario { get; set; }
-    
     [Parameter]
     public decimal Precio_Caja { get; set; }
+    [Parameter] 
+    public int StockTotal { get; set; }
+    [Parameter]
+    public string? Ruta_Imagen { get; set; }
 }

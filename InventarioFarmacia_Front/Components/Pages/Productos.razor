@@ -1,19 +1,23 @@
 @page "/productos"
+@using InventarioFarmacia_Shared;
+@inject InventarioFarmacia_Front.Services.ProductServices ProductServices
 
 <PageTitle>Productos</PageTitle>
 
 <h1 class="fw-bold position-sticky top-0 bg-white">Productos</h1>
 
-<div>
+<div class="d-flex flex-wrap justify-content-center gap-3 p-3">
     @foreach (var producto in productos)
     {
-        <CardItem Nombre="Producto" Precio_Unitario="100" Precio_Caja="200" Nombre_Clinico="Nombre Clinico"/>
+        <CardItem Id="@producto.Id" Nombre="@producto.Nombre" Precio_Unitario="@producto.Precio_Unitario" Precio_Caja="@producto.Precio_Caja" StockTotal="@producto.StockTotal" Ruta_Imagen="@producto.Ruta_Imagen"/>
     }
 </div>
 
 @code {
-    List<string> productos = new List<string>
+    protected List<ProductoInfoCardDTO> productos = new List<ProductoInfoCardDTO>();
+
+    protected override async Task OnInitializedAsync()
     {
-        "1","2", "3", "4", "5", "6", "7", "8", "9", "10"
-    };
+        productos = await ProductServices.GetProductosAsync();
+    }
 }

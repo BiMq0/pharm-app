@@ -1,11 +1,20 @@
 using InventarioFarmacia_Front.Components;
+using InventarioFarmacia_Front.Services;
+using Microsoft.AspNetCore.Components;
+
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddScoped(sp =>
+{
+    var navigationManager = sp.GetRequiredService<NavigationManager>();
+    return new HttpClient { BaseAddress = new Uri(navigationManager.BaseUri) };
+});
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped<ProductServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
