@@ -1,4 +1,5 @@
-﻿using InventarioFarmacia_Domain.Models;
+﻿using System.Text.Json.Serialization;
+using InventarioFarmacia_Domain.Models;
 
 namespace InventarioFarmacia_Shared
 {
@@ -20,6 +21,17 @@ namespace InventarioFarmacia_Shared
             Precio_Unitario = producto.Precio_Unitario;
             Precio_Caja = producto.Precio_Caja;
             StockTotal = producto.StockDisponible + producto.StockPorVencer;
+        }
+
+        [JsonConstructor]
+        public ProductoInfoCardDTO(int id, string? nombre, string? ruta_Imagen, decimal precio_Unitario, decimal precio_Caja, int stockTotal)
+        {
+            Id = id;
+            Nombre = nombre;
+            Ruta_Imagen = ruta_Imagen;
+            Precio_Unitario = precio_Unitario;
+            Precio_Caja = precio_Caja;
+            StockTotal = stockTotal;
         }
     }
 }

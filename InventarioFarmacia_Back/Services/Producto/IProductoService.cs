@@ -5,5 +5,6 @@ namespace InventarioFarmacia_Back;
 public interface IProductoService
 {
     Task<IEnumerable<ProductoInfoCardDTO>> ObtenerProductosAsync(string filtro = "");
-    Task<ProductoAllInfoDTO> ObtenerProductoPorIdAsync(int id);
+    Task<ProductoDetalladoDTO> ObtenerProductoPorIdAsync(int id);
+    Task<bool> CrearProductoAsync(ProductoNuevoDTO producto);
 }

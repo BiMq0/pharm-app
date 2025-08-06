@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InventarioFarmacia_Shared.Endpoints;
+using InventarioFarmacia_Shared;
 
 namespace InventarioFarmacia_Back
 {
@@ -22,6 +23,14 @@ namespace InventarioFarmacia_Back
             {
                 var product = await _productoService.ObtenerProductoPorIdAsync(id);
                 return product is not null ? Results.Ok(product) : Results.NotFound();
+            });
+
+            productos.MapPost(ProductsEndpoints.Create, async (ProductoNuevoDTO productoDto, IProductoService _productoService) =>
+            {
+                var created = await _productoService.CrearProductoAsync(productoDto);
+                return created
+                    ? Results.Created($"/api/products/{productoDto.Nombre}", productoDto)
+                    : Results.BadRequest();
             });
         }
     }

@@ -1,4 +1,5 @@
 ﻿using InventarioFarmacia_Shared;
+using InventarioFarmacia_Domain.Models;
 
 namespace InventarioFarmacia_Back;
 
@@ -25,9 +26,23 @@ public class ProductoService : IProductoService
         }
     }
 
-    public async Task<ProductoAllInfoDTO> ObtenerProductoPorIdAsync(int id)
+    public async Task<ProductoDetalladoDTO> ObtenerProductoPorIdAsync(int id)
     {
         var producto = await _productoRepository.GetByIdAsync(id);
-        return new ProductoAllInfoDTO(producto);
+        return new ProductoDetalladoDTO(producto);
+    }
+
+    public async Task<bool> CrearProductoAsync(ProductoNuevoDTO productoDto)
+    {
+        var producto = new Producto
+        {
+            Nombre = productoDto.Nombre,
+            Nombre_Clinico = productoDto.Nombre_Clinico,
+            Ruta_Imagen = productoDto.Ruta_Imagen,
+            Precio_Unitario = productoDto.Precio_Unitario,
+            Precio_Caja = productoDto.Precio_Caja
+        };
+
+        return await _productoRepository.AddAsync(producto);
     }
 }

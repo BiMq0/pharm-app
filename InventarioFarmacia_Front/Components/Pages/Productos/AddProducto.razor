@@ -1,0 +1,28 @@
+@page "/productos/agregar"
+@using InventarioFarmacia_Shared;
+@inject InventarioFarmacia_Front.Services.ProductServices ProductServices
+
+<PageTitle>Agregar Producto</PageTitle>
+
+<h1 class="fw-bold position-sticky top-0 bg-white">Agregar Producto</h1>
+<EditForm Model="@nuevoProducto" >
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label for="nombre" class="form-label">Nombre</label>
+        <InputText id="nombre" class="form-control" @bind-Value="@nombre" />
+        <ValidationMessage For="@(() => nombre)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Agregar Producto</button>
+</EditForm>
+
+@code{
+    private string nombre = "gfdsfdsfd";
+
+    private object nuevoProducto = new
+    {
+        Nombre = "gfdsfdsfd"
+    };
+}

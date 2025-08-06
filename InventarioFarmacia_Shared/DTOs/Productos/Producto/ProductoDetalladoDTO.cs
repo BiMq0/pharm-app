@@ -7,7 +7,7 @@ using InventarioFarmacia_Domain.Models;
 
 namespace InventarioFarmacia_Shared
 {
-    public class ProductoAllInfoDTO
+    public class ProductoDetalladoDTO
     {
         public int Id { get; set; }
         public string? Nombre { get; set; }
@@ -32,7 +32,7 @@ namespace InventarioFarmacia_Shared
             .Count(pi => pi.Estado == Estados_ProductosIndividuales.POR_VENCER);
         public bool TieneStockBajo => StockDisponible < 20;
 
-        public ProductoAllInfoDTO(Producto producto)
+        public ProductoDetalladoDTO(Producto producto)
         {
             Id = producto.Id;
             Nombre = producto.Nombre;
