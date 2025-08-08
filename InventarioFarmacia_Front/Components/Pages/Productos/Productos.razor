@@ -1,6 +1,8 @@
 @page "/productos"
 @using InventarioFarmacia_Shared;
-@inject InventarioFarmacia_Front.Services.ProductServices ProductServices
+@inject InventarioFarmacia_Front.Services.IProductoService ProductServices
+@inject IJSRuntime JS;
+@rendermode InteractiveServer
 
 <PageTitle>Productos</PageTitle>
 
@@ -9,13 +11,19 @@
 <div class="d-flex flex-wrap justify-content-center gap-3 p-3">
     @foreach (var producto in productos)
     {
-        <CardItem Id="@producto.Id" Nombre="@producto.Nombre" Precio_Unitario="@producto.Precio_Unitario" Precio_Caja="@producto.Precio_Caja" StockTotal="@producto.StockTotal" Ruta_Imagen="@producto.Ruta_Imagen"/>
+        <ProductCardItem Id="@producto.Id" Nombre="@producto.Nombre" Precio_Unitario="@producto.Precio_Unitario" Precio_Caja="@producto.Precio_Caja" StockTotal="@producto.StockTotal" Ruta_Imagen="@producto.Ruta_Imagen"/>
     }
 </div>
 
 <NavLink href="/productos/agregar" class="btn btn-primary position-fixed" style="bottom: 20px; right: 20px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
     <span class="bi bi-plus-lg">+</span>
 </NavLink>
+
+@if (mostrarKratos)
+{
+    <img src="https://media.tenor.com/-mgYKYQQw8YAAAAe/warter-white-god-of-war.png" class="kratos-easteregg" />
+}
+
 
 @code {
     protected List<ProductoInfoCardDTO> productos = new List<ProductoInfoCardDTO>();
@@ -24,4 +32,26 @@
     {
         productos = await ProductServices.GetProductosAsync();
     }
+
+    private bool mostrarKratos = false;
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotnetRef = DotNetObjectReference.Create(this);
+            var module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/easteregg.js");
+            await module.InvokeVoidAsync("iniciarKonami", dotnetRef);
+        }
+    }
+
+    [JSInvokable]
+    public Task MostrarKratos()
+    {
+        mostrarKratos = !mostrarKratos;
+        StateHasChanged();
+        return Task.CompletedTask;
+    }
+
 }

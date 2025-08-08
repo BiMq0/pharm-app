@@ -1,28 +1,51 @@
 @page "/productos/agregar"
 @using InventarioFarmacia_Shared;
-@inject InventarioFarmacia_Front.Services.ProductServices ProductServices
+@inject Services.IProductoService ProductServices
 
 <PageTitle>Agregar Producto</PageTitle>
 
 <h1 class="fw-bold position-sticky top-0 bg-white">Agregar Producto</h1>
-<EditForm Model="@nuevoProducto" >
+<EditForm OnValidSubmit="AgregarProducto" Model="@ProductoNuevo" FormName="AgregarProductoForm">
     <DataAnnotationsValidator />
-    <ValidationSummary />
+    <ValidationSummary/>
 
     <div class="mb-3">
-        <label for="nombre" class="form-label">Nombre</label>
-        <InputText id="nombre" class="form-control" @bind-Value="@nombre" />
-        <ValidationMessage For="@(() => nombre)" />
+        <label for="nombre" class="form-label">Nombre de Producto (*)</label>
+        <InputText id="nombre" class="form-control" @bind-Value="ProductoNuevo.Nombre" placeholder="Ingrese el nombre del producto" />
+        <ValidationMessage For="@(() => ProductoNuevo.Nombre)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="nombreClinico" class="form-label">Nombre Clínico de Producto (*)</label>
+        <InputText id="nombreClinico" class="form-control" @bind-Value="ProductoNuevo.Nombre_Clinico" placeholder="Ingrese el nombre clínico del producto" />
+        <ValidationMessage For="@(() => ProductoNuevo.Nombre_Clinico)" />
+    </div>
+    
+    <div class="mb-3">
+        <label for="precio" class="form-label">Precio por unidad (*)</label>
+        <InputNumber id="precio" class="form-control" @bind-Value="ProductoNuevo.Precio_Unitario" placeholder="Ingrese el precio por unidad en Bs." />
+        <ValidationMessage For="@(() => ProductoNuevo.Precio_Unitario)" />
+    </div>
+    
+    <div class="mb-3">
+        <label for="precio_Caja" class="form-label">Precio por Caja</label>
+        <InputNumber id="precio_Caja" class="form-control" @bind-Value="ProductoNuevo.Precio_Caja" placeholder="Ingrese el precio por caja en Bs." />
+        <ValidationMessage For="@(() => ProductoNuevo.Precio_Caja)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="imagen" class="form-label">Imagen del Producto (*)</label>
+        <InputFile id="imagen" class="form-control" OnChange="@(e => ProductoNuevo.Ruta_Imagen = e.File.Name)" />
+        <ValidationMessage For="@(() => ProductoNuevo.Ruta_Imagen)" />
     </div>
 
     <button type="submit" class="btn btn-primary">Agregar Producto</button>
 </EditForm>
 
 @code{
-    private string nombre = "gfdsfdsfd";
+    private ProductoNuevoDTO ProductoNuevo = new ();
 
-    private object nuevoProducto = new
+    private void AgregarProducto()
     {
-        Nombre = "gfdsfdsfd"
-    };
+    }
 }

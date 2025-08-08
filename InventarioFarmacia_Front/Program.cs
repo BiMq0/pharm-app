@@ -1,6 +1,6 @@
 using InventarioFarmacia_Front.Components;
-using InventarioFarmacia_Front.Services;
 using Microsoft.AspNetCore.Components;
+using InventarioFarmacia_Front.Handlers;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -13,8 +13,8 @@ builder.Services.AddScoped(sp =>
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddScopedServices();
 
-builder.Services.AddScoped<ProductServices>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

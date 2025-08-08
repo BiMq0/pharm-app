@@ -1,11 +1,11 @@
 ﻿@rendermode InteractiveServer
 
-<div class="card shadow m-3 d-inline-block border-0">
+<div class="card shadow m-3 d-inline-block border-0 " style="width: 15rem; height: 100%;">
     <div class="card-body">
-        <div style="visible:none;">@Id</div>
-        <img src="@Ruta_Imagen" class="card-img" alt="Imagen del producto" style="width: 200px;">
+        <div style="display:none;">@Id</div>
+        <img src="@Ruta_Imagen" class="card-img w-100" alt="@Nombre" style="width: 200px;">
         <div class="d-flex flex-column mt-3">
-            <h5 class="card-text fw-bold">@Nombre</h5>
+            <h5 class="card-text fw-bold text-wrap" style="max-width: 100%;">@Nombre</h5>
             <h6 class="card-text fw-bold text-muted">Stock: @StockTotal</h6>
             <span class="card-text">Precio: Bs. @Precio_Unitario.ToString()</span>
             <span class="card-text">Precio por caja: Bs. @Precio_Caja.ToString()</span>
