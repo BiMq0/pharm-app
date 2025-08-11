@@ -1,0 +1,35 @@
+﻿
+    <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header @(Exito ? "bg-success" : "bg-danger") text-white">
+                    <h5 class="modal-title">@Titulo</h5>
+                </div>
+                <div class="modal-body">
+                    <p>@Mensaje</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn @(Exito ? "btn-success" : "btn-danger")" @onclick="OnAceptar">
+                        Aceptar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Backdrop del modal -->
+    <div class="modal-backdrop fade show"></div>
+
+@code
+{
+    [Parameter]
+    public string Mensaje { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Titulo { get; set; } = null!;
+
+    [Parameter]
+    public bool Exito { get; set; }
+
+    [Parameter]
+    public EventCallback OnAceptar { get; set; }
+}

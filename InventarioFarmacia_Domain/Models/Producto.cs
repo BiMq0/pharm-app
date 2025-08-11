@@ -5,6 +5,7 @@ namespace InventarioFarmacia_Domain.Models;
 public class Producto
 {
     public int Id { get; set; }
+    public int Id_Categoria { get; set; }
     public string? Nombre { get; set; }
     public string? Nombre_Clinico { get; set; }
     public string? Ruta_Imagen { get; set; }
@@ -12,7 +13,7 @@ public class Producto
     public decimal Precio_Caja { get; set; }
 
     public ICollection<Producto_Individual> ProductosIndividuales { get; set; } = new List<Producto_Individual>();
-    public ICollection<Categoria> Categorias { get; set; } = new List<Categoria>();
+    public Categoria Categoria { get; set; } = new Categoria();
     public ICollection<Bitacora_Producto> BitacoraProductos { get; set; } = new List<Bitacora_Producto>();
 
 

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace InventarioFarmacia_Back.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class FixedProductRelationship : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -17,7 +17,8 @@ namespace InventarioFarmacia_Back.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", nullable: true)
+                    Nombre = table.Column<string>(type: "TEXT", nullable: true),
+                    Ruta_Imagen = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -69,23 +70,6 @@ namespace InventarioFarmacia_Back.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Productos",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", nullable: true),
-                    Nombre_Clinico = table.Column<string>(type: "TEXT", nullable: true),
-                    Ruta_Imagen = table.Column<string>(type: "TEXT", nullable: true),
-                    Precio_Unitario = table.Column<decimal>(type: "TEXT", nullable: false),
-                    Precio_Caja = table.Column<decimal>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Productos", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Usuarios",
                 columns: table => new
                 {
@@ -100,60 +84,25 @@ namespace InventarioFarmacia_Back.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Categoria_Productos",
-                columns: table => new
-                {
-                    CategoriasId = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProductosId = table.Column<int>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Categoria_Productos", x => new { x.CategoriasId, x.ProductosId });
-                    table.ForeignKey(
-                        name: "FK_Categoria_Productos_Categorias_CategoriasId",
-                        column: x => x.CategoriasId,
-                        principalTable: "Categorias",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Categoria_Productos_Productos_ProductosId",
-                        column: x => x.ProductosId,
-                        principalTable: "Productos",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Productos_Individuales",
+                name: "Productos",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Id_Producto = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id_Inventario = table.Column<int>(type: "INTEGER", nullable: false),
-                    Fecha_Vencimiento = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    Nro_Lote = table.Column<string>(type: "TEXT", nullable: true),
-                    Estado = table.Column<int>(type: "INTEGER", nullable: false)
+                    Id_Categoria = table.Column<int>(type: "INTEGER", nullable: false),
+                    Nombre = table.Column<string>(type: "TEXT", nullable: true),
+                    Nombre_Clinico = table.Column<string>(type: "TEXT", nullable: true),
+                    Ruta_Imagen = table.Column<string>(type: "TEXT", nullable: true),
+                    Precio_Unitario = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Precio_Caja = table.Column<decimal>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Productos_Individuales", x => x.Id);
+                    table.PrimaryKey("PK_Productos", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Productos_Individuales_Inventarios_Id_Inventario",
-                        column: x => x.Id_Inventario,
-                        principalTable: "Inventarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Productos_Individuales_Lotes_Nro_Lote",
-                        column: x => x.Nro_Lote,
-                        principalTable: "Lotes",
-                        principalColumn: "Nro_Lote",
-                        onDelete: ReferentialAction.SetNull);
-                    table.ForeignKey(
-                        name: "FK_Productos_Individuales_Productos_Id_Producto",
-                        column: x => x.Id_Producto,
-                        principalTable: "Productos",
+                        name: "FK_Productos_Categorias_Id_Categoria",
+                        column: x => x.Id_Categoria,
+                        principalTable: "Categorias",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -195,6 +144,28 @@ namespace InventarioFarmacia_Back.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Ventas",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Id_Usuario = table.Column<int>(type: "INTEGER", nullable: true),
+                    Fecha_Venta = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    Cantidad_Productos = table.Column<int>(type: "INTEGER", nullable: false),
+                    Costo_Total = table.Column<decimal>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Ventas", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Ventas_Usuarios_Id_Usuario",
+                        column: x => x.Id_Usuario,
+                        principalTable: "Usuarios",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.SetNull);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Bitacora_Productos",
                 columns: table => new
                 {
@@ -226,50 +197,36 @@ namespace InventarioFarmacia_Back.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Ventas",
+                name: "Productos_Individuales",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Id_Usuario = table.Column<int>(type: "INTEGER", nullable: true),
-                    Fecha_Venta = table.Column<DateOnly>(type: "TEXT", nullable: false),
-                    Cantidad_Productos = table.Column<int>(type: "INTEGER", nullable: false),
-                    Costo_Total = table.Column<decimal>(type: "TEXT", nullable: false)
+                    Id_Producto = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id_Inventario = table.Column<int>(type: "INTEGER", nullable: false),
+                    Fecha_Vencimiento = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    Nro_Lote = table.Column<string>(type: "TEXT", nullable: true),
+                    Estado = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Ventas", x => x.Id);
+                    table.PrimaryKey("PK_Productos_Individuales", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Ventas_Usuarios_Id_Usuario",
-                        column: x => x.Id_Usuario,
-                        principalTable: "Usuarios",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.SetNull);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Detalle_Compras",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Id_OrdenDeCompra = table.Column<int>(type: "INTEGER", nullable: false),
-                    Id_ProductoIndividual = table.Column<int>(type: "INTEGER", nullable: false),
-                    Precio = table.Column<decimal>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Detalle_Compras", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Detalle_Compras_Orden_Compras_Id_OrdenDeCompra",
-                        column: x => x.Id_OrdenDeCompra,
-                        principalTable: "Orden_Compras",
+                        name: "FK_Productos_Individuales_Inventarios_Id_Inventario",
+                        column: x => x.Id_Inventario,
+                        principalTable: "Inventarios",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Detalle_Compras_Productos_Individuales_Id_ProductoIndividual",
-                        column: x => x.Id_ProductoIndividual,
-                        principalTable: "Productos_Individuales",
+                        name: "FK_Productos_Individuales_Lotes_Nro_Lote",
+                        column: x => x.Nro_Lote,
+                        principalTable: "Lotes",
+                        principalColumn: "Nro_Lote",
+                        onDelete: ReferentialAction.SetNull);
+                    table.ForeignKey(
+                        name: "FK_Productos_Individuales_Productos_Id_Producto",
+                        column: x => x.Id_Producto,
+                        principalTable: "Productos",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -303,6 +260,33 @@ namespace InventarioFarmacia_Back.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Detalle_Compras",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Id_OrdenDeCompra = table.Column<int>(type: "INTEGER", nullable: false),
+                    Id_ProductoIndividual = table.Column<int>(type: "INTEGER", nullable: false),
+                    Precio = table.Column<decimal>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Detalle_Compras", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Detalle_Compras_Orden_Compras_Id_OrdenDeCompra",
+                        column: x => x.Id_OrdenDeCompra,
+                        principalTable: "Orden_Compras",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Detalle_Compras_Productos_Individuales_Id_ProductoIndividual",
+                        column: x => x.Id_ProductoIndividual,
+                        principalTable: "Productos_Individuales",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Bitacora_Inventarios_Id_Inventario",
                 table: "Bitacora_Inventarios",
@@ -329,11 +313,6 @@ namespace InventarioFarmacia_Back.Migrations
                 column: "Id_Usuario");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Categoria_Productos_ProductosId",
-                table: "Categoria_Productos",
-                column: "ProductosId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Detalle_Compras_Id_OrdenDeCompra",
                 table: "Detalle_Compras",
                 column: "Id_OrdenDeCompra");
@@ -353,6 +332,11 @@ namespace InventarioFarmacia_Back.Migrations
                 name: "IX_Detalle_Ventas_Id_Venta",
                 table: "Detalle_Ventas",
                 column: "Id_Venta");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Productos_Id_Categoria",
+                table: "Productos",
+                column: "Id_Categoria");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Productos_Individuales_Id_Inventario",
@@ -385,16 +369,10 @@ namespace InventarioFarmacia_Back.Migrations
                 name: "Bitacora_Productos");
 
             migrationBuilder.DropTable(
-                name: "Categoria_Productos");
-
-            migrationBuilder.DropTable(
                 name: "Detalle_Compras");
 
             migrationBuilder.DropTable(
                 name: "Detalle_Ventas");
-
-            migrationBuilder.DropTable(
-                name: "Categorias");
 
             migrationBuilder.DropTable(
                 name: "Orden_Compras");
@@ -416,6 +394,9 @@ namespace InventarioFarmacia_Back.Migrations
 
             migrationBuilder.DropTable(
                 name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "Categorias");
         }
     }
 }

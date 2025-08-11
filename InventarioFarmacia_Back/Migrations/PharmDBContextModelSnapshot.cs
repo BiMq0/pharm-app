@@ -17,21 +17,6 @@ namespace InventarioFarmacia_Back.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
-            modelBuilder.Entity("CategoriaProducto", b =>
-                {
-                    b.Property<int>("CategoriasId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ProductosId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("CategoriasId", "ProductosId");
-
-                    b.HasIndex("ProductosId");
-
-                    b.ToTable("Categoria_Productos", (string)null);
-                });
-
             modelBuilder.Entity("InventarioFarmacia_Domain.Models.Bitacora_Inventario", b =>
                 {
                     b.Property<int>("Id")
@@ -111,10 +96,13 @@ namespace InventarioFarmacia_Back.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Nombre")
+                    b.Property<string>("Descripcion")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Ruta_Imagen")
+                    b.Property<string>("Icono")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Nombre")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -239,6 +227,9 @@ namespace InventarioFarmacia_Back.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("Id_Categoria")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Nombre")
                         .HasColumnType("TEXT");
 
@@ -255,6 +246,8 @@ namespace InventarioFarmacia_Back.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Id_Categoria");
 
                     b.ToTable("Productos");
                 });
@@ -334,21 +327,6 @@ namespace InventarioFarmacia_Back.Migrations
                     b.ToTable("Ventas");
                 });
 
-            modelBuilder.Entity("CategoriaProducto", b =>
-                {
-                    b.HasOne("InventarioFarmacia_Domain.Models.Categoria", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("InventarioFarmacia_Domain.Models.Producto", null)
-                        .WithMany()
-                        .HasForeignKey("ProductosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("InventarioFarmacia_Domain.Models.Bitacora_Inventario", b =>
                 {
                     b.HasOne("InventarioFarmacia_Domain.Models.Inventario", null)
@@ -425,6 +403,17 @@ namespace InventarioFarmacia_Back.Migrations
                     b.Navigation("Venta");
                 });
 
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Producto", b =>
+                {
+                    b.HasOne("InventarioFarmacia_Domain.Models.Categoria", "Categoria")
+                        .WithMany("Productos")
+                        .HasForeignKey("Id_Categoria")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Categoria");
+                });
+
             modelBuilder.Entity("InventarioFarmacia_Domain.Models.Producto_Individual", b =>
                 {
                     b.HasOne("InventarioFarmacia_Domain.Models.Inventario", "Inventario")
@@ -460,6 +449,11 @@ namespace InventarioFarmacia_Back.Migrations
                         .OnDelete(DeleteBehavior.SetNull);
 
                     b.Navigation("Usuario");
+                });
+
+            modelBuilder.Entity("InventarioFarmacia_Domain.Models.Categoria", b =>
+                {
+                    b.Navigation("Productos");
                 });
 
             modelBuilder.Entity("InventarioFarmacia_Domain.Models.Inventario", b =>

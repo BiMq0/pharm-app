@@ -1,0 +1,138 @@
+﻿@page "/categorias"
+@using InventarioFarmacia_Shared;
+@using InventarioFarmacia_Front.Components.SimpleComponents;
+@using InventarioFarmacia_Shared;
+@inject InventarioFarmacia_Front.Services.ICategoriaService CategoriaServices
+@inject IJSRuntime JS;
+@rendermode InteractiveServer
+
+<PageTitle>Categorías</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="bg-primary bg-gradient text-white p-4 rounded-3 shadow">
+                <h1 class="fw-bold mb-2">📁 Categorías</h1>
+                <p class="mb-0 opacity-75">Organiza y administra las categorías de productos de tu farmacia</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <h3 class="text-primary fw-bold">@categorias.Count</h3>
+                    <p class="text-muted mb-0">Total de Categorías</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <h3 class="text-success fw-bold">@categorias.Sum(c => c.CantidadProductos)</h3>
+                    <p class="text-muted mb-0">Productos Clasificados</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                    🔍
+                </span>
+                <input type="text" class="form-control border-start-0" 
+                       placeholder="Buscar categorías..." 
+                       @bind="filtroNombre" 
+                       @oninput="FiltrarCategorias">
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+            <button class="btn btn-outline-secondary me-2" @onclick="LimpiarFiltros">
+                🔄 Limpiar
+            </button>
+        </div>
+    </div>
+
+    <div class="row">
+        @foreach (var categoria in categoriasFiltradas)
+            {
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
+                    <CategoriaCardItem Id="@categoria.Id" 
+                                       Nombre="@categoria.Nombre" 
+                                       Descripcion="@categoria.Descripcion"
+                                       Icono="@categoria.Icono"
+                                       ProductosCount="@categoria.CantidadProductos" />
+                </div>
+            }
+    </div>
+</div>
+
+<NavLink href="/categorias/agregar" 
+         class="btn btn-primary position-fixed shadow-lg" 
+         style="bottom: 20px; right: 20px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px; z-index: 1050;">
+        <span class="bi bi-plus-lg">+</span>
+</NavLink>
+
+@code {
+    private List<CategoriaInfoCardDTO> categorias = new();
+    private List<CategoriaInfoCardDTO> categoriasFiltradas = new();
+    private string filtroNombre = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarCategorias();
+    }
+
+    private Task CargarCategorias()
+    {
+        try
+        {
+            categorias = new List<CategoriaInfoCardDTO>
+            {
+                new() { Id = 1, Nombre = "Analgésicos", Descripcion = "Medicamentos para el dolor", Icono = "💊", CantidadProductos = 15 },
+                new() { Id = 2, Nombre = "Antibióticos", Descripcion = "Medicamentos antibacterianos", Icono = "🧪", CantidadProductos = 8 },
+                new() { Id = 3, Nombre = "Vitaminas", Descripcion = "Suplementos vitamínicos", Icono = "🌟", CantidadProductos = 12 },
+                new() { Id = 4, Nombre = "Higiene Personal", Descripcion = "Productos de cuidado personal", Icono = "🧴", CantidadProductos = 20 },
+                new() { Id = 5, Nombre = "Primeros Auxilios", Descripcion = "Productos para emergencias", Icono = "🏥", CantidadProductos = 6 }
+            };
+            
+            
+            categoriasFiltradas = categorias;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar categorías: {ex.Message}");
+        }
+        
+        return Task.CompletedTask;
+    }
+
+    private void FiltrarCategorias(ChangeEventArgs e)
+    {
+        filtroNombre = e.Value?.ToString() ?? string.Empty;
+        
+        if (string.IsNullOrWhiteSpace(filtroNombre))
+        {
+            categoriasFiltradas = categorias;
+        }
+        else
+        {
+            categoriasFiltradas = categorias
+                .Where(c => c.Nombre.Contains(filtroNombre, StringComparison.OrdinalIgnoreCase) ||
+                           (c.Descripcion?.Contains(filtroNombre, StringComparison.OrdinalIgnoreCase) ?? false))
+                .ToList();
+        }
+        
+        StateHasChanged();
+    }
+
+    private void LimpiarFiltros()
+    {
+        filtroNombre = string.Empty;
+        categoriasFiltradas = categorias;
+        StateHasChanged();
+    }
+}

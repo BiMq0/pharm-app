@@ -1,14 +1,16 @@
 @page "/productos/agregar"
 @using InventarioFarmacia_Shared;
+@using InventarioFarmacia_Front.Components.SimpleComponents.Modals;
 @inject Services.IProductoService ProductServices
+@inject IWebHostEnvironment Environment
+@rendermode InteractiveServer
 
 <PageTitle>Agregar Producto</PageTitle>
 
 <h1 class="fw-bold position-sticky top-0 bg-white">Agregar Producto</h1>
-<EditForm OnValidSubmit="AgregarProducto" Model="@ProductoNuevo" FormName="AgregarProductoForm">
+<EditForm Model="@ProductoNuevo" OnValidSubmit="AgregarProducto" FormName="AgregarProductoForm">
     <DataAnnotationsValidator />
-    <ValidationSummary/>
-
+    <ValidationSummary />
     <div class="mb-3">
         <label for="nombre" class="form-label">Nombre de Producto (*)</label>
         <InputText id="nombre" class="form-control" @bind-Value="ProductoNuevo.Nombre" placeholder="Ingrese el nombre del producto" />
@@ -35,17 +37,110 @@
 
     <div class="mb-3">
         <label for="imagen" class="form-label">Imagen del Producto (*)</label>
-        <InputFile id="imagen" class="form-control" OnChange="@(e => ProductoNuevo.Ruta_Imagen = e.File.Name)" />
+        <InputFile id="imagen" class="form-control" OnChange="OnImageSelected" accept="image/*" />
         <ValidationMessage For="@(() => ProductoNuevo.Ruta_Imagen)" />
+        @if (!string.IsNullOrEmpty(ProductoNuevo.Ruta_Imagen))
+        {
+            <small class="text-muted">Archivo seleccionado: @ProductoNuevo.Ruta_Imagen</small>
+        }
+        @if (!string.IsNullOrEmpty(imagePreviewUrl))
+        {
+            <div class="mt-2">
+                <img src="@imagePreviewUrl" alt="Vista previa" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+            </div>
+        }
     </div>
 
     <button type="submit" class="btn btn-primary">Agregar Producto</button>
 </EditForm>
 
+@if(MostrarModal)
+{
+    @if (RegistroExitoso)
+    {
+        <ModalProducto Mensaje="Producto agregado exitosamente" Titulo="Éxito" OnAceptar="CerrarModal" Exito="true" />
+    }
+    else
+    {
+        <ModalProducto Mensaje="Error al agregar producto" Titulo="Error" OnAceptar="CerrarModal" Exito="false" />
+    }
+}
+
 @code{
-    private ProductoNuevoDTO ProductoNuevo = new ();
+
+    private bool RegistroExitoso { get; set; } = false;
+    private bool MostrarModal { get; set; } = false; 
+    [SupplyParameterFromForm]
+    private ProductoNuevoDTO ProductoNuevo { get; set; } = new();
+    private string imagePreviewUrl = string.Empty;
+    private const long MaxFileSize = 5 * 1024 * 1024;
+    private async Task OnImageSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file != null)
+        {
+            if (file.Size > MaxFileSize)
+            {
+                Console.WriteLine("El archivo es demasiado grande. Máximo 5MB.");
+                return;
+            }
+            if (!file.ContentType.StartsWith("image/"))
+            {
+                Console.WriteLine("Solo se permiten archivos de imagen.");
+                return;
+            }
+            try
+            {
+                var uploadsPath = Path.Combine(Environment.WebRootPath, "uploads", "productos");
+                if (!Directory.Exists(uploadsPath))
+                {
+                    Directory.CreateDirectory(uploadsPath);
+                }
+
+                // Generar nombre único p1ara el archivo
+                var fileName = $"{Guid.NewGuid()}_{file.Name}";
+                var filePath = Path.Combine(uploadsPath, fileName);
+
+                // Guardar el archivo
+                using var stream = file.OpenReadStream(MaxFileSize);
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await stream.CopyToAsync(fileStream);
+
+                ProductoNuevo.Ruta_Imagen = $"/uploads/productos/{fileName}";
+                imagePreviewUrl = ProductoNuevo.Ruta_Imagen;
+
+                StateHasChanged();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error al guardar la imagen: {ex.Message}");
+            }
+        }
+    }
 
     private void AgregarProducto()
     {
+        try
+        {
+            RegistroExitoso = false; 
+            MostrarModal = true;
+            //await ProductServices.CrearProducto(ProductoNuevo);
+            ProductoNuevo = new ProductoNuevoDTO();
+            imagePreviewUrl = string.Empty;
+        }
+        catch (Exception ex)
+        {
+            RegistroExitoso = false;
+            MostrarModal = true;
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+        
+        StateHasChanged();
+    }
+
+    private void CerrarModal()
+    {
+        MostrarModal = false;
+        StateHasChanged();
     }
 }

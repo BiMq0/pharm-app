@@ -34,7 +34,6 @@ public class LoteRepository : ILoteRepository
         return await _context.Lotes
             .Include(l => l.ProductosIndividuales)     // ← Unidades en el lote
                 .ThenInclude(pi => pi.Producto)        // ← Información del producto
-                    .ThenInclude(p => p.Categorias)    // ← Categorías del producto
             .FirstOrDefaultAsync(l => l.Id == id)
             ?? throw new KeyNotFoundException($"Lote con id {id} no encontrado.");
     }

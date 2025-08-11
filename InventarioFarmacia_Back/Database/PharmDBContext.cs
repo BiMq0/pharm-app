@@ -32,10 +32,9 @@ public class PharmDBContext : DbContext
 
         // Categoria -> Producto (Many-to-Many)
         modelBuilder.Entity<Producto>()
-            .HasMany(p => p.Categorias)
+            .HasOne(p => p.Categoria)
             .WithMany(c => c.Productos)
-            .UsingEntity(j => j.ToTable("Categoria_Productos"));
-
+            .HasForeignKey(p => p.Id_Categoria);
         // Producto -> ProductosIndividuales (1:N)
         modelBuilder.Entity<Producto_Individual>()
             .HasOne(pi => pi.Producto)

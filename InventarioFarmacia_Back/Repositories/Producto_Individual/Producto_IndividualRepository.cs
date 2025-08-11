@@ -18,7 +18,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)           // ← Qué producto es
-                .ThenInclude(p => p.Categorias)   // ← Categorías del producto
+                .ThenInclude(p => p.Categoria)   // ← Categorías del producto
             .Include(pi => pi.Lote)               // ← Lote al que pertenece
             .Include(pi => pi.Inventario)         // ← En qué inventario está
             .Include(pi => pi.DetalleCompras)     // ← De qué compra vino
@@ -30,7 +30,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categorias)
+                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
@@ -47,7 +47,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categorias)
+                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
@@ -60,7 +60,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categorias)
+                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
@@ -73,7 +73,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categorias)
+                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
@@ -86,7 +86,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categorias)
+                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)

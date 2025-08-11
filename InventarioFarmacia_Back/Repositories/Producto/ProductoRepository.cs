@@ -15,7 +15,7 @@ public class ProductoRepository : IProductoRepository
     public async Task<IEnumerable<Producto>> GetAllAsync()
     {
         return await _context.Productos
-            .Include(p => p.Categorias)
+            .Include(p => p.Categoria)
             .Include(p => p.ProductosIndividuales)
                 .ThenInclude(pi => pi.Inventario)
             .AsNoTracking()
@@ -25,7 +25,7 @@ public class ProductoRepository : IProductoRepository
     public async Task<IEnumerable<Producto>> GetAllAsync(string filtro)
     {
         return await _context.Productos
-            .Include(p => p.Categorias)
+            .Include(p => p.Categoria)
             .Include(p => p.ProductosIndividuales)
                 .ThenInclude(pi => pi.Inventario)
             .Where(p => p.Id.ToString().Contains(filtro)
@@ -40,7 +40,7 @@ public class ProductoRepository : IProductoRepository
     public async Task<Producto> GetByIdAsync(int id)
     {
         return await _context.Productos
-            .Include(p => p.Categorias)           // ← Categorías del producto
+            .Include(p => p.Categoria)           // ← Categorías del producto
             .Include(p => p.ProductosIndividuales) // ← Unidades físicas
                 .ThenInclude(pi => pi.Inventario)  // ← En qué inventario están
             .Include(p => p.BitacoraProductos)    // ← Historial de cambios

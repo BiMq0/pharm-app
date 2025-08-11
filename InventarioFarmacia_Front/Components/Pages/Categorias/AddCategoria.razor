@@ -1,0 +1,239 @@
+@page "/categorias/agregar"
+@using InventarioFarmacia_Shared;
+@using InventarioFarmacia_Front.Components.SimpleComponents.Modals;
+@using System.ComponentModel.DataAnnotations;
+@inject InventarioFarmacia_Front.Services.ICategoriaService CategoriaServices
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Agregar Categoría</PageTitle>
+
+<div class="container-fluid">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="d-flex align-items-center mb-3">
+                <button class="btn btn-outline-secondary me-3" @onclick="RegresarACategorias">
+                    ← Regresar
+                </button>
+                <div>
+                    <h1 class="fw-bold mb-1">📁 Nueva Categoría</h1>
+                    <p class="text-muted mb-0">Crea una nueva categoría para organizar tus productos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row ">
+        <div class="col-lg-8 col-xl-6">
+            <div class="card shadow-sm border-0">
+                <div class="card-header bg-primary bg-gradient text-white">
+                    <h5 class="card-title mb-0 fw-bold">📝 Información de la Categoría</h5>
+                </div>
+                <div class="card-body p-4">
+                    <EditForm Model="@CategoriaNueva" OnValidSubmit="AgregarCategoria" FormName="AgregarCategoriaForm">
+                        <DataAnnotationsValidator />
+                        <ValidationSummary class="alert alert-danger" />
+
+                        <!-- Nombre de la categoría -->
+                        <div class="mb-4">
+                            <label for="nombre" class="form-label fw-semibold">
+                                📝 Nombre de la Categoría <span class="text-danger">*</span>
+                            </label>
+                            <InputText id="nombre" 
+                                       class="form-control form-control-lg" 
+                                       @bind-Value="CategoriaNueva.Nombre" 
+                                       placeholder="Ej: Analgésicos, Vitaminas, etc." />
+                            <ValidationMessage For="@(() => CategoriaNueva.Nombre)" class="text-danger small" />
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="mb-4">
+                            <label for="descripcion" class="form-label fw-semibold">
+                                📄 Descripción
+                            </label>
+                            <InputTextArea id="descripcion" 
+                                           class="form-control" 
+                                           rows="3"
+                                           @bind-Value="CategoriaNueva.Descripcion" 
+                                           placeholder="Describe brevemente el tipo de productos que incluye esta categoría..." />
+                            <ValidationMessage For="@(() => CategoriaNueva.Descripcion)" class="text-danger small" />
+                            <div class="form-text">Opcional: Ayuda a identificar mejor el propósito de la categoría</div>
+                        </div>
+
+                        <!-- Icono -->
+                        <div class="mb-4">
+                            <label for="icono" class="form-label fw-semibold">
+                                🎨 Icono Representativo
+                            </label>
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <InputText id="icono" 
+                                               class="form-control" 
+                                               @bind-Value="CategoriaNueva.Icono" 
+                                               placeholder="Ej: 💊, 🧴, 🩹, etc." />
+                                    <ValidationMessage For="@(() => CategoriaNueva.Icono)" class="text-danger small" />
+                                    <div class="form-text">Usa un emoji que represente la categoría</div>
+                                </div>
+                                <div class="col-md-4 text-center">
+                                    @if (!string.IsNullOrEmpty(CategoriaNueva.Icono))
+                                    {
+                                        <div class="border rounded p-3 bg-light">
+                                            <span style="font-size: 2rem;">@CategoriaNueva.Icono</span>
+                                            <small class="d-block text-muted">Vista previa</small>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="border rounded p-3 bg-light text-muted">
+                                            <span style="font-size: 2rem;">📁</span>
+                                            <small class="d-block">Por defecto</small>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold text-muted">
+                                💡 Iconos Sugeridos
+                            </label>
+                            <div class="d-flex flex-wrap gap-2">
+                                @foreach (var sugerencia in iconesSugeridos)
+                                {
+                                    <button type="button" 
+                                            class="btn btn-outline-secondary btn-sm" 
+                                            @onclick="() => SeleccionarIcono(sugerencia.Icono)"
+                                            title="@sugerencia.Nombre">
+                                        @sugerencia.Icono @sugerencia.Nombre
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                        <!-- Botones de acción -->
+                        <div class="d-flex gap-3 justify-content-end">
+                            <button type="button" 
+                                    class="btn btn-outline-secondary px-4" 
+                                    @onclick="RegresarACategorias">
+                                🚫 Cancelar
+                            </button>
+                            <button type="submit" 
+                                    class="btn btn-primary px-4 fw-semibold">
+                                ✅ Crear Categoría
+                            </button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de confirmación -->
+@if(MostrarModal)
+{
+    @if (RegistroExitoso)
+    {
+        <ModalProducto Mensaje="@mensajeModal" Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" />
+    }
+    else
+    {
+        <ModalProducto Mensaje="@mensajeModal" Titulo="Error" OnAceptar="CerrarModal" />
+    }
+}
+
+@code {
+    [SupplyParameterFromForm]
+    private CategoriaNuevaDTO CategoriaNueva { get; set; } = new();
+    
+    private bool RegistroExitoso { get; set; } = false;
+    private bool MostrarModal { get; set; } = false;
+    private string mensajeModal = string.Empty;
+
+    private readonly List<IconoSugerencia> iconesSugeridos = new()
+    {
+        new("💊", "Medicamentos"),
+        new("🧴", "Líquidos"),
+        new("🩹", "Primeros Auxilios"),
+        new("🌟", "Vitaminas"),
+        new("🧪", "Laboratorio"),
+        new("🏥", "Hospital"),
+        new("🦷", "Dental"),
+        new("👁️", "Oftalmología"),
+        new("🤱", "Bebés"),
+        new("🧼", "Higiene")
+    };
+
+    private void SeleccionarIcono(string icono)
+    {
+        CategoriaNueva.Icono = icono;
+        StateHasChanged();
+    }
+
+    private void AgregarCategoria()
+    {
+        try
+        {
+            mensajeModal = $"La categoría '{CategoriaNueva.Nombre}' se ha creado exitosamente.";
+            RegistroExitoso = true;
+            MostrarModal = true;
+            
+            // Aquí iría la llamada al servicio:
+            // await CategoriaServices.CrearCategoriaAsync(CategoriaNueva);
+            
+            Console.WriteLine($"Categoría creada: {CategoriaNueva.Nombre}");
+        }
+        catch (Exception ex)
+        {
+            mensajeModal = $"Error al crear la categoría: {ex.Message}";
+            RegistroExitoso = false;
+            MostrarModal = true;
+        }
+        
+        StateHasChanged();
+    }
+
+    private void CerrarModal()
+    {
+        MostrarModal = false;
+        StateHasChanged();
+    }
+
+    private void CerrarModalYRegresar()
+    {
+        MostrarModal = false;
+        Navigation.NavigateTo("/categorias");
+    }
+
+    private void RegresarACategorias()
+    {
+        Navigation.NavigateTo("/categorias");
+    }
+
+    // Clase auxiliar para iconos sugeridos
+    public class IconoSugerencia
+    {
+        public string Icono { get; set; }
+        public string Nombre { get; set; }
+
+        public IconoSugerencia(string icono, string nombre)
+        {
+            Icono = icono;
+            Nombre = nombre;
+        }
+    }
+
+    // DTO temporal - debería estar en el proyecto Shared
+    public class CategoriaNuevaDTO
+    {
+        [Required(ErrorMessage = "El nombre es obligatorio.")]
+        [StringLength(50, MinimumLength = 2, ErrorMessage = "El nombre debe tener entre 2 y 50 caracteres.")]
+        public string Nombre { get; set; } = string.Empty;
+
+        [StringLength(200, ErrorMessage = "La descripción no puede exceder 200 caracteres.")]
+        public string? Descripcion { get; set; }
+
+        [StringLength(10, ErrorMessage = "El icono no puede exceder 10 caracteres.")]
+        public string? Icono { get; set; }
+    }
+}

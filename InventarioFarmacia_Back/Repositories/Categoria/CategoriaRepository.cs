@@ -21,7 +21,7 @@ public class CategoriaRepository : ICategoriaRepository
     public async Task<IEnumerable<Categoria>> GetAllAsync(string filtro)
     {
         return await _dbContext.Categorias.Where(c => c.Id.ToString().Contains(filtro) ||
-                                                    c.Nombre.Contains(filtro)
+                                                    c.Nombre.Contains(filtro) || c.Descripcion.Contains(filtro) || c.Icono.Contains(filtro)
                                                 )
                                         .Include(c => c.CantidadProductos)
                                         .Include(c => c.Productos)
