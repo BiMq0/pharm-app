@@ -31,16 +31,27 @@ namespace InventarioFarmacia_Shared
 
         [Range(0.01, 99999.99, ErrorMessage = "El precio por caja debe ser mayor que cero.")]
         public decimal Precio_Caja { get; set; }
-        public Categoria Categoria { get; set; }
 
-        public ProductoNuevoDTO(string nombre, string nombre_Clinico, string ruta_Imagen, decimal precio_Unitario, decimal precio_Caja, Categoria categoria)
+        [Required(ErrorMessage = "La cantidad por caja es obligatoria.")]
+        [Range(1, int.MaxValue, ErrorMessage = "La cantidad por caja debe ser al menos 1.")]
+        public int Existencias_Por_Caja { get; set; }
+
+        public bool Tiene_Subunidades { get; set; }
+        public int? Unidades_Por_Existencia { get; set; }
+        public int Total_Existencias_Por_Caja => Tiene_Subunidades ? Existencias_Por_Caja * (Unidades_Por_Existencia ?? 1) : Existencias_Por_Caja;
+        public CategoriaToNewProductoDTO Categoria { get; set; }
+
+        public ProductoNuevoDTO(string nombre, string nombre_Clinico, string ruta_Imagen, decimal precio_Unitario, decimal precio_Caja, int existencias_Por_Caja, bool tiene_Subunidades, int? unidades_Por_Existencia, Categoria categoria)
         {
             Nombre = nombre;
             Nombre_Clinico = nombre_Clinico;
             Ruta_Imagen = ruta_Imagen;
             Precio_Unitario = precio_Unitario;
             Precio_Caja = precio_Caja;
-            Categoria = categoria;
+            Existencias_Por_Caja = existencias_Por_Caja;
+            Tiene_Subunidades = tiene_Subunidades;
+            Unidades_Por_Existencia = unidades_Por_Existencia;
+            Categoria = new CategoriaToNewProductoDTO(categoria);
         }
 
         public ProductoNuevoDTO()

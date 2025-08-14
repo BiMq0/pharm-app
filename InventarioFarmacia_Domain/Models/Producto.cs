@@ -9,9 +9,12 @@ public class Producto
     public string? Nombre { get; set; }
     public string? Nombre_Clinico { get; set; }
     public string? Ruta_Imagen { get; set; }
+    public int Existencias_Por_Caja { get; set; }
     public decimal Precio_Unitario { get; set; }
     public decimal Precio_Caja { get; set; }
-
+    public bool Tiene_Subunidades { get; set; }
+    public int? Unidades_Por_Existencia { get; set; }
+    public int Total_Existencias_Por_Caja => Tiene_Subunidades ? Existencias_Por_Caja * (Unidades_Por_Existencia ?? 1) : Existencias_Por_Caja;
     public ICollection<Producto_Individual> ProductosIndividuales { get; set; } = new List<Producto_Individual>();
     public Categoria Categoria { get; set; } = new Categoria();
     public ICollection<Bitacora_Producto> BitacoraProductos { get; set; } = new List<Bitacora_Producto>();

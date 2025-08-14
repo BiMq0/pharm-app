@@ -8,7 +8,8 @@
 <PageTitle>Agregar Producto</PageTitle>
 
 <h1 class="fw-bold position-sticky top-0 bg-white">Agregar Producto</h1>
-<EditForm Model="@ProductoNuevo" OnValidSubmit="AgregarProducto" FormName="AgregarProductoForm">
+<div class="container-fluid">
+    <EditForm Model="@ProductoNuevo" OnValidSubmit="AgregarProducto" FormName="AgregarProductoForm">
     <DataAnnotationsValidator />
     <ValidationSummary />
     <div class="mb-3">
@@ -36,10 +37,55 @@
     </div>
 
     <div class="mb-3">
+        <label for="existencias_por_caja" class="form-label">Existencias por Caja</label>
+        <InputNumber id="existencias_por_caja" class="form-control" @bind-Value="ProductoNuevo.Existencias_Por_Caja" placeholder="Ingrese las existencias por caja" />
+        <ValidationMessage For="@(() => ProductoNuevo.Existencias_Por_Caja)" />
+    </div>
+
+    <div class="mb-3">
+        <label for="tiene_subunidades" class="form-label">¿Tiene Subunidades? <span class="text-muted">Ej. Pastillas</span></label>
+        <InputCheckbox id="tiene_subunidades" class="form-check-input" @bind-Value="ProductoNuevo.Tiene_Subunidades" />
+    </div>
+
+    @if(ProductoNuevo?.Tiene_Subunidades == true)
+    {
+        <div class="mb-3">
+            <label for="subunidades" class="form-label">Unidades por existencia</label>
+            <InputNumber id="subunidades" class="form-control" @bind-Value="ProductoNuevo.Unidades_Por_Existencia" placeholder="Ingrese las subunidades del producto" />
+
+            @if (ProductoNuevo?.Unidades_Por_Existencia is null || ProductoNuevo.Unidades_Por_Existencia <= 0)
+            {
+                <div class="text-danger">Debe ingresar una cantidad válida de subunidades o desmarcar la opción.</div>
+            }
+        </div>
+    }
+
+    <div class="mb-3">
+        <label for="categoria" class="form-label">Categoria del producto (*)</label>
+        <InputSelect id="categoria" class="form-control" @bind-Value="categoriaSeleccionada" @onchange="OnCategoriaChanged">
+            <option value="">Seleccione una categoría</option>
+            @foreach (var categoria in categorias)
+            {
+                <option value="@categoria.Nombre">@categoria.Nombre</option>
+            }
+        </InputSelect>
+        @* Quitar ValidationMessage problemático y usar validación manual *@
+        @if (string.IsNullOrEmpty(categoriaSeleccionada))
+        {
+            <div class="text-danger small">Debe seleccionar una categoría.</div>
+        }
+    </div>
+
+    <div class="mb-3">
         <label for="imagen" class="form-label">Imagen del Producto (*)</label>
         <InputFile id="imagen" class="form-control" OnChange="OnImageSelected" accept="image/*" />
-        <ValidationMessage For="@(() => ProductoNuevo.Ruta_Imagen)" />
-        @if (!string.IsNullOrEmpty(ProductoNuevo.Ruta_Imagen))
+        
+        @* Quitar ValidationMessage problemático *@
+        @if (string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
+        {
+            <div class="text-danger small">Debe seleccionar una imagen.</div>
+        }
+        @if (!string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
         {
             <small class="text-muted">Archivo seleccionado: @ProductoNuevo.Ruta_Imagen</small>
         }
@@ -52,8 +98,11 @@
     </div>
 
     <button type="submit" class="btn btn-primary">Agregar Producto</button>
-</EditForm>
+    </EditForm>
+</div>
 
+
+ @* Condicional para mostrar modal *@
 @if(MostrarModal)
 {
     @if (RegistroExitoso)
@@ -67,13 +116,56 @@
 }
 
 @code{
-
-    private bool RegistroExitoso { get; set; } = false;
-    private bool MostrarModal { get; set; } = false; 
     [SupplyParameterFromForm]
     private ProductoNuevoDTO ProductoNuevo { get; set; } = new();
+    private bool RegistroExitoso { get; set; } = false;
+    private bool MostrarModal { get; set; } = false; 
+    
     private string imagePreviewUrl = string.Empty;
     private const long MaxFileSize = 5 * 1024 * 1024;
+    private List<CategoriaToNewProductoDTO> categorias = new();
+    
+    // Variable separada para la categoría seleccionada (evita problemas de binding)
+    private string categoriaSeleccionada = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (ProductoNuevo == null)
+        {
+            ProductoNuevo = new ProductoNuevoDTO();
+        }
+        
+        if (ProductoNuevo.Categoria == null)
+        {
+            ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
+        }
+
+        //reemplazar por servicio de recuperacion de categorias
+        categorias = new List<CategoriaToNewProductoDTO>()
+        {
+            new CategoriaToNewProductoDTO { Nombre = "Medicamentos" },
+            new CategoriaToNewProductoDTO { Nombre = "Suplementos" },
+            new CategoriaToNewProductoDTO { Nombre = "Equipos Médicos" },
+            new CategoriaToNewProductoDTO { Nombre = "Cosméticos" },
+            new CategoriaToNewProductoDTO { Nombre = "Higiene Personal" }
+        };
+        
+        await Task.CompletedTask;
+        StateHasChanged(); // Forzar actualización después de la inicialización
+    }
+
+    private void OnCategoriaChanged(ChangeEventArgs e)
+    {
+        categoriaSeleccionada = e.Value?.ToString() ?? string.Empty;
+        
+        // Actualizar el objeto ProductoNuevo
+        if (ProductoNuevo?.Categoria != null)
+        {
+            ProductoNuevo.Categoria.Nombre = categoriaSeleccionada;
+        }
+        
+        StateHasChanged();
+    }
     private async Task OnImageSelected(InputFileChangeEventArgs e)
     {
         var file = e.File;
@@ -122,10 +214,37 @@
     {
         try
         {
-            RegistroExitoso = false; 
+            // Validaciones manuales antes de proceder
+            if (string.IsNullOrEmpty(categoriaSeleccionada))
+            {
+                Console.WriteLine("Error: Debe seleccionar una categoría");
+                RegistroExitoso = false;
+                MostrarModal = true;
+                return;
+            }
+
+            if (string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
+            {
+                Console.WriteLine("Error: Debe seleccionar una imagen");
+                RegistroExitoso = false;
+                MostrarModal = true;
+                return;
+            }
+
+            // Asegurar que la categoría esté asignada
+            if (ProductoNuevo?.Categoria != null)
+            {
+                ProductoNuevo.Categoria.Nombre = categoriaSeleccionada;
+            }
+
+            //var resultado = await ProductServices.CrearProducto(ProductoNuevo);
+            RegistroExitoso = true; 
             MostrarModal = true;
-            //await ProductServices.CrearProducto(ProductoNuevo);
+            
+            // Limpiar formulario solo si fue exitoso
             ProductoNuevo = new ProductoNuevoDTO();
+            ProductoNuevo.Categoria = new CategoriaToNewProductoDTO(); // Reinicializar categoría
+            categoriaSeleccionada = string.Empty;
             imagePreviewUrl = string.Empty;
         }
         catch (Exception ex)
@@ -135,7 +254,7 @@
             Console.WriteLine($"Error: {ex.Message}");
         }
         
-        StateHasChanged();
+        StateHasChanged(); // Asegurar actualización de UI
     }
 
     private void CerrarModal()

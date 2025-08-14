@@ -40,7 +40,11 @@ public class ProductoService : IProductoService
             Nombre_Clinico = productoDto.Nombre_Clinico,
             Ruta_Imagen = productoDto.Ruta_Imagen,
             Precio_Unitario = productoDto.Precio_Unitario,
-            Precio_Caja = productoDto.Precio_Caja
+            Precio_Caja = productoDto.Precio_Caja,
+            Existencias_Por_Caja = productoDto.Existencias_Por_Caja,
+            Tiene_Subunidades = productoDto.Tiene_Subunidades,
+            Unidades_Por_Existencia = productoDto.Unidades_Por_Existencia,
+            Categoria = productoDto.Categoria
         };
 
         return await _productoRepository.AddAsync(producto);

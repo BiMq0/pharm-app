@@ -17,7 +17,7 @@ namespace InventarioFarmacia_Shared
         public decimal Precio_Caja { get; set; }
 
         public ICollection<ProductoIndividualToProductoAllInfoDTO> ProductosIndividuales { get; set; } = new List<ProductoIndividualToProductoAllInfoDTO>();
-        public ICollection<CategoriaToProductoDTO> Categorias { get; set; } = new List<CategoriaToProductoDTO>();
+        //public ICollection<CategoriaToProductoDTO> Categorias { get; set; } = new List<CategoriaToProductoDTO>();
 
         public int StockDisponible => ProductosIndividuales
         .Count(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE);
