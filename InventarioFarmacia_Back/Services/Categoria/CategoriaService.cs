@@ -1,5 +1,5 @@
 ﻿using InventarioFarmacia_Domain.Models;
-
+using InventarioFarmacia_Shared.DTOs.Categorias;
 namespace InventarioFarmacia_Back;
 
 public class CategoriaService : ICategoriaService
@@ -11,38 +11,45 @@ public class CategoriaService : ICategoriaService
         _categoriaRepository = categoriaRepository;
     }
 
-    public async Task<IEnumerable<Categoria>> ObtenerCategoriasAsync(string filtro = "")
+    public async Task<IEnumerable<CategoriaInfoCardDTO>> ObtenerCategoriasAsync(string filtro = "")
     {
         if (string.IsNullOrEmpty(filtro))
         {
-            return await _categoriaRepository.GetAllAsync();
+            return (await _categoriaRepository.GetAllAsync()).Select(c => new CategoriaInfoCardDTO(c));
         }
-        return await _categoriaRepository.GetAllAsync(filtro);
+        return (await _categoriaRepository.GetAllAsync(filtro)).Select(c => new CategoriaInfoCardDTO(c));
     }
 
-    public async Task<Categoria> ObtenerCategoriaPorIdAsync(int id)
+    public async Task<CategoriaAllInfoDTO> ObtenerCategoriaPorIdAsync(int id)
     {
-        return await _categoriaRepository.GetByIdAsync(id);
+        var categoria = await _categoriaRepository.GetByIdAsync(id);
+        if (categoria == null) return null;
+        return new CategoriaAllInfoDTO(categoria);
     }
 
-    public async Task<bool> CrearCategoriaAsync(Categoria categoria)
+    public async Task<bool> CrearCategoriaAsync(CategoriaNuevaDTO categoria)
     {
-        // TODO: Agregar validaciones de negocio
-        // TODO: Verificar que no exista una categoría con el mismo nombre
-        return await _categoriaRepository.AddAsync(categoria);
+        var nuevaCategoria = new Categoria
+        {
+            Nombre = categoria.Nombre,
+            Descripcion = categoria.Descripcion
+        };
+        return await _categoriaRepository.AddAsync(nuevaCategoria);
     }
 
-    public async Task<bool> ActualizarCategoriaAsync(Categoria categoria)
+    public async Task<bool> ActualizarCategoriaAsync(CategoriaNuevaDTO categoria)
     {
-        // TODO: Agregar validaciones de negocio
-        // TODO: Verificar que la categoría existe
-        return await _categoriaRepository.UpdateAsync(categoria);
+        var categoriaExistente = await _categoriaRepository.GetByIdAsync(categoria.Id);
+        if (categoriaExistente == null) return false;
+
+        categoriaExistente.Nombre = categoria.Nombre ?? categoriaExistente.Nombre;
+        categoriaExistente.Descripcion = categoria.Descripcion ?? categoriaExistente.Descripcion;
+
+        return await _categoriaRepository.UpdateAsync(categoriaExistente);
     }
 
     public async Task<bool> EliminarCategoriaAsync(int id)
     {
-        // TODO: Verificar que la categoría existe
-        // TODO: Verificar que no tenga productos asociados
         return await _categoriaRepository.DeleteAsync(id);
     }
 }

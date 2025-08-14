@@ -6,6 +6,7 @@ namespace InventarioFarmacia_Back;
 public class ProductoService : IProductoService
 {
     private readonly IProductoRepository _productoRepository;
+    private readonly ICategoriaRepository _categoriaRepository;
 
     public ProductoService(IProductoRepository productoRepository)
     {
@@ -44,7 +45,7 @@ public class ProductoService : IProductoService
             Existencias_Por_Caja = productoDto.Existencias_Por_Caja,
             Tiene_Subunidades = productoDto.Tiene_Subunidades,
             Unidades_Por_Existencia = productoDto.Unidades_Por_Existencia,
-            Categoria = productoDto.Categoria
+            Categoria = await _categoriaRepository.GetByIdAsync(productoDto.Categoria.Id)
         };
 
         return await _productoRepository.AddAsync(producto);

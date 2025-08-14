@@ -1,17 +1,13 @@
 ﻿using InventarioFarmacia_Domain.Models;
-// using InventarioFarmacia_Shared;
+using InventarioFarmacia_Shared.DTOs.Categorias;
 
 namespace InventarioFarmacia_Back;
 
 public interface ICategoriaService
 {
-    Task<IEnumerable<Categoria>> ObtenerCategoriasAsync(string filtro = "");
-    Task<Categoria> ObtenerCategoriaPorIdAsync(int id);
-    Task<bool> CrearCategoriaAsync(Categoria categoria);
-    Task<bool> ActualizarCategoriaAsync(Categoria categoria);
+    Task<IEnumerable<CategoriaInfoCardDTO>> ObtenerCategoriasAsync(string filtro = "");
+    Task<CategoriaAllInfoDTO> ObtenerCategoriaPorIdAsync(int id);
+    Task<bool> CrearCategoriaAsync(CategoriaNuevaDTO categoria);
+    Task<bool> ActualizarCategoriaAsync(CategoriaNuevaDTO categoria);
     Task<bool> EliminarCategoriaAsync(int id);
-    // TODO: Agregar métodos con DTOs cuando estén creados
-    // Task<IEnumerable<CategoriaDTO>> ObtenerCategoriasDTOAsync(string filtro = "");
-    // Task<CategoriaDTO> ObtenerCategoriaDTOPorIdAsync(int id);
-    // Task<bool> CrearCategoriaAsync(CategoriaNuevaDTO categoria);
 }

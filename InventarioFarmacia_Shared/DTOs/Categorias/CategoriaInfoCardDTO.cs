@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InventarioFarmacia_Domain.Models;
 
-namespace InventarioFarmacia_Shared
+namespace InventarioFarmacia_Shared.DTOs.Categorias
 {
     public class CategoriaInfoCardDTO
     {

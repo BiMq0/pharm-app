@@ -8,8 +8,9 @@ using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using InventarioFarmacia_Domain.Models;
+using InventarioFarmacia_Shared.DTOs.Categorias;
 
-namespace InventarioFarmacia_Shared
+namespace InventarioFarmacia_Shared.DTOs.Products
 {
     public class ProductoNuevoDTO
     {

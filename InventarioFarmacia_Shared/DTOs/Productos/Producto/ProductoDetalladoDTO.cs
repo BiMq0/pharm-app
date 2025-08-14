@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using InventarioFarmacia_Domain.Constants;
 using InventarioFarmacia_Domain.Models;
 
-namespace InventarioFarmacia_Shared
+namespace InventarioFarmacia_Shared.DTOs.Products
 {
     public class ProductoDetalladoDTO
     {

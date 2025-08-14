@@ -1,7 +1,7 @@
 ﻿using System.Text.Json.Serialization;
 using InventarioFarmacia_Domain.Models;
 
-namespace InventarioFarmacia_Shared
+namespace InventarioFarmacia_Shared.DTOs.Products
 {
     public class ProductoInfoCardDTO
     {
