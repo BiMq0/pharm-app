@@ -27,7 +27,7 @@ public class CategoriaService : ICategoriaService
         return new CategoriaAllInfoDTO(categoria);
     }
 
-    public async Task<bool> CrearCategoriaAsync(CategoriaNuevaDTO categoria)
+    public async Task<bool> CrearCategoriaAsync(CategoriaNuevoDTO categoria)
     {
         var nuevaCategoria = new Categoria
         {
@@ -37,13 +37,14 @@ public class CategoriaService : ICategoriaService
         return await _categoriaRepository.AddAsync(nuevaCategoria);
     }
 
-    public async Task<bool> ActualizarCategoriaAsync(CategoriaNuevaDTO categoria)
+    public async Task<bool> ActualizarCategoriaAsync(CategoriaEdicionDTO categoria)
     {
         var categoriaExistente = await _categoriaRepository.GetByIdAsync(categoria.Id);
         if (categoriaExistente == null) return false;
 
         categoriaExistente.Nombre = categoria.Nombre ?? categoriaExistente.Nombre;
         categoriaExistente.Descripcion = categoria.Descripcion ?? categoriaExistente.Descripcion;
+        categoriaExistente.Icono = categoria.Icono ?? categoriaExistente.Icono;
 
         return await _categoriaRepository.UpdateAsync(categoriaExistente);
     }
