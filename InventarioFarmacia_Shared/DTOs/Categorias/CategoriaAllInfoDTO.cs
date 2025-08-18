@@ -11,7 +11,8 @@ namespace InventarioFarmacia_Shared.DTOs.Categorias
     {
         public int Id { get; set; }
         public string? Nombre { get; set; }
-        public string? Ruta_Imagen { get; set; }
+        public string? Icono { get; set; }
+        public string? Descripcion { get; set; }
         public ICollection<ProductoInfoToCategoria> Productos { get; set; } = new List<ProductoInfoToCategoria>();
 
         public int CantidadProductos => Productos.Count();
@@ -20,11 +21,18 @@ namespace InventarioFarmacia_Shared.DTOs.Categorias
         {
             Id = categoria.Id;
             Nombre = categoria.Nombre;
+            Icono = categoria.Icono;
+            Descripcion = categoria.Descripcion;
 
             foreach (var producto in categoria.Productos ?? Enumerable.Empty<Producto>())
             {
                 Productos.Add(new ProductoInfoToCategoria(producto));
             }
+        }
+
+        public CategoriaAllInfoDTO()
+        {
+
         }
     }
 }

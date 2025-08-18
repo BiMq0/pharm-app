@@ -1,5 +1,5 @@
-﻿using InventarioFarmacia_Shared;
-namespace InventarioFarmacia_Front.Services;
+﻿using InventarioFarmacia_Shared.DTOs.Products;
+namespace InventarioFarmacia_Front.Services.Products;
 
 public interface IProductoService
 {

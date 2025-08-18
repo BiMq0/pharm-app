@@ -23,7 +23,7 @@ public class CategoriaService : ICategoriaService
     public async Task<CategoriaAllInfoDTO> ObtenerCategoriaPorIdAsync(int id)
     {
         var categoria = await _categoriaRepository.GetByIdAsync(id);
-        if (categoria == null) return null;
+        if (categoria == null) return null!;
         return new CategoriaAllInfoDTO(categoria);
     }
 
@@ -32,7 +32,8 @@ public class CategoriaService : ICategoriaService
         var nuevaCategoria = new Categoria
         {
             Nombre = categoria.Nombre,
-            Descripcion = categoria.Descripcion
+            Descripcion = categoria.Descripcion,
+            Icono = categoria.Icono
         };
         return await _categoriaRepository.AddAsync(nuevaCategoria);
     }

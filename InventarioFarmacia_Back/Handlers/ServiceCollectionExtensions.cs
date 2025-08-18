@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using InventarioFarmacia_Back.Mappers;
 
 namespace InventarioFarmacia_Back
 {
@@ -45,8 +46,8 @@ namespace InventarioFarmacia_Back
 
         public static IServiceCollection AddScopedMappers(this IServiceCollection services)
         {
-            // todavia deberia ser implementado cuando se agreguen los demas mappers
             services.AddScoped<ProductMapper>();
+            services.AddScoped<CategoriesMapper>();
             return services;
         }
     }

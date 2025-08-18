@@ -1,7 +1,8 @@
 @page "/productos/agregar"
-@using InventarioFarmacia_Shared;
+@using InventarioFarmacia_Shared.DTOs.Products;
+@using InventarioFarmacia_Shared.DTOs.Categorias;
 @using InventarioFarmacia_Front.Components.SimpleComponents.Modals;
-@inject Services.IProductoService ProductServices
+@inject Services.Products.IProductoService ProductServices
 @inject IWebHostEnvironment Environment
 @rendermode InteractiveServer
 
@@ -69,7 +70,6 @@
                 <option value="@categoria.Nombre">@categoria.Nombre</option>
             }
         </InputSelect>
-        @* Quitar ValidationMessage problemático y usar validación manual *@
         @if (string.IsNullOrEmpty(categoriaSeleccionada))
         {
             <div class="text-danger small">Debe seleccionar una categoría.</div>
@@ -125,7 +125,7 @@
     private const long MaxFileSize = 5 * 1024 * 1024;
     private List<CategoriaToNewProductoDTO> categorias = new();
     
-    // Variable separada para la categoría seleccionada (evita problemas de binding)
+
     private string categoriaSeleccionada = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -139,8 +139,6 @@
         {
             ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
         }
-
-        //reemplazar por servicio de recuperacion de categorias
         categorias = new List<CategoriaToNewProductoDTO>()
         {
             new CategoriaToNewProductoDTO { Nombre = "Medicamentos" },
@@ -151,14 +149,13 @@
         };
         
         await Task.CompletedTask;
-        StateHasChanged(); // Forzar actualización después de la inicialización
+        StateHasChanged(); 
     }
 
     private void OnCategoriaChanged(ChangeEventArgs e)
     {
         categoriaSeleccionada = e.Value?.ToString() ?? string.Empty;
-        
-        // Actualizar el objeto ProductoNuevo
+
         if (ProductoNuevo?.Categoria != null)
         {
             ProductoNuevo.Categoria.Nombre = categoriaSeleccionada;
@@ -214,7 +211,6 @@
     {
         try
         {
-            // Validaciones manuales antes de proceder
             if (string.IsNullOrEmpty(categoriaSeleccionada))
             {
                 Console.WriteLine("Error: Debe seleccionar una categoría");
@@ -231,7 +227,6 @@
                 return;
             }
 
-            // Asegurar que la categoría esté asignada
             if (ProductoNuevo?.Categoria != null)
             {
                 ProductoNuevo.Categoria.Nombre = categoriaSeleccionada;
@@ -243,7 +238,7 @@
             
             // Limpiar formulario solo si fue exitoso
             ProductoNuevo = new ProductoNuevoDTO();
-            ProductoNuevo.Categoria = new CategoriaToNewProductoDTO(); // Reinicializar categoría
+            ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
             categoriaSeleccionada = string.Empty;
             imagePreviewUrl = string.Empty;
         }
@@ -254,7 +249,7 @@
             Console.WriteLine($"Error: {ex.Message}");
         }
         
-        StateHasChanged(); // Asegurar actualización de UI
+        StateHasChanged();
     }
 
     private void CerrarModal()

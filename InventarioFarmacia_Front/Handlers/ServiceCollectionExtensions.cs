@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using InventarioFarmacia_Front.Services;
+using InventarioFarmacia_Front.Services.Products;
 
 namespace InventarioFarmacia_Front.Handlers
 {

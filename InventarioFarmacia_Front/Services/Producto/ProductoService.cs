@@ -4,10 +4,10 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Net.Http;
 using System.Net.Http.Json;
-using InventarioFarmacia_Shared;
+using InventarioFarmacia_Shared.DTOs.Products;
 using InventarioFarmacia_Shared.Endpoints;
 
-namespace InventarioFarmacia_Front.Services;
+namespace InventarioFarmacia_Front.Services.Products;
 
 public class ProductoService : IProductoService
 {

@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InventarioFarmacia_Shared.Endpoints;
-using InventarioFarmacia_Shared;
+using InventarioFarmacia_Shared.DTOs.Products;
 
-namespace InventarioFarmacia_Back
+namespace InventarioFarmacia_Back.Mappers
 {
     public class ProductMapper
     {

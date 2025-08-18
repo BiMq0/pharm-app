@@ -1,0 +1,131 @@
+﻿@page "/categorias/{id:int}"                   
+@using InventarioFarmacia_Shared.DTOs.Categorias;
+@inject NavigationManager Navigation
+@inject Services.Categories.ICategoriaService CategoriaService
+@rendermode InteractiveServer
+<div class="container-fluid">
+    <div class="row">
+         <div class="card shadow-lg border-0 p-0">
+            <div class="card-header d-flex align-items-center justify-content-between py-3" 
+                 style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+                <div class="d-flex align-items-center">
+                    <i class="bi bi-folder-fill text-white fs-2 me-3"></i>
+                        <span class="fw-bold text-white fs-3">Detalles de Categoría</span>
+                </div>
+                <div class="d-flex gap-2">
+                    <NavLink href="@($"/categorias/editar/{Id}")" class="btn btn-light btn-sm px-3 py-2">
+                        <i class="bi bi-pencil-fill"></i> Editar
+                    </NavLink>
+
+                    <NavLink href="/categorias" class="btn btn-outline-light btn-sm px-3 py-2">
+                        <i class="bi bi-arrow-left"></i> Regresar
+                    </NavLink>
+                </div>
+            </div>
+            <div class="card-body px-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-3 text-center">
+                        <div class="bg-primary-subtle rounded-circle mx-auto d-flex align-items-center justify-content-center shadow-sm" 
+                             style="width: 200px; height: 200px; font-size: 4em; transition: transform 0.3s ease;">
+                            @categoriaAllInfoDTO.Icono
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex flex-column gap-4">
+                            <div class="border-start border-primary border-3 ps-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-tag-fill text-primary me-2"></i>
+                                    <h5 class="fw-bold text-primary mb-0">Nombre de Categoría</h5>
+                                </div>
+                                <p class="fs-4 fw-semibold text-dark mb-0">@categoriaAllInfoDTO.Nombre</p>
+                            </div>
+                            
+                            <div class="border-start border-success border-3 ps-3">
+                                <div class="d-flex align-items-center mb-2">
+                                    <i class="bi bi-journal-text text-success me-2"></i>
+                                    <h5 class="fw-bold text-success mb-0">Descripción</h5>
+                                </div>
+                                <p class="text-muted fs-5 lh-base mb-0">
+                                    @(string.IsNullOrEmpty(categoriaAllInfoDTO.Descripcion) ? "Sin descripción disponible" : categoriaAllInfoDTO.Descripcion)
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-3">
+                        <div class="card bg-gradient border-0  bg-success-subtle">
+                            <div class="card-body text-center d-flex flex-column justify-content-center p-4">
+                                <div class="d-flex justify-content-center gap-4">
+                                    <div class="display-2 fw-bold text-success">@categoriaAllInfoDTO.CantidadProductos</div>
+                                </div>
+                                <hr class="text-success w-75 mx-auto opacity-50">
+                                <p class="text-success fw-semibold mb-0">
+                                    <i class="bi bi-box-seam-fill text-success fs-6"></i>
+                                    @(categoriaAllInfoDTO.CantidadProductos != 1 ? "Productos" : "Producto")
+                                </p>
+                                <small class="text-muted">en esta categoría</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+         </div>
+    </div>
+    <div class="row mt-4">
+        <div class="card border-0 shadow-sm px-0">
+            <div class="card-header border-0 bg-gradient bg-primary">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h3 class="fw-bold mb-0 text-white">
+                        <i class="bi bi-grid-3x3-gap-fill me-2"></i>
+                        Productos en esta categoría
+                    </h3>
+                    @if(categoriaAllInfoDTO.CantidadProductos > 0)
+                    {
+                        <span class="badge bg-light text-success fs-6 px-3 py-2">
+                            @categoriaAllInfoDTO.CantidadProductos productos
+                        </span>
+                    }
+                </div>
+            </div>
+            <div class="card-body p-4">
+                @if(categoriaAllInfoDTO.CantidadProductos > 0)
+                {
+                    <div class="row g-3">
+                        @foreach (var producto in categoriaAllInfoDTO.Productos)
+                        {
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5">
+                        <div class="mb-4">
+                            <i class="bi bi-inbox text-muted" style="font-size: 4rem; opacity: 0.6;"></i>
+                        </div>
+                        <h4 class="text-muted fw-bold">No hay productos en esta categoría</h4>
+                        <p class="text-muted mb-4">Esta categoría aún no tiene productos asociados. ¡Agrega el primero!</p>
+                        <NavLink href="/productos/nuevo" class="btn btn-primary px-4 py-2">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Agregar Primer Producto
+                        </NavLink>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private CategoriaAllInfoDTO? categoriaAllInfoDTO = new();
+    protected override async Task OnInitializedAsync()
+    {
+        categoriaAllInfoDTO = await CategoriaService.GetCategoriaByIdAsync(Id);
+    }
+
+    private void EditarCategoria(int id)
+    {
+        Navigation.NavigateTo($"/categorias/editar/{id}");
+    }
+}

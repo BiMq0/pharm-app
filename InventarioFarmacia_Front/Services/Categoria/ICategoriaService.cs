@@ -1,12 +1,13 @@
-﻿using InventarioFarmacia_Shared;
+﻿using InventarioFarmacia_Shared.DTOs.Categorias;
 
-namespace InventarioFarmacia_Front.Services.Categoria;
+namespace InventarioFarmacia_Front.Services.Categories;
 
 public interface ICategoriaService
 {
-    Task<List<CategoriaInfoCardDTO>> GetCategoriasAsync(string filtro = "");
-    Task<CategoriaInfoCardDTO> GetCategoriaByIdAsync(int id);
-    Task<CategoriaInfoCardDTO> CreateCategoriaAsync(CategoriaInfoCardDTO categoria);
-    Task<CategoriaInfoCardDTO> UpdateCategoriaAsync(CategoriaInfoCardDTO categoria);
+    Task<IEnumerable<CategoriaInfoCardDTO>> GetCategoriasAsync(string filtro = "");
+    Task<CategoriaAllInfoDTO> GetCategoriaByIdAsync(int id);
+    Task<CategoriaEdicionDTO> GetCategoriaByIdForEditAsync(int id);
+    Task<bool> CreateCategoriaAsync(CategoriaNuevoDTO categoria);
+    Task<bool> UpdateCategoriaAsync(CategoriaEdicionDTO categoria);
     Task<bool> DeleteCategoriaAsync(int id);
 }

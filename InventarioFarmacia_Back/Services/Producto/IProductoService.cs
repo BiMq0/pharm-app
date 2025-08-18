@@ -1,4 +1,4 @@
-﻿using InventarioFarmacia_Shared;
+﻿using InventarioFarmacia_Shared.DTOs.Products;
 
 namespace InventarioFarmacia_Back;
 

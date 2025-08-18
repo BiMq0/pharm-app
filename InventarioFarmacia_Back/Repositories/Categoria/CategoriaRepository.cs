@@ -14,7 +14,6 @@ public class CategoriaRepository : ICategoriaRepository
     public async Task<IEnumerable<Categoria>> GetAllAsync()
     {
         return await _dbContext.Categorias
-            .Include(c => c.CantidadProductos)
             .Include(c => c.Productos)
             .AsNoTracking().ToListAsync();
     }
@@ -23,7 +22,6 @@ public class CategoriaRepository : ICategoriaRepository
         return await _dbContext.Categorias.Where(c => c.Id.ToString().Contains(filtro) ||
                                                     c.Nombre.Contains(filtro) || c.Descripcion.Contains(filtro) || c.Icono.Contains(filtro)
                                                 )
-                                        .Include(c => c.CantidadProductos)
                                         .Include(c => c.Productos)
                                         .AsNoTracking().ToListAsync();
     }
@@ -31,7 +29,6 @@ public class CategoriaRepository : ICategoriaRepository
     {
         return await _dbContext.Categorias
             .Include(c => c.Productos)
-            .Include(c => c.CantidadProductos)
             .FirstOrDefaultAsync(c => c.Id == id) ?? throw new KeyNotFoundException($"No se encontro la categoria por id {id}");
     }
     public async Task<bool> AddAsync(Categoria categoria)
