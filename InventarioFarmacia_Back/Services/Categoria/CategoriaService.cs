@@ -20,6 +20,12 @@ public class CategoriaService : ICategoriaService
         return (await _categoriaRepository.GetAllAsync(filtro)).Select(c => new CategoriaInfoCardDTO(c));
     }
 
+    public async Task<IEnumerable<CategoriaToNewProductoDTO>> ObtenerCategoriasParaNuevoProducto()
+    {
+        var categorias = await _categoriaRepository.GetAllAsync();
+        return categorias.Select(c => new CategoriaToNewProductoDTO(c));
+    }
+
     public async Task<CategoriaAllInfoDTO> ObtenerCategoriaPorIdAsync(int id)
     {
         var categoria = await _categoriaRepository.GetByIdAsync(id);

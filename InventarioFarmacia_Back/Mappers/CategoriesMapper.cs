@@ -25,6 +25,12 @@ namespace InventarioFarmacia_Back.Mappers
                 return categoria != null ? Results.Ok(categoria) : Results.NotFound();
             });
 
+            mapGroup.MapGet(CategoriesEndpoints.GET_FOR_NEW_PRODUCT, async (ICategoriaService categoriaService) =>
+            {
+                var categorias = await categoriaService.ObtenerCategoriasParaNuevoProducto();
+                return Results.Ok(categorias);
+            });
+
             mapGroup.MapPost(CategoriesEndpoints.CREATE, async (ICategoriaService categoriaService, CategoriaNuevoDTO categoriaDto) =>
             {
                 var result = await categoriaService.CrearCategoriaAsync(categoriaDto);

@@ -3,6 +3,7 @@
 @using InventarioFarmacia_Shared.DTOs.Categorias;
 @using InventarioFarmacia_Front.Components.SimpleComponents.Modals;
 @inject Services.Products.IProductoService ProductServices
+@inject Services.Categories.ICategoriaService CategoriaService
 @inject IWebHostEnvironment Environment
 @rendermode InteractiveServer
 
@@ -123,8 +124,7 @@
     
     private string imagePreviewUrl = string.Empty;
     private const long MaxFileSize = 5 * 1024 * 1024;
-    private List<CategoriaToNewProductoDTO> categorias = new();
-    
+    private IEnumerable<CategoriaToNewProductoDTO> categorias = new List<CategoriaToNewProductoDTO>();
 
     private string categoriaSeleccionada = string.Empty;
 
@@ -139,15 +139,8 @@
         {
             ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
         }
-        categorias = new List<CategoriaToNewProductoDTO>()
-        {
-            new CategoriaToNewProductoDTO { Nombre = "Medicamentos" },
-            new CategoriaToNewProductoDTO { Nombre = "Suplementos" },
-            new CategoriaToNewProductoDTO { Nombre = "Equipos Médicos" },
-            new CategoriaToNewProductoDTO { Nombre = "Cosméticos" },
-            new CategoriaToNewProductoDTO { Nombre = "Higiene Personal" }
-        };
-        
+        categorias = await CategoriaService.GetCategoriasParaNuevoProductoAsync();
+
         await Task.CompletedTask;
         StateHasChanged(); 
     }

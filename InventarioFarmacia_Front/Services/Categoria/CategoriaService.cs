@@ -2,6 +2,7 @@
 
 using InventarioFarmacia_Shared.Endpoints;
 using InventarioFarmacia_Shared.DTOs.Categorias;
+using InventarioFarmacia_Domain.Models;
 
 public class CategoriaService : ICategoriaService
 {
@@ -38,6 +39,22 @@ public class CategoriaService : ICategoriaService
         var url = Config.ApiBaseUrl + CategoriesEndpoints.BASE + CategoriesEndpoints.GET_BY_ID;
         url = url.Replace("{id}", id.ToString());
         return await _httpClient.GetFromJsonAsync<CategoriaAllInfoDTO>(url) ?? throw new KeyNotFoundException("Categoria no encontrada");
+    }
+    public async Task<IEnumerable<CategoriaToNewProductoDTO>> GetCategoriasParaNuevoProductoAsync()
+    {
+        string url = Config.ApiBaseUrl + CategoriesEndpoints.BASE + CategoriesEndpoints.GET_FOR_NEW_PRODUCT;
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<CategoriaToNewProductoDTO>>() ?? Enumerable.Empty<CategoriaToNewProductoDTO>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al buscar categorías: {ex.Message}");
+            return new List<CategoriaToNewProductoDTO>();
+        }
     }
     public async Task<CategoriaEdicionDTO> GetCategoriaByIdForEditAsync(int id)
     {

@@ -6,6 +6,7 @@ namespace InventarioFarmacia_Back;
 public interface ICategoriaService
 {
     Task<IEnumerable<CategoriaInfoCardDTO>> ObtenerCategoriasAsync(string filtro = "");
+    Task<IEnumerable<CategoriaToNewProductoDTO>> ObtenerCategoriasParaNuevoProducto();
     Task<CategoriaAllInfoDTO> ObtenerCategoriaPorIdAsync(int id);
     Task<bool> CrearCategoriaAsync(CategoriaNuevoDTO categoria);
     Task<bool> ActualizarCategoriaAsync(CategoriaEdicionDTO categoria);
