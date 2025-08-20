@@ -10,22 +10,54 @@
 
 <PageTitle>Editar Categoría</PageTitle>
 
-<div class="container-fluid">
-    <div class="row mb-4">
+<div class="container-fluid mt-3">
+    <div class="row mb-4 ">
         <div class="col-12">
-            <div class="d-flex align-items-center mb-3">
-                <div>
+            <div class="text-white card bg-primary p-4 rounded-3 shadow"">
                     <h1 class="fw-bold mb-1"><i class="bi bi-pencil-fill"></i> Edicion de Categoría</h1>
-                    <p class="text-muted mb-0">Edita la categoría para organizar tus productos</p>
-                </div>
+                    <p class="mb-0">Edita la categoría para organizar tus productos</p>
             </div>
         </div>
     </div>
-    <div class="row w-100">
+    <div class="row">
         <div class="col-lg-12 col-xl-12">
             <div class="card shadow border-0">
-                <div class="card-header bg-primary bg-gradient text-white">
-                    <h5 class="card-title mb-0 fw-bold"><i class="bi bi-pencil-fill"></i> Información de la Categoría</h5>
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h5 class="card-title fw-bold h-100 m-0">Información de la Categoría</h5>
+                    <style>
+                        .btn-eliminar {
+                            position: relative;
+                            transition: all 0.3s ease;
+                            overflow: visible;
+                        }
+
+                        .btn-eliminar::before {
+                            content: "Eliminar categoría";  
+                            position:absolute;
+                            right: 100%; 
+                            top: 50%;
+                            color: white;
+                            padding: 8px 12px;
+                            border-radius: 6px;
+                            font-size: 14px;
+                            font-weight: 500;
+                            white-space: nowrap;
+                   
+                            opacity: 0;
+                            display: visible;
+                            transform: translateY(-50%) translateX(10px); 
+                            
+                            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                            z-index: 100;
+                        }
+
+                        .btn-eliminar:hover::before {
+                            opacity: 1;
+                            visibility: visible;
+                            transform: translateY(-50%) translateX(-10px);
+                        }
+                    </style>
+                    <button class="btn btn-light btn-eliminar" @onclick="MostrarModalConfirmar"><i class="bi bi-trash3-fill"></i></button>
                 </div>
                 <div class="card-body p-4">
                     <EditForm Model="@CategoriaEditada" OnValidSubmit="EditarCategoria" FormName="AgregarCategoriaForm">
@@ -44,7 +76,7 @@
 
                         <div class="mb-4">
                             <label for="descripcion" class="form-label fw-semibold">
-                                Descripción
+                                Descripción <span class="text-danger">*</span>
                             </label>
                             <InputText id="descripcion" 
                                            class="form-control" 
@@ -115,7 +147,7 @@
                             </button>
                             <button type="submit" 
                                     class="btn btn-outline-primary px-4 fw-semibold">
-                                Editar Categoría
+                                Guardar cambios
                             </button>
                             </div>
                         </div>
@@ -126,16 +158,21 @@
     </div>
 </div>
 
-@if(MostrarModal)
+@if(MostrarModalMensaje)
 {
-    @if (RegistroExitoso)
+    @if (OperacionExitosa || EliminacionExitosa)
     {
-        <ModalProducto Mensaje="Se editó la categoría exitosamente" Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true/>
+        <ModalMensaje Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true/>
     }
     else
     {
-        <ModalProducto Mensaje="Error al editar la categoria" Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false/>
+        <ModalMensaje Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false/>
     }
+}
+
+@if(MostrarModalConfirmacion)
+{
+    <ModalConfirmacion OnAceptar="@(() => EliminarCategoria(id))" OnCancelar="CerrarModalConfirmacion" />
 }
 
 @if(isLoading){ <Cargador /> }
@@ -143,8 +180,10 @@
 @code {
     [SupplyParameterFromForm]
     private CategoriaEdicionDTO CategoriaEditada { get; set; } = new();
-    private bool RegistroExitoso { get; set; } = false;
-    private bool MostrarModal { get; set; } = false;
+    private bool OperacionExitosa { get; set; } = false;
+    private bool EliminacionExitosa { get; set; } = false;
+    private bool MostrarModalConfirmacion { get; set; } = false;
+    private bool MostrarModalMensaje { get; set; } = false;
 
     [Parameter]
     public int id { get; set; } 
@@ -174,36 +213,60 @@
         {
             isLoading = true;
             var resultado = await CategoriaServices.UpdateCategoriaAsync(CategoriaEditada);
-            await Task.Delay(1000);
             isLoading = false;
-            RegistroExitoso = resultado;
-            MostrarModal = resultado;
+            OperacionExitosa = resultado;
+            MostrarModalMensaje = true;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al crear la categoría: {ex.Message}");
-            RegistroExitoso = false;
-            MostrarModal = true;
+            OperacionExitosa = false;
+            MostrarModalMensaje = true;
         }
         
         StateHasChanged();
     }
 
+    private void MostrarModalConfirmar()
+    {
+        MostrarModalConfirmacion = true;
+        StateHasChanged();
+    }
+
+    private async Task EliminarCategoria(int id)
+    {
+        try
+        {
+            isLoading = true;
+            var resultado = await CategoriaServices.DeleteCategoriaAsync(id);
+            isLoading = false;
+            CerrarModalConfirmacion();
+            EliminacionExitosa = resultado;
+            MostrarModalMensaje = true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al eliminar la categoría: {ex.Message}");
+            EliminacionExitosa = false;
+            MostrarModalMensaje = true;
+        }
+        StateHasChanged();
+    }
     private void SeleccionarIcono(string icono)
     {
         CategoriaEditada.Icono = icono;
         StateHasChanged();
     }
 
-    private void CerrarModal()
+    private void CerrarModalConfirmacion()
     {
-        MostrarModal = false;
+        MostrarModalConfirmacion = false;
         StateHasChanged();
     }
 
     private void CerrarModalYRegresar()
     {
-        MostrarModal = false;
+        MostrarModalMensaje = false;
         Navigation.NavigateTo("/categorias");
     }
 

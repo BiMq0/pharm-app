@@ -10,13 +10,13 @@
 
 <PageTitle>Agregar Categoría</PageTitle>
 
-<div class="container-fluid">
+<div class="container-fluid mt-3">
     <div class="row mb-4">
         <div class="col-12">
             <div class="d-flex align-items-center mb-3">
-                <div>
-                    <h1 class="fw-bold mb-1">📝 Nueva Categoría</h1>
-                    <p class="text-muted mb-0">Crea una nueva categoría para organizar tus productos</p>
+                <div class="card bg-primary p-4 text-white rounded-3 shadow w-100">
+                    <h1 class="fw-bold mb-1"><i class="bi bi-folder-fill"></i> Nueva Categoría</h1>
+                    <p class="opacity-75 mb-0">Crea una nueva categoría para organizar tus productos</p>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="col-lg-12 col-xl-12">
             <div class="card shadow border-0">
                 <div class="card-header bg-primary bg-gradient text-white">
-                    <h5 class="card-title mb-0 fw-bold">📝 Información de la Categoría</h5>
+                    <h5 class="card-title mb-0 fw-bold"><i class="bi bi-pencil-fill"></i> Información de la Categoría</h5>
                 </div>
                 <div class="card-body p-4">
                     <EditForm Model="@CategoriaNueva" OnValidSubmit="AgregarCategoria" FormName="AgregarCategoriaForm">
@@ -44,7 +44,7 @@
 
                         <div class="mb-4">
                             <label for="descripcion" class="form-label fw-semibold">
-                                Descripción
+                                Descripción <span class="text-danger">*</span>
                             </label>
                             <InputText id="descripcion" 
                                            class="form-control" 
@@ -130,11 +130,11 @@
 {
     @if (RegistroExitoso)
     {
-        <ModalProducto Mensaje="Se creó la categoría exitosamente" Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true/>
+        <ModalMensaje Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true/>
     }
     else
     {
-        <ModalProducto Mensaje="Error al crear la categoria" Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false/>
+        <ModalMensaje Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false/>
     }
 }
 
@@ -172,7 +172,6 @@
         {
             isLoading = true;
             var resultado = await CategoriaServices.CreateCategoriaAsync(CategoriaNueva);
-            await Task.Delay(1000);
             isLoading = false;
             RegistroExitoso = resultado;
             MostrarModal = resultado;

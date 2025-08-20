@@ -107,11 +107,11 @@
 {
     @if (RegistroExitoso)
     {
-        <ModalProducto Mensaje="Producto agregado exitosamente" Titulo="Éxito" OnAceptar="CerrarModal" Exito="true" />
+        <ModalMensaje Titulo="Éxito" OnAceptar="CerrarModal" Exito="true" />
     }
     else
     {
-        <ModalProducto Mensaje="Error al agregar producto" Titulo="Error" OnAceptar="CerrarModal" Exito="false" />
+        <ModalMensaje Titulo="Error" OnAceptar="CerrarModal" Exito="false" />
     }
 }
 

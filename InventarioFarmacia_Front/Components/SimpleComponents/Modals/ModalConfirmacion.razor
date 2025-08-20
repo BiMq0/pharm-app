@@ -1,0 +1,33 @@
+﻿
+    <div class="modal fade show" style="display: block;" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-white bg-warning">
+                    <h5 class="modal-title">¿Estás seguro?</h5>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de que deseas realizar la operación?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" @onclick="OnAceptar">
+                        Aceptar
+                    </button>
+                    <button type="button" class="btn btn-danger" @onclick="OnCancelar">
+                        Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Backdrop del modal -->
+    <div class="modal-backdrop fade show"></div>
+
+@code
+{
+
+    [Parameter]
+    public EventCallback OnAceptar { get; set; }
+
+    [Parameter]
+    public EventCallback OnCancelar { get; set; }
+}

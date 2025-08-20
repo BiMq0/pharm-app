@@ -21,14 +21,13 @@
 
 @code
 {
-    [Parameter]
-    public string Mensaje { get; set; } = string.Empty;
 
     [Parameter]
     public string Titulo { get; set; } = null!;
 
     [Parameter]
     public bool Exito { get; set; }
+    public string Mensaje => Exito ? "Operación realizada exitosamente" : "Error al realizar la operación";
 
     [Parameter]
     public EventCallback OnAceptar { get; set; }

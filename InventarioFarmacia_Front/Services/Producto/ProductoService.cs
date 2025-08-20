@@ -18,7 +18,7 @@ public class ProductoService : IProductoService
         _httpClient = httpClient;
     }
 
-    public async Task<List<ProductoInfoCardDTO>> GetProductosAsync(string filtro = "")
+    public async Task<IEnumerable<ProductoInfoCardDTO>> GetProductosAsync(string filtro = "")
     {
         string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.GetAll;
         if (!string.IsNullOrEmpty(filtro))
@@ -30,7 +30,7 @@ public class ProductoService : IProductoService
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
 
-            return await response.Content.ReadFromJsonAsync<List<ProductoInfoCardDTO>>() ?? new List<ProductoInfoCardDTO>();
+            return await response.Content.ReadFromJsonAsync<IEnumerable<ProductoInfoCardDTO>>() ?? Enumerable.Empty<ProductoInfoCardDTO>();
         }
         catch (Exception ex)
         {

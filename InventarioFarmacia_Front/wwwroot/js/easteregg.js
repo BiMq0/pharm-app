@@ -1,31 +1,40 @@
 export function iniciarKonami(dotnetHelper) {
   const konamiCode = [
-    "arrowup",
-    "arrowup",
-    "arrowdown",
-    "arrowdown",
-    "arrowleft",
-    "arrowright",
-    "arrowleft",
-    "arrowright",
-    "b",
-    "a",
+    "ArrowUp",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+    "ArrowLeft",
+    "ArrowRight",
+    "KeyB",
+    "KeyA",
   ];
 
   let inputSequence = [];
 
   document.addEventListener("keydown", function (e) {
-    inputSequence.push(e.key.toLowerCase());
+    inputSequence.push(e.code);
     if (inputSequence.length > konamiCode.length) {
       inputSequence.shift();
     }
-
     const currentSequence = inputSequence.join(",");
     const targetSequence = konamiCode.join(",");
-
     if (currentSequence === targetSequence) {
       inputSequence = [];
-      dotnetHelper.invokeMethodAsync("MostrarKratos");
+
+      if (
+        dotnetHelper &&
+        typeof dotnetHelper.invokeMethodAsync === "function"
+      ) {
+        dotnetHelper
+          .invokeMethodAsync("MostrarKratos")
+          .then(() => console.log("✅ MostrarKratos llamado exitosamente"))
+          .catch((err) => console.error("Error al llamar MostrarKratos:", err));
+      } else {
+        console.error("dotnetHelper no válido:", dotnetHelper);
+      }
     }
   });
 }
