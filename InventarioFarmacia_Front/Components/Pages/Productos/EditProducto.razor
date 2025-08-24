@@ -1,4 +1,5 @@
-@page "/productos/agregar"
+@page "/productos/editar/{id:int}"
+@using InventarioFarmacia_Front.Services.Products
 @using InventarioFarmacia_Shared.DTOs.Products;
 @using InventarioFarmacia_Shared.DTOs.Categorias;
 @using InventarioFarmacia_Front.Components.SimpleComponents.Modals;
@@ -8,7 +9,7 @@
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
 
-<PageTitle>Agregar Producto</PageTitle>
+<PageTitle>Editar Producto</PageTitle>
 
 <div class="container-fluid mt-3">
     <div class="row mb-4">
@@ -28,7 +29,7 @@
                     <h5 class="card-title mb-0 fw-bold"><i class="bi bi-pencil-fill"></i> Información del Producto</h5>
                 </div>
                 <div class="card-body p-4">
-                    <EditForm Model="@ProductoNuevo" OnValidSubmit="AgregarProducto" FormName="AgregarProductoForm">
+                    <EditForm Model="@ProductoEdicion" OnValidSubmit="EditarProducto" FormName="AgregarProductoForm">
                         <DataAnnotationsValidator />
 
                         <!-- Información básica -->
@@ -40,9 +41,9 @@
                                     </label>
                                     <InputText id="nombre" 
                                                class="form-control form-control-lg" 
-                                               @bind-Value="ProductoNuevo.Nombre" 
+                                               @bind-Value="ProductoEdicion.Nombre" 
                                                placeholder="Ej: Paracetamol, Ibuprofeno, etc." />
-                                    <ValidationMessage For="@(() => ProductoNuevo.Nombre)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Nombre)" class="text-danger small" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -52,9 +53,9 @@
                                     </label>
                                     <InputText id="nombreClinico" 
                                                class="form-control form-control-lg" 
-                                               @bind-Value="ProductoNuevo.Nombre_Clinico" 
+                                               @bind-Value="ProductoEdicion.Nombre_Clinico" 
                                                placeholder="Nombre científico o genérico" />
-                                    <ValidationMessage For="@(() => ProductoNuevo.Nombre_Clinico)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Nombre_Clinico)" class="text-danger small" />
                                     <div class="form-text">Nombre científico o principio activo</div>
                                 </div>
                             </div>
@@ -72,10 +73,10 @@
                                         <span class="input-group-text">Bs.</span>
                                         <InputNumber id="precio" 
                                                      class="form-control" 
-                                                     @bind-Value="ProductoNuevo.Precio_Unitario" 
+                                                     @bind-Value="ProductoEdicion.Precio_Unitario" 
                                                      placeholder="0.00" />
                                     </div>
-                                    <ValidationMessage For="@(() => ProductoNuevo.Precio_Unitario)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Precio_Unitario)" class="text-danger small" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="precio_Caja" class="form-label fw-semibold">
@@ -85,10 +86,10 @@
                                         <span class="input-group-text">Bs.</span>
                                         <InputNumber id="precio_Caja" 
                                                      class="form-control" 
-                                                     @bind-Value="ProductoNuevo.Precio_Caja" 
+                                                     @bind-Value="ProductoEdicion.Precio_Caja" 
                                                      placeholder="0.00" />
                                     </div>
-                                    <ValidationMessage For="@(() => ProductoNuevo.Precio_Caja)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Precio_Caja)" class="text-danger small" />
                                     <div class="form-text">Precio opcional para venta por caja</div>
                                 </div>
                             </div>
@@ -104,9 +105,9 @@
                                     </label>
                                     <InputNumber id="existencias_por_caja" 
                                                  class="form-control form-control-lg" 
-                                                 @bind-Value="ProductoNuevo.Existencias_Por_Caja" 
+                                                 @bind-Value="ProductoEdicion.Existencias_Por_Caja" 
                                                  placeholder="Ej: 10, 20, 50..." />
-                                    <ValidationMessage For="@(() => ProductoNuevo.Existencias_Por_Caja)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Existencias_Por_Caja)" class="text-danger small" />
                                     <div class="form-text">Cantidad de unidades que contiene una caja</div>
                                 </div>
                                 <div class="col-md-6">
@@ -117,14 +118,14 @@
                                         <div class="form-check form-switch">
                                             <InputCheckbox id="tiene_subunidades" 
                                                            class="form-check-input" 
-                                                           @bind-Value="ProductoNuevo.Tiene_Subunidades" />
+                                                           @bind-Value="ProductoEdicion.Tiene_Subunidades" />
                                             <label class="form-check-label" for="tiene_subunidades">
                                                 ¿Tiene Subunidades? <span class="text-muted">(Ej: Pastillas, Cápsulas)</span>
                                             </label>
                                         </div>
                                     </div>
                                     
-                                    @if(ProductoNuevo?.Tiene_Subunidades == true)
+                                    @if(ProductoEdicion?.Tiene_Subunidades == true)
                                     {
                                         <div class="mt-3">
                                             <label for="subunidades" class="form-label fw-semibold">
@@ -132,9 +133,9 @@
                                             </label>
                                             <InputNumber id="subunidades" 
                                                          class="form-control form-control-lg" 
-                                                         @bind-Value="ProductoNuevo.Unidades_Por_Existencia" 
-                                                         placeholder="Ej: 10 pastillas por tableta" />
-                                            @if (ProductoNuevo?.Unidades_Por_Existencia is null || ProductoNuevo.Unidades_Por_Existencia <= 0)
+                                                         @bind-Value="ProductoEdicion.Unidades_Por_Existencia" 
+                                                         placeholder="Ej: 10 pastillas por blister" />
+                                            @if (ProductoEdicion?.Unidades_Por_Existencia is null || ProductoEdicion.Unidades_Por_Existencia <= 0)
                                             {
                                                 <div class="text-danger small mt-1">Debe ingresar una cantidad válida de subunidades.</div>
                                             }
@@ -153,24 +154,26 @@
                                 Categoría del Producto <span class="text-danger">*</span>
                             </label>
                             <InputSelect id="categoria" 
-                 class="form-select form-select-lg" 
-                 @bind-Value="idCategoriaSeleccionada" 
-                 @bind-Value:after="OnCategoriaChanged">
-        <option value="-1">Seleccione una categoría</option>
-        @foreach (var categoria in categorias)
-        {
-            <option value="@categoria.Id">@categoria.Nombre</option>
-        }
-    </InputSelect>
-    @if (idCategoriaSeleccionada == -1)
-    {
-        <div class="text-danger small mt-1">Debe seleccionar una categoría.</div>
-    }
-    else
-    {
-        <div class="text-success small mt-1">✓ Categoría seleccionada: @categoriaSeleccionada</div>
-    }
+                                         class="form-select form-select-lg" 
+                                         @bind-Value="categoriaSeleccionada" 
+                                         @onchange="OnCategoriaChanged">
+                                <option value="">Seleccione una categoría</option>
+                                @foreach (var categoria in categorias)
+                                {
+                                    <option value="@categoria.Nombre">@categoria.Nombre</option>
+                                }
+                            </InputSelect>
+                            @if (string.IsNullOrEmpty(categoriaSeleccionada))
+                            {
+                                <div class="text-danger small mt-1">Debe seleccionar una categoría.</div>
+                            }
+                            else
+                            {
+                                <div class="text-success small mt-1">✓ Categoría seleccionada: @categoriaSeleccionada</div>
+                            }
                         </div>
+
+                        <!-- Imagen del producto -->
                         <div class="mb-4">
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">📸 Imagen del Producto</h6>
                             <label for="imagen" class="form-label fw-semibold">
@@ -181,16 +184,17 @@
                                        OnChange="OnImageSelected" 
                                        accept="image/*" />
                             
-                            @if (string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
+                            @if (string.IsNullOrEmpty(ProductoEdicion?.Ruta_Imagen))
                             {
                                 <div class="text-danger small mt-1">Debe seleccionar una imagen.</div>
                             }
                             
-                            @if (!string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
+                            @if (!string.IsNullOrEmpty(ProductoEdicion?.Ruta_Imagen))
                             {
-                                <div class="text-success small mt-1">✓ Archivo seleccionado: @System.IO.Path.GetFileName(ProductoNuevo.Ruta_Imagen)</div>
+                                <div class="text-success small mt-1">✓ Archivo seleccionado: @System.IO.Path.GetFileName(ProductoEdicion.Ruta_Imagen)</div>
                             }
                             
+                            <!-- Vista previa de la imagen -->
                             @if (!string.IsNullOrEmpty(imagePreviewUrl))
                             {
                                 <div class="mt-3">
@@ -258,7 +262,9 @@
 
 @code{
     [SupplyParameterFromForm]
-    private ProductoNuevoDTO ProductoNuevo { get; set; } = new();
+    private ProductoEdicionDTO ProductoEdicion { get; set; } = new();
+    [Parameter]
+    public int id { get; set; }
     private bool RegistroExitoso { get; set; } = false;
     private bool MostrarModal { get; set; } = false; 
     
@@ -271,14 +277,14 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (ProductoNuevo == null)
+        if (ProductoEdicion == null)
         {
-            ProductoNuevo = new ProductoNuevoDTO();
+            ProductoEdicion = await ProductServices.GetProductoPorIdForEditAsync(id) ?? new ();
         }
         
-        if (ProductoNuevo.Categoria == null)
+        if (ProductoEdicion.Categoria == null)
         {
-            ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
+            ProductoEdicion.Categoria = new CategoriaToNewProductoDTO();
         }
         categorias = await CategoriaService.GetCategoriasParaNuevoProductoAsync();
 
@@ -286,25 +292,16 @@
         StateHasChanged(); 
     }
 
-    private void OnCategoriaChanged()
+    private void OnCategoriaChanged(ChangeEventArgs e)
     {
-        if (idCategoriaSeleccionada > 0)
-    {
-        var categoria = categorias.FirstOrDefault(c => c.Id == idCategoriaSeleccionada) ?? new ();
-        categoriaSeleccionada = categoria.Nombre;
-        ProductoNuevo.Categoria = categoria;
-    }
-    else
-    {
-        categoriaSeleccionada = string.Empty;
-        if (ProductoNuevo?.Categoria != null)
+        categoriaSeleccionada = e.Value?.ToString() ?? string.Empty;
+
+        if (ProductoEdicion?.Categoria != null)
         {
-            ProductoNuevo.Categoria.Id = -1;
-            ProductoNuevo.Categoria.Nombre = string.Empty;
+            ProductoEdicion.Categoria.Nombre = categoriaSeleccionada;
         }
-    }
-    
-    StateHasChanged();
+        
+        StateHasChanged();
     }
 
     private async Task OnImageSelected(InputFileChangeEventArgs e)
@@ -339,8 +336,8 @@
                 using var fileStream = new FileStream(filePath, FileMode.Create);
                 await stream.CopyToAsync(fileStream);
 
-                ProductoNuevo.Ruta_Imagen = $"/uploads/productos/{fileName}";
-                imagePreviewUrl = ProductoNuevo.Ruta_Imagen;
+                ProductoEdicion.Ruta_Imagen = $"/uploads/productos/{fileName}";
+                imagePreviewUrl = ProductoEdicion.Ruta_Imagen;
 
                 StateHasChanged();
             }
@@ -351,28 +348,35 @@
         }
     }
 
-    private async Task AgregarProducto()
+    private async Task EditarProducto()
     {
         try
         {
-            if (idCategoriaSeleccionada <= 0)
-        {
-            Console.WriteLine("Error: Debe seleccionar una categoría");
-            RegistroExitoso = false;
-            MostrarModal = true;
-            return;
-        }
-            if (string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
+            if (string.IsNullOrEmpty(categoriaSeleccionada))
             {
+                Console.WriteLine("Error: Debe seleccionar una categoría");
                 RegistroExitoso = false;
                 MostrarModal = true;
-                StateHasChanged();
                 return;
             }
 
+            if (string.IsNullOrEmpty(ProductoEdicion?.Ruta_Imagen))
+            {
+                Console.WriteLine("Error: Debe seleccionar una imagen");
+                RegistroExitoso = false;
+                MostrarModal = true;
+                return;
+            }
+
+            if (ProductoEdicion?.Categoria != null)
+            {
+                ProductoEdicion.Categoria.Nombre = categoriaSeleccionada;
+            }
+
+            // Simular delay para mostrar que es async
             await Task.Delay(100);
-            var resultado = await ProductServices.CrearProducto(ProductoNuevo!);
-            RegistroExitoso = resultado;
+            var resultado = await ProductServices.EditarProducto(ProductoEdicion!);
+            RegistroExitoso = resultado; 
             MostrarModal = true;
         }
         catch (Exception ex)
@@ -409,8 +413,8 @@
 
     private void LimpiarFormulario()
     {
-        ProductoNuevo = new ProductoNuevoDTO();
-        ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
+        ProductoEdicion = new ();
+        ProductoEdicion.Categoria = new ();
         idCategoriaSeleccionada = -1;
         categoriaSeleccionada = string.Empty;
         imagePreviewUrl = string.Empty;

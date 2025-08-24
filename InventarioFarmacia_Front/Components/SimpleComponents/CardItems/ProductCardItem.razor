@@ -1,4 +1,5 @@
 ﻿@rendermode InteractiveServer
+@inject NavigationManager Navigation
 
 <div class="card shadow m-3 d-inline-block border-0 " style="width: 15rem; height: 100%;">
     <div class="card-body">
@@ -9,6 +10,22 @@
             <h6 class="card-text fw-bold text-muted">Stock: @StockTotal</h6>
             <span class="card-text">Precio: Bs. @Precio_Unitario.ToString()</span>
             <span class="card-text">Precio por caja: Bs. @Precio_Caja.ToString()</span>
+        </div>
+
+        <div class="mt-auto">
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="badge bg-success fs-6">@StockTotal productos en stock</span>
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-outline-secondary btn-sm" 
+                            title="Editar producto" @onclick="() => EditarProducto(Id)">
+                        <i class="bi bi-pencil-fill"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-secondary btn-sm" 
+                            title="Ver producto" @onclick="() => VerProducto(Id)">
+                        <i class="bi bi-eye-fill"></i>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -27,4 +44,14 @@
     public int StockTotal { get; set; }
     [Parameter]
     public string? Ruta_Imagen { get; set; }
+
+    private void EditarProducto(int id)
+    {
+        Navigation.NavigateTo($"/productos/editar/{id}");
+    }
+
+    private void VerProducto(int id)
+    {
+        Navigation.NavigateTo($"/productos/{id}");
+    }
 }

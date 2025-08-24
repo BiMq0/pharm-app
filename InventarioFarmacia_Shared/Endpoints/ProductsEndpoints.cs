@@ -8,10 +8,10 @@ namespace InventarioFarmacia_Shared.Endpoints
     public static class ProductsEndpoints
     {
         public const string Base = "/products";
-        public const string GetAll = $"/";
+        public const string GetAll = $"";
         public const string GetById = $"/{{id}}";
         public const string Create = $"/create";
-        public const string Update = $"/update";
+        public const string Update = $"/update/{{id}}";
         public const string Delete = $"/delete/{{id}}";
     }
 }

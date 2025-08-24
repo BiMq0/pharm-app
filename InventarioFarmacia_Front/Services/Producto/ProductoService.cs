@@ -39,4 +39,93 @@ public class ProductoService : IProductoService
         }
     }
 
+    public async Task<ProductoDetalladoDTO> GetProductoPorIdAsync(int id)
+    {
+        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.GetById;
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<ProductoDetalladoDTO>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener producto por ID: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<ProductoEdicionDTO> GetProductoPorIdForEditAsync(int id)
+    {
+        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.GetById;
+        url = url.Replace("{id}", id.ToString());
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<ProductoEdicionDTO>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener producto por ID: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<bool> CrearProducto(ProductoNuevoDTO producto)
+    {
+        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.Create;
+        Console.WriteLine($"URL de creación de producto: {url}");
+        try
+        {
+            var response = await _httpClient.PostAsJsonAsync(url, producto);
+            response.EnsureSuccessStatusCode();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al crear producto: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> EditarProducto(ProductoEdicionDTO producto)
+    {
+        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.Update;
+        url = url.Replace("{id}", producto.Id.ToString());
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync(url, producto);
+            response.EnsureSuccessStatusCode();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al editar producto: {ex.Message}");
+            return false;
+        }
+    }
+
+    public async Task<bool> EliminarProducto(int id)
+    {
+        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.Delete;
+        url = url.Replace("{id}", id.ToString());
+        try
+        {
+            var response = await _httpClient.DeleteAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al eliminar producto: {ex.Message}");
+            return false;
+        }
+    }
+
 }

@@ -93,9 +93,15 @@
             <div class="card-body p-4">
                 @if(categoriaAllInfoDTO.CantidadProductos > 0)
                 {
-                    <div class="row g-3">
+                    <div class="d-flex gap-3">
                         @foreach (var producto in categoriaAllInfoDTO.Productos)
                         {
+                            <div class="card shadow-sm">
+                                <div class="card-body d-flex align-items-center gap-3">
+                                    <img src="@producto.Ruta_Imagen" alt="@producto.Nombre" class="img-fluid rounded-circle" style="height: 70px;"/>
+                                    <span class="fw-semibold">@producto.Nombre</span>
+                                </div>
+                            </div>
                         }
                     </div>
                 }

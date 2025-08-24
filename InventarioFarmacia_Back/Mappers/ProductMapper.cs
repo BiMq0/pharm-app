@@ -32,6 +32,21 @@ namespace InventarioFarmacia_Back.Mappers
                     ? Results.Created($"/api/products/{productoDto.Nombre}", productoDto)
                     : Results.BadRequest();
             });
+
+            productos.MapPut(ProductsEndpoints.Update, async (ProductoEdicionDTO productoDto, IProductoService _productoService) =>
+            {
+                var updated = await _productoService.ActualizarProductoAsync(productoDto);
+                return updated
+                    ? Results.NoContent()
+                    : Results.NotFound();
+            });
+            productos.MapDelete(ProductsEndpoints.Delete, async (int id, IProductoService _productoService) =>
+            {
+                var deleted = await _productoService.EliminarProductoAsync(id);
+                return deleted
+                    ? Results.NoContent()
+                    : Results.NotFound();
+            });
         }
     }
 }

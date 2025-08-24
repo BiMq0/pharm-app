@@ -8,9 +8,10 @@ public class ProductoService : IProductoService
     private readonly IProductoRepository _productoRepository;
     private readonly ICategoriaRepository _categoriaRepository;
 
-    public ProductoService(IProductoRepository productoRepository)
+    public ProductoService(IProductoRepository productoRepository, ICategoriaRepository categoriaRepository)
     {
         _productoRepository = productoRepository;
+        _categoriaRepository = categoriaRepository;
     }
 
     public async Task<IEnumerable<ProductoInfoCardDTO>> ObtenerProductosAsync(string filtro = "")
@@ -49,5 +50,31 @@ public class ProductoService : IProductoService
         };
 
         return await _productoRepository.AddAsync(producto);
+    }
+
+    public async Task<bool> ActualizarProductoAsync(ProductoEdicionDTO productoEdicionDTO)
+    {
+        var productoExistente = await _productoRepository.GetByIdAsync(productoEdicionDTO.Id);
+        if (productoExistente == null) return false;
+
+        productoExistente.Nombre = productoEdicionDTO.Nombre ?? productoExistente.Nombre;
+        productoExistente.Nombre_Clinico = productoEdicionDTO.Nombre_Clinico ?? productoExistente.Nombre_Clinico;
+        productoExistente.Ruta_Imagen = productoEdicionDTO.Ruta_Imagen ?? productoExistente.Ruta_Imagen;
+        productoExistente.Precio_Unitario = productoEdicionDTO.Precio_Unitario;
+        productoExistente.Precio_Caja = productoEdicionDTO.Precio_Caja;
+        productoExistente.Existencias_Por_Caja = productoEdicionDTO.Existencias_Por_Caja;
+        productoExistente.Tiene_Subunidades = productoEdicionDTO.Tiene_Subunidades;
+        productoExistente.Unidades_Por_Existencia = productoEdicionDTO.Unidades_Por_Existencia;
+        productoExistente.Categoria = await _categoriaRepository.GetByIdAsync(productoEdicionDTO.Categoria.Id);
+
+        return await _productoRepository.UpdateAsync(productoExistente);
+    }
+
+    public async Task<bool> EliminarProductoAsync(int id)
+    {
+        var productoExistente = await _productoRepository.GetByIdAsync(id);
+        if (productoExistente == null) return false;
+
+        return await _productoRepository.DeleteAsync(productoExistente.Id);
     }
 }

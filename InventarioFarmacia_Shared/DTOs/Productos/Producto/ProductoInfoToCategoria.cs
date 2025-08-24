@@ -12,5 +12,9 @@ namespace InventarioFarmacia_Shared.DTOs.Products
             Nombre = producto.Nombre;
             Ruta_Imagen = producto.Ruta_Imagen;
         }
+        public ProductoInfoToCategoria()
+        {
+
+        }
     }
 }

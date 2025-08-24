@@ -21,6 +21,37 @@
             </div>
         </div>
     </div>
+    
+<div class="row mb-4">
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card border-0 bg-light">
+                <div class="card-body text-center">
+                    <h3 class="text-primary fw-bold">@productos.Count()</h3>
+                    <p class="text-muted mb-0">Total de Productos</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="input-group">
+                    <span class="input-group-text bg-white border-end-0">
+                        <i class="bi bi-search"></i>
+                    </span>
+                    <input type="text" class="form-control border-start-0" 
+                           placeholder="Buscar productos..." 
+                           @bind="filtroNombre" 
+                           @oninput="FiltrarProductos"/>
+            </div>
+        </div>
+        <div class="col-md-4 text-end">
+                <button class="btn btn-outline-secondary me-2" @onclick="async () => { filtroNombre = string.Empty; await FiltrarProductos(); }">
+                    <i class="bi bi-arrow-clockwise "></i> Limpiar
+                </button>
+            </div>
+    </div>
+
+
     <div class="row">
         <div class="col-12">
             <div class="d-flex flex-wrap justify-content-center gap-3 p-3">
@@ -40,6 +71,7 @@
 
 @code {
     private bool isLoading = true;
+    private string filtroNombre = string.Empty;
     protected IEnumerable<ProductoInfoCardDTO> productos = new List<ProductoInfoCardDTO>();
     protected override async Task OnInitializedAsync()
     {
@@ -47,4 +79,15 @@
         isLoading = false;
     }
 
+    private async Task FiltrarProductos()
+    {
+        if (string.IsNullOrWhiteSpace(filtroNombre))
+        {
+            productos = await ProductServices.GetProductosAsync();
+        }
+        else
+        {
+            productos = await ProductServices.GetProductosAsync(filtroNombre);
+        }
+    }
 }
