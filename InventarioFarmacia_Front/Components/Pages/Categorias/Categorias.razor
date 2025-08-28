@@ -16,15 +16,13 @@
 <div class="container-fluid mt-3">
     <div class="row mb-4">
         <div class="col-12">
-            <div class="bg-primary text-white p-4 rounded-3 shadow">
-                <h1 class="fw-bold mb-2"><i class="bi bi-folder-fill"></i> Categorías</h1>
+            <div class="bg-primary text-white p-4 rounded-3 shadow d-flex">
+                <div class="col-md-6">
+                    <h1 class="fw-bold mb-2"><i class="bi bi-folder-fill"></i> Categorías</h1>
                 <p class="mb-0 opacity-75">Organiza y administra las categorías de productos de tu farmacia</p>
-            </div>
-        </div>
-    </div>
-
-    <div class="row mb-4">
-        <div class="col-md-3 col-sm-6 mb-3">
+                </div>
+                <div class="col-md-6 d-flex align-items-center justify-content-end gap-4">
+                    <div class="col-md-3 col-sm-6">
             <div class="card border-0 bg-light">
                 <div class="card-body text-center">
                     <h3 class="text-primary fw-bold">@categorias.Count()</h3>
@@ -32,11 +30,14 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-3 col-sm-6 mb-3">
+        <div class="col-md-3 col-sm-6 ">
             <div class="card border-0 bg-light">
                 <div class="card-body text-center">
                     <h3 class="text-success fw-bold">@categorias.Sum(c => c.CantidadProductos)</h3>
-                    <p class="text-muted mb-0">Productos Clasificados</p>
+                    <p class="text-muted mb-0">@(categorias.Sum(c => c.CantidadProductos) != 1 ? "Productos Clasificados" : "Producto Clasificado")</p>
+                </div>
+            </div>
+        </div>
                 </div>
             </div>
         </div>

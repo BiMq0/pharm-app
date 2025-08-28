@@ -16,7 +16,7 @@
         <div class="col-12">
             <div class="d-flex align-items-center mb-3">
                 <div class="card bg-primary p-4 text-white rounded-3 shadow w-100">
-                    <h1 class="fw-bold mb-1"><i class="bi bi-box-fill"></i> Nuevo Producto</h1>
+                    <h1 class="fw-bold mb-1"><i class="bi bi-box-fill"></i>Editar Producto</h1>
                     <p class="opacity-75 mb-0">Agrega un nuevo producto al inventario de la farmacia</p>
                 </div>
             </div>
@@ -277,10 +277,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        if (ProductoEdicion == null)
-        {
-            ProductoEdicion = await ProductServices.GetProductoPorIdForEditAsync(id) ?? new ();
-        }
+        ProductoEdicion = await ProductServices.GetProductoPorIdForEditAsync(id) ;
+
         
         if (ProductoEdicion.Categoria == null)
         {

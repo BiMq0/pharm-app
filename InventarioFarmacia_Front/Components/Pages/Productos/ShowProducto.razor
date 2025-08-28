@@ -1,0 +1,14 @@
+﻿@page "/productos/show/{id:int}"
+@using InventarioFarmacia_Shared.DTOs.Products
+@inject Services.Products.IProductoService ProductServices
+
+
+
+@code {
+    private ProductoDetalladoDTO Producto { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Producto = await ProductServices.GetProductoPorIdAsync(1);
+    }
+}

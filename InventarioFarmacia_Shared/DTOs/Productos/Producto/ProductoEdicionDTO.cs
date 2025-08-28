@@ -7,8 +7,8 @@ using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Categorias;
+using InventarioFarmacia_Shared.DTOs.Products;
 
 namespace InventarioFarmacia_Shared.DTOs.Products
 {
@@ -43,17 +43,18 @@ namespace InventarioFarmacia_Shared.DTOs.Products
         public int Total_Existencias_Por_Caja => Tiene_Subunidades ? Existencias_Por_Caja * (Unidades_Por_Existencia ?? 1) : Existencias_Por_Caja;
         public CategoriaToNewProductoDTO Categoria { get; set; }
 
-        public ProductoEdicionDTO(string nombre, string nombre_Clinico, string ruta_Imagen, decimal precio_Unitario, decimal precio_Caja, int existencias_Por_Caja, bool tiene_Subunidades, int? unidades_Por_Existencia, Categoria categoria)
+        public ProductoEdicionDTO(ProductoDetalladoDTO producto)
         {
-            Nombre = nombre;
-            Nombre_Clinico = nombre_Clinico;
-            Ruta_Imagen = ruta_Imagen;
-            Precio_Unitario = precio_Unitario;
-            Precio_Caja = precio_Caja;
-            Existencias_Por_Caja = existencias_Por_Caja;
-            Tiene_Subunidades = tiene_Subunidades;
-            Unidades_Por_Existencia = unidades_Por_Existencia;
-            Categoria = new CategoriaToNewProductoDTO(categoria);
+            Id = producto.Id;
+            Nombre = producto.Nombre!;
+            Nombre_Clinico = producto.Nombre_Clinico!;
+            Ruta_Imagen = producto.Ruta_Imagen!;
+            Precio_Unitario = producto.Precio_Unitario;
+            Precio_Caja = producto.Precio_Caja;
+            Existencias_Por_Caja = producto.Existencias_Por_Caja;
+            Tiene_Subunidades = producto.Tiene_Subunidades;
+            Unidades_Por_Existencia = producto.Unidades_Por_Existencia;
+            Categoria = new CategoriaToNewProductoDTO(producto.Categoria);
         }
 
         public ProductoEdicionDTO()

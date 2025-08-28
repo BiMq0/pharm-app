@@ -58,20 +58,8 @@ public class ProductoService : IProductoService
 
     public async Task<ProductoEdicionDTO> GetProductoPorIdForEditAsync(int id)
     {
-        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.GetById;
-        url = url.Replace("{id}", id.ToString());
-        try
-        {
-            var response = await _httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
-
-            return await response.Content.ReadFromJsonAsync<ProductoEdicionDTO>();
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error al obtener producto por ID: {ex.Message}");
-            return null;
-        }
+        var response = await GetProductoPorIdAsync(id);
+        return new ProductoEdicionDTO(response);
     }
 
     public async Task<bool> CrearProducto(ProductoNuevoDTO producto)
