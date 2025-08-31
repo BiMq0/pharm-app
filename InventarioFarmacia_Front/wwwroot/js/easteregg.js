@@ -13,9 +13,10 @@ export function iniciarKonami(dotnetHelper) {
   ];
 
   let inputSequence = [];
-
+  console.log("Konami code listener initialized");
   document.addEventListener("keydown", function (e) {
     inputSequence.push(e.code);
+    console.log("Tecla presionada:", e.code);
     if (inputSequence.length > konamiCode.length) {
       inputSequence.shift();
     }

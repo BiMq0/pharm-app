@@ -5,10 +5,9 @@
 
 
 @code {
-    private ProductoDetalladoDTO Producto { get; set; } = new();
-
+    private ProductoDetalladoDTO? Producto { get; set; }
     protected override async Task OnInitializedAsync()
     {
-        Producto = await ProductServices.GetProductoPorIdAsync(1);
+        Producto = await ProductServices.GetProductoPorIdAsync(4);
     }
 }

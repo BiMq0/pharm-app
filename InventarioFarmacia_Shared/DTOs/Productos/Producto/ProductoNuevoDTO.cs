@@ -57,6 +57,7 @@ namespace InventarioFarmacia_Shared.DTOs.Products
 
         public ProductoNuevoDTO()
         {
+            Categoria = new CategoriaToNewProductoDTO();
         }
     }
 }

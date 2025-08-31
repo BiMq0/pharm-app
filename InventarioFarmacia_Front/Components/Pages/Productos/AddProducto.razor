@@ -31,17 +31,15 @@
                     <EditForm Model="@ProductoNuevo" OnValidSubmit="AgregarProducto" FormName="AgregarProductoForm">
                         <DataAnnotationsValidator />
 
-                        <!-- Información básica -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <label for="nombre" class="form-label fw-semibold">
                                         Nombre del Producto <span class="text-danger">*</span>
                                     </label>
-                                    <InputText id="nombre" 
-                                               class="form-control form-control-lg" 
-                                               @bind-Value="ProductoNuevo.Nombre" 
-                                               placeholder="Ej: Paracetamol, Ibuprofeno, etc." />
+                                    <InputText id="nombre" class="form-control form-control-lg"
+                                        @bind-Value="ProductoNuevo.Nombre"
+                                        placeholder="Ej: Paracetamol, Ibuprofeno, etc." />
                                     <ValidationMessage For="@(() => ProductoNuevo.Nombre)" class="text-danger small" />
                                 </div>
                             </div>
@@ -50,19 +48,19 @@
                                     <label for="nombreClinico" class="form-label fw-semibold">
                                         Nombre Clínico <span class="text-danger">*</span>
                                     </label>
-                                    <InputText id="nombreClinico" 
-                                               class="form-control form-control-lg" 
-                                               @bind-Value="ProductoNuevo.Nombre_Clinico" 
-                                               placeholder="Nombre científico o genérico" />
-                                    <ValidationMessage For="@(() => ProductoNuevo.Nombre_Clinico)" class="text-danger small" />
+                                    <InputText id="nombreClinico" class="form-control form-control-lg"
+                                        @bind-Value="ProductoNuevo.Nombre_Clinico"
+                                        placeholder="Nombre científico o genérico" />
+                                    <ValidationMessage For="@(() => ProductoNuevo.Nombre_Clinico)"
+                                        class="text-danger small" />
                                     <div class="form-text">Nombre científico o principio activo</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Precios -->
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">💰 Información de Precios</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i
+                                    class="bi bi-currency-dollar"></i> Información de Precios</h6>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="precio" class="form-label fw-semibold">
@@ -70,12 +68,11 @@
                                     </label>
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text">Bs.</span>
-                                        <InputNumber id="precio" 
-                                                     class="form-control" 
-                                                     @bind-Value="ProductoNuevo.Precio_Unitario" 
-                                                     placeholder="0.00" />
+                                        <InputNumber id="precio" class="form-control"
+                                            @bind-Value="ProductoNuevo.Precio_Unitario" placeholder="0.00" />
                                     </div>
-                                    <ValidationMessage For="@(() => ProductoNuevo.Precio_Unitario)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoNuevo.Precio_Unitario)"
+                                        class="text-danger small" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="precio_Caja" class="form-label fw-semibold">
@@ -83,30 +80,29 @@
                                     </label>
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text">Bs.</span>
-                                        <InputNumber id="precio_Caja" 
-                                                     class="form-control" 
-                                                     @bind-Value="ProductoNuevo.Precio_Caja" 
-                                                     placeholder="0.00" />
+                                        <InputNumber id="precio_Caja" class="form-control"
+                                            @bind-Value="ProductoNuevo.Precio_Caja" placeholder="0.00" />
                                     </div>
-                                    <ValidationMessage For="@(() => ProductoNuevo.Precio_Caja)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoNuevo.Precio_Caja)"
+                                        class="text-danger small" />
                                     <div class="form-text">Precio opcional para venta por caja</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Información de inventario -->
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">📦 Información de Inventario</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-box-fill"></i>
+                                Información de Inventario</h6>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="existencias_por_caja" class="form-label fw-semibold">
                                         Existencias por Caja
                                     </label>
-                                    <InputNumber id="existencias_por_caja" 
-                                                 class="form-control form-control-lg" 
-                                                 @bind-Value="ProductoNuevo.Existencias_Por_Caja" 
-                                                 placeholder="Ej: 10, 20, 50..." />
-                                    <ValidationMessage For="@(() => ProductoNuevo.Existencias_Por_Caja)" class="text-danger small" />
+                                    <InputNumber id="existencias_por_caja" class="form-control form-control-lg"
+                                        @bind-Value="ProductoNuevo.Existencias_Por_Caja"
+                                        placeholder="Ej: 10, 20, 50..." />
+                                    <ValidationMessage For="@(() => ProductoNuevo.Existencias_Por_Caja)"
+                                        class="text-danger small" />
                                     <div class="form-text">Cantidad de unidades que contiene una caja</div>
                                 </div>
                                 <div class="col-md-6">
@@ -115,28 +111,29 @@
                                             Configuración de Subunidades
                                         </label>
                                         <div class="form-check form-switch">
-                                            <InputCheckbox id="tiene_subunidades" 
-                                                           class="form-check-input" 
-                                                           @bind-Value="ProductoNuevo.Tiene_Subunidades" />
+                                            <InputCheckbox id="tiene_subunidades" class="form-check-input"
+                                                @bind-Value="ProductoNuevo.Tiene_Subunidades" />
                                             <label class="form-check-label" for="tiene_subunidades">
-                                                ¿Tiene Subunidades? <span class="text-muted">(Ej: Pastillas, Cápsulas)</span>
+                                                ¿Tiene Subunidades? <span class="text-muted">(Ej: Pastillas,
+                                                    Cápsulas)</span>
                                             </label>
                                         </div>
                                     </div>
-                                    
-                                    @if(ProductoNuevo?.Tiene_Subunidades == true)
+
+                                    @if (ProductoNuevo?.Tiene_Subunidades == true)
                                     {
                                         <div class="mt-3">
                                             <label for="subunidades" class="form-label fw-semibold">
                                                 Unidades por Existencia <span class="text-danger">*</span>
                                             </label>
-                                            <InputNumber id="subunidades" 
-                                                         class="form-control form-control-lg" 
-                                                         @bind-Value="ProductoNuevo.Unidades_Por_Existencia" 
-                                                         placeholder="Ej: 10 pastillas por tableta" />
-                                            @if (ProductoNuevo?.Unidades_Por_Existencia is null || ProductoNuevo.Unidades_Por_Existencia <= 0)
+                                            <InputNumber id="subunidades" class="form-control form-control-lg"
+                                                @bind-Value="ProductoNuevo.Unidades_Por_Existencia"
+                                                placeholder="Ej: 10 pastillas por tableta" />
+                                            @if (ProductoNuevo?.Unidades_Por_Existencia is null ||
+                                                                                    ProductoNuevo.Unidades_Por_Existencia <= 0)
                                             {
-                                                <div class="text-danger small mt-1">Debe ingresar una cantidad válida de subunidades.</div>
+                                                <div class="text-danger small mt-1">Debe ingresar una cantidad válida de
+                                                    subunidades.</div>
                                             }
                                             <div class="form-text">Cantidad de subunidades por presentación</div>
                                         </div>
@@ -148,58 +145,57 @@
 
                         <!-- Categoría -->
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">🏷️ Categorización</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-tag-fill"></i>
+                                Categorización</h6>
                             <label for="categoria" class="form-label fw-semibold">
                                 Categoría del Producto <span class="text-danger">*</span>
                             </label>
-                            <InputSelect id="categoria" 
-                 class="form-select form-select-lg" 
-                 @bind-Value="idCategoriaSeleccionada" 
-                 @bind-Value:after="OnCategoriaChanged">
-        <option value="-1">Seleccione una categoría</option>
-        @foreach (var categoria in categorias)
-        {
-            <option value="@categoria.Id">@categoria.Nombre</option>
-        }
-    </InputSelect>
-    @if (idCategoriaSeleccionada == -1)
-    {
-        <div class="text-danger small mt-1">Debe seleccionar una categoría.</div>
-    }
-    else
-    {
-        <div class="text-success small mt-1">✓ Categoría seleccionada: @categoriaSeleccionada</div>
-    }
+                            <InputSelect id="categoria" class="form-select form-select-lg"
+                                @bind-Value="idCategoriaSeleccionada" @bind-Value:after="OnCategoriaChanged">
+                                <option value="-1">Seleccione una categoría</option>
+                                @foreach (var categoria in categorias)
+                                {
+                                    <option value="@categoria.Id">@categoria.Nombre</option>
+                                }
+                            </InputSelect>
+                            @if (idCategoriaSeleccionada == -1)
+                            {
+                                <div class="text-danger small mt-1">Debe seleccionar una categoría.</div>
+                            }
+                            else
+                            {
+                                <div class="text-success small mt-1"><i class="bi bi-check-circle-fill"></i>
+                                    Categoría seleccionada: @categoriaSeleccionada</div>
+                            }
                         </div>
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">📸 Imagen del Producto</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-camera-fill"></i>
+                                Imagen del Producto</h6>
                             <label for="imagen" class="form-label fw-semibold">
                                 Imagen del Producto <span class="text-danger">*</span>
                             </label>
-                            <InputFile id="imagen" 
-                                       class="form-control form-control-lg" 
-                                       OnChange="OnImageSelected" 
-                                       accept="image/*" />
-                            
+                            <InputFile id="imagen" class="form-control form-control-lg" OnChange="OnImageSelected"
+                                accept="image/*" />
+
                             @if (string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
                             {
                                 <div class="text-danger small mt-1">Debe seleccionar una imagen.</div>
                             }
-                            
+
                             @if (!string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
                             {
-                                <div class="text-success small mt-1">✓ Archivo seleccionado: @System.IO.Path.GetFileName(ProductoNuevo.Ruta_Imagen)</div>
+                                <div class="text-success small mt-1"><i class="bi bi-check-circle-fill"></i>
+                                    Archivo seleccionado: @System.IO.Path.GetFileName(ProductoNuevo.Ruta_Imagen)</div>
                             }
-                            
+
                             @if (!string.IsNullOrEmpty(imagePreviewUrl))
                             {
                                 <div class="mt-3">
                                     <label class="form-label fw-semibold text-muted">Vista Previa:</label>
                                     <div class="text-center p-3 border rounded bg-light">
-                                        <img src="@imagePreviewUrl" 
-                                             alt="Vista previa del producto" 
-                                             class="img-fluid rounded shadow" 
-                                             style="max-width: 250px; max-height: 250px; object-fit: cover;" />
+                                        <img src="@imagePreviewUrl" alt="Vista previa del producto"
+                                            class="img-fluid rounded shadow"
+                                            style="max-width: 250px; max-height: 250px; object-fit: cover;" />
                                     </div>
                                 </div>
                             }
@@ -216,21 +212,15 @@
                             <div class="form-text">Formatos soportados: JPG, PNG, GIF (máximo 5MB)</div>
                         </div>
 
-                        <!-- Botones de acción -->
                         <div class="d-flex gap-3 justify-content-between mt-5">
-                            <button type="button" 
-                                    class="btn btn-outline-secondary me-3" 
-                                    @onclick="RegresarAProductos">
+                            <button type="button" class="btn btn-outline-secondary me-3" @onclick="RegresarAProductos">
                                 ← Regresar
                             </button>
                             <div>
-                                <button type="button" 
-                                        class="btn btn-outline-danger px-4" 
-                                        @onclick="LimpiarFormulario">
+                                <button type="button" class="btn btn-outline-danger px-4" @onclick="LimpiarFormulario">
                                     Limpiar
                                 </button>
-                                <button type="submit" 
-                                        class="btn btn-primary px-4 fw-semibold ms-2">
+                                <button type="submit" class="btn btn-primary px-4 fw-semibold ms-2">
                                     <i class="bi bi-plus-circle"></i> Crear Producto
                                 </button>
                             </div>
@@ -244,7 +234,7 @@
 
 
 @* Modal de confirmación *@
-@if(MostrarModal)
+@if (MostrarModal)
 {
     @if (RegistroExitoso)
     {
@@ -256,12 +246,12 @@
     }
 }
 
-@code{
+@code {
     [SupplyParameterFromForm]
     private ProductoNuevoDTO ProductoNuevo { get; set; } = new();
     private bool RegistroExitoso { get; set; } = false;
-    private bool MostrarModal { get; set; } = false; 
-    
+    private bool MostrarModal { get; set; } = false;
+
     private string imagePreviewUrl = string.Empty;
     private const long MaxFileSize = 5 * 1024 * 1024;
     private IEnumerable<CategoriaToNewProductoDTO> categorias = new List<CategoriaToNewProductoDTO>();
@@ -275,7 +265,7 @@
         {
             ProductoNuevo = new ProductoNuevoDTO();
         }
-        
+
         if (ProductoNuevo.Categoria == null)
         {
             ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
@@ -283,28 +273,28 @@
         categorias = await CategoriaService.GetCategoriasParaNuevoProductoAsync();
 
         await Task.CompletedTask;
-        StateHasChanged(); 
+        StateHasChanged();
     }
 
     private void OnCategoriaChanged()
     {
         if (idCategoriaSeleccionada > 0)
-    {
-        var categoria = categorias.FirstOrDefault(c => c.Id == idCategoriaSeleccionada) ?? new ();
-        categoriaSeleccionada = categoria.Nombre;
-        ProductoNuevo.Categoria = categoria;
-    }
-    else
-    {
-        categoriaSeleccionada = string.Empty;
-        if (ProductoNuevo?.Categoria != null)
         {
-            ProductoNuevo.Categoria.Id = -1;
-            ProductoNuevo.Categoria.Nombre = string.Empty;
+            var categoria = categorias.FirstOrDefault(c => c.Id == idCategoriaSeleccionada) ?? new();
+            categoriaSeleccionada = categoria.Nombre;
+            ProductoNuevo.Categoria = categoria;
         }
-    }
-    
-    StateHasChanged();
+        else
+        {
+            categoriaSeleccionada = string.Empty;
+            if (ProductoNuevo?.Categoria != null)
+            {
+                ProductoNuevo.Categoria.Id = -1;
+                ProductoNuevo.Categoria.Nombre = string.Empty;
+            }
+        }
+
+        StateHasChanged();
     }
 
     private async Task OnImageSelected(InputFileChangeEventArgs e)
@@ -356,12 +346,12 @@
         try
         {
             if (idCategoriaSeleccionada <= 0)
-        {
-            Console.WriteLine("Error: Debe seleccionar una categoría");
-            RegistroExitoso = false;
-            MostrarModal = true;
-            return;
-        }
+            {
+                Console.WriteLine("Error: Debe seleccionar una categoría");
+                RegistroExitoso = false;
+                MostrarModal = true;
+                return;
+            }
             if (string.IsNullOrEmpty(ProductoNuevo?.Ruta_Imagen))
             {
                 RegistroExitoso = false;
@@ -381,7 +371,7 @@
             MostrarModal = true;
             Console.WriteLine($"Error: {ex.Message}");
         }
-        
+
         StateHasChanged();
     }
 

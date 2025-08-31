@@ -32,18 +32,17 @@
                     <EditForm Model="@ProductoEdicion" OnValidSubmit="EditarProducto" FormName="AgregarProductoForm">
                         <DataAnnotationsValidator />
 
-                        <!-- Información básica -->
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <label for="nombre" class="form-label fw-semibold">
                                         Nombre del Producto <span class="text-danger">*</span>
                                     </label>
-                                    <InputText id="nombre" 
-                                               class="form-control form-control-lg" 
-                                               @bind-Value="ProductoEdicion.Nombre" 
-                                               placeholder="Ej: Paracetamol, Ibuprofeno, etc." />
-                                    <ValidationMessage For="@(() => ProductoEdicion.Nombre)" class="text-danger small" />
+                                    <InputText id="nombre" class="form-control form-control-lg"
+                                        @bind-Value="ProductoEdicion.Nombre"
+                                        placeholder="Ej: Paracetamol, Ibuprofeno, etc." />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Nombre)"
+                                        class="text-danger small" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -51,19 +50,19 @@
                                     <label for="nombreClinico" class="form-label fw-semibold">
                                         Nombre Clínico <span class="text-danger">*</span>
                                     </label>
-                                    <InputText id="nombreClinico" 
-                                               class="form-control form-control-lg" 
-                                               @bind-Value="ProductoEdicion.Nombre_Clinico" 
-                                               placeholder="Nombre científico o genérico" />
-                                    <ValidationMessage For="@(() => ProductoEdicion.Nombre_Clinico)" class="text-danger small" />
+                                    <InputText id="nombreClinico" class="form-control form-control-lg"
+                                        @bind-Value="ProductoEdicion.Nombre_Clinico"
+                                        placeholder="Nombre científico o genérico" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Nombre_Clinico)"
+                                        class="text-danger small" />
                                     <div class="form-text">Nombre científico o principio activo</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Precios -->
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">💰 Información de Precios</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i
+                                    class="bi bi-currency-dollar"></i> Información de Precios</h6>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="precio" class="form-label fw-semibold">
@@ -71,12 +70,11 @@
                                     </label>
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text">Bs.</span>
-                                        <InputNumber id="precio" 
-                                                     class="form-control" 
-                                                     @bind-Value="ProductoEdicion.Precio_Unitario" 
-                                                     placeholder="0.00" />
+                                        <InputNumber id="precio" class="form-control"
+                                            @bind-Value="ProductoEdicion.Precio_Unitario" placeholder="0.00" />
                                     </div>
-                                    <ValidationMessage For="@(() => ProductoEdicion.Precio_Unitario)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Precio_Unitario)"
+                                        class="text-danger small" />
                                 </div>
                                 <div class="col-md-6">
                                     <label for="precio_Caja" class="form-label fw-semibold">
@@ -84,30 +82,29 @@
                                     </label>
                                     <div class="input-group input-group-lg">
                                         <span class="input-group-text">Bs.</span>
-                                        <InputNumber id="precio_Caja" 
-                                                     class="form-control" 
-                                                     @bind-Value="ProductoEdicion.Precio_Caja" 
-                                                     placeholder="0.00" />
+                                        <InputNumber id="precio_Caja" class="form-control"
+                                            @bind-Value="ProductoEdicion.Precio_Caja" placeholder="0.00" />
                                     </div>
-                                    <ValidationMessage For="@(() => ProductoEdicion.Precio_Caja)" class="text-danger small" />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Precio_Caja)"
+                                        class="text-danger small" />
                                     <div class="form-text">Precio opcional para venta por caja</div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Información de inventario -->
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">📦 Información de Inventario</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-box-fill"></i>
+                                Información de Inventario</h6>
                             <div class="row">
                                 <div class="col-md-6">
                                     <label for="existencias_por_caja" class="form-label fw-semibold">
                                         Existencias por Caja
                                     </label>
-                                    <InputNumber id="existencias_por_caja" 
-                                                 class="form-control form-control-lg" 
-                                                 @bind-Value="ProductoEdicion.Existencias_Por_Caja" 
-                                                 placeholder="Ej: 10, 20, 50..." />
-                                    <ValidationMessage For="@(() => ProductoEdicion.Existencias_Por_Caja)" class="text-danger small" />
+                                    <InputNumber id="existencias_por_caja" class="form-control form-control-lg"
+                                        @bind-Value="ProductoEdicion.Existencias_Por_Caja"
+                                        placeholder="Ej: 10, 20, 50..." />
+                                    <ValidationMessage For="@(() => ProductoEdicion.Existencias_Por_Caja)"
+                                        class="text-danger small" />
                                     <div class="form-text">Cantidad de unidades que contiene una caja</div>
                                 </div>
                                 <div class="col-md-6">
@@ -116,28 +113,29 @@
                                             Configuración de Subunidades
                                         </label>
                                         <div class="form-check form-switch">
-                                            <InputCheckbox id="tiene_subunidades" 
-                                                           class="form-check-input" 
-                                                           @bind-Value="ProductoEdicion.Tiene_Subunidades" />
+                                            <InputCheckbox id="tiene_subunidades" class="form-check-input"
+                                                @bind-Value="ProductoEdicion.Tiene_Subunidades" />
                                             <label class="form-check-label" for="tiene_subunidades">
-                                                ¿Tiene Subunidades? <span class="text-muted">(Ej: Pastillas, Cápsulas)</span>
+                                                ¿Tiene Subunidades? <span class="text-muted">(Ej: Pastillas,
+                                                    Cápsulas)</span>
                                             </label>
                                         </div>
                                     </div>
-                                    
-                                    @if(ProductoEdicion?.Tiene_Subunidades == true)
+
+                                    @if (ProductoEdicion?.Tiene_Subunidades == true)
                                     {
                                         <div class="mt-3">
                                             <label for="subunidades" class="form-label fw-semibold">
                                                 Unidades por Existencia <span class="text-danger">*</span>
                                             </label>
-                                            <InputNumber id="subunidades" 
-                                                         class="form-control form-control-lg" 
-                                                         @bind-Value="ProductoEdicion.Unidades_Por_Existencia" 
-                                                         placeholder="Ej: 10 pastillas por blister" />
-                                            @if (ProductoEdicion?.Unidades_Por_Existencia is null || ProductoEdicion.Unidades_Por_Existencia <= 0)
+                                            <InputNumber id="subunidades" class="form-control form-control-lg"
+                                                @bind-Value="ProductoEdicion.Unidades_Por_Existencia"
+                                                placeholder="Ej: 10 pastillas por blister" />
+                                            @if (ProductoEdicion?.Unidades_Por_Existencia is null ||
+                                                                                    ProductoEdicion.Unidades_Por_Existencia <= 0)
                                             {
-                                                <div class="text-danger small mt-1">Debe ingresar una cantidad válida de subunidades.</div>
+                                                <div class="text-danger small mt-1">Debe ingresar una cantidad válida de
+                                                    subunidades.</div>
                                             }
                                             <div class="form-text">Cantidad de subunidades por presentación</div>
                                         </div>
@@ -147,16 +145,14 @@
                         </div>
 
 
-                        <!-- Categoría -->
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">🏷️ Categorización</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-tag-fill"></i>
+                                Categorización</h6>
                             <label for="categoria" class="form-label fw-semibold">
                                 Categoría del Producto <span class="text-danger">*</span>
                             </label>
-                            <InputSelect id="categoria" 
-                                         class="form-select form-select-lg" 
-                                         @bind-Value="categoriaSeleccionada" 
-                                         @onchange="OnCategoriaChanged">
+                            <InputSelect id="categoria" class="form-select form-select-lg"
+                                @bind-Value="categoriaSeleccionada" @onchange="OnCategoriaChanged">
                                 <option value="">Seleccione una categoría</option>
                                 @foreach (var categoria in categorias)
                                 {
@@ -173,37 +169,27 @@
                             }
                         </div>
 
-                        <!-- Imagen del producto -->
                         <div class="mb-4">
-                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">📸 Imagen del Producto</h6>
+                            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">Imagen del Producto</h6>
                             <label for="imagen" class="form-label fw-semibold">
                                 Imagen del Producto <span class="text-danger">*</span>
                             </label>
-                            <InputFile id="imagen" 
-                                       class="form-control form-control-lg" 
-                                       OnChange="OnImageSelected" 
-                                       accept="image/*" />
-                            
-                            @if (string.IsNullOrEmpty(ProductoEdicion?.Ruta_Imagen))
-                            {
-                                <div class="text-danger small mt-1">Debe seleccionar una imagen.</div>
-                            }
-                            
+
                             @if (!string.IsNullOrEmpty(ProductoEdicion?.Ruta_Imagen))
                             {
-                                <div class="text-success small mt-1">✓ Archivo seleccionado: @System.IO.Path.GetFileName(ProductoEdicion.Ruta_Imagen)</div>
+                                <div class="text-success small mt-1"><i class="bi bi-file-earmark-image"></i> Archivo
+                                    seleccionado:
+                                    @System.IO.Path.GetFileName(ProductoEdicion.Ruta_Imagen)</div>
                             }
-                            
-                            <!-- Vista previa de la imagen -->
+
                             @if (!string.IsNullOrEmpty(imagePreviewUrl))
                             {
                                 <div class="mt-3">
                                     <label class="form-label fw-semibold text-muted">Vista Previa:</label>
                                     <div class="text-center p-3 border rounded bg-light">
-                                        <img src="@imagePreviewUrl" 
-                                             alt="Vista previa del producto" 
-                                             class="img-fluid rounded shadow" 
-                                             style="max-width: 250px; max-height: 250px; object-fit: cover;" />
+                                        <img src="@imagePreviewUrl" alt="Vista previa del producto"
+                                            class="img-fluid rounded shadow"
+                                            style="max-width: 250px; max-height: 250px; object-fit: cover;" />
                                     </div>
                                 </div>
                             }
@@ -220,22 +206,17 @@
                             <div class="form-text">Formatos soportados: JPG, PNG, GIF (máximo 5MB)</div>
                         </div>
 
-                        <!-- Botones de acción -->
                         <div class="d-flex gap-3 justify-content-between mt-5">
-                            <button type="button" 
-                                    class="btn btn-outline-secondary me-3" 
-                                    @onclick="RegresarAProductos">
-                                ← Regresar
+                            <button type="button" class="btn btn-outline-secondary me-3" @onclick="RegresarAProductos">
+                                <i class="bi bi-arrow-left"></i> Regresar
                             </button>
                             <div>
-                                <button type="button" 
-                                        class="btn btn-outline-danger px-4" 
-                                        @onclick="LimpiarFormulario">
-                                    Limpiar
+                                <button type="button" class="btn btn-outline-danger px-4"
+                                    @onclick="MostrarModalSolicitudConfirmacion">
+                                    <i class="bi bi-trash"></i> Eliminar Producto
                                 </button>
-                                <button type="submit" 
-                                        class="btn btn-primary px-4 fw-semibold ms-2">
-                                    <i class="bi bi-plus-circle"></i> Crear Producto
+                                <button type="submit" class="btn btn-primary px-4 fw-semibold ms-2">
+                                    <i class="bi bi-pencil-fill"></i> Actualizar Producto
                                 </button>
                             </div>
                         </div>
@@ -248,7 +229,7 @@
 
 
 @* Modal de confirmación *@
-@if(MostrarModal)
+@if (MostrarModal)
 {
     @if (RegistroExitoso)
     {
@@ -260,34 +241,32 @@
     }
 }
 
-@code{
+@if (MostrarModalConfirmacion)
+{
+    <ModalConfirmacion OnAceptar="@(() => EliminarProducto(id))" OnCancelar="CerrarModal" />
+}
+
+@code {
     [SupplyParameterFromForm]
     private ProductoEdicionDTO ProductoEdicion { get; set; } = new();
     [Parameter]
     public int id { get; set; }
-    private bool RegistroExitoso { get; set; } = false;
-    private bool MostrarModal { get; set; } = false; 
-    
     private string imagePreviewUrl = string.Empty;
-    private const long MaxFileSize = 5 * 1024 * 1024;
-    private IEnumerable<CategoriaToNewProductoDTO> categorias = new List<CategoriaToNewProductoDTO>();
-
     private string categoriaSeleccionada = string.Empty;
     private int idCategoriaSeleccionada = -1;
+    private IEnumerable<CategoriaToNewProductoDTO> categorias = new List<CategoriaToNewProductoDTO>();
 
+    private bool RegistroExitoso { get; set; } = false;
+    private bool MostrarModal { get; set; } = false;
+    private bool MostrarModalConfirmacion { get; set; } = false;
     protected override async Task OnInitializedAsync()
     {
-        ProductoEdicion = await ProductServices.GetProductoPorIdForEditAsync(id) ;
-
-        
-        if (ProductoEdicion.Categoria == null)
-        {
-            ProductoEdicion.Categoria = new CategoriaToNewProductoDTO();
-        }
+        ProductoEdicion = await ProductServices.GetProductoPorIdForEditAsync(id);
+        imagePreviewUrl = ProductoEdicion.Ruta_Imagen;
         categorias = await CategoriaService.GetCategoriasParaNuevoProductoAsync();
-
-        await Task.CompletedTask;
-        StateHasChanged(); 
+        categoriaSeleccionada = ProductoEdicion.Categoria.Nombre;
+        idCategoriaSeleccionada = ProductoEdicion.Categoria.Id;
+        StateHasChanged();
     }
 
     private void OnCategoriaChanged(ChangeEventArgs e)
@@ -298,52 +277,8 @@
         {
             ProductoEdicion.Categoria.Nombre = categoriaSeleccionada;
         }
-        
+
         StateHasChanged();
-    }
-
-    private async Task OnImageSelected(InputFileChangeEventArgs e)
-    {
-        var file = e.File;
-        if (file != null)
-        {
-            if (file.Size > MaxFileSize)
-            {
-                Console.WriteLine("El archivo es demasiado grande. Máximo 5MB.");
-                return;
-            }
-            if (!file.ContentType.StartsWith("image/"))
-            {
-                Console.WriteLine("Solo se permiten archivos de imagen.");
-                return;
-            }
-            try
-            {
-                var uploadsPath = Path.Combine(Environment.WebRootPath, "uploads", "productos");
-                if (!Directory.Exists(uploadsPath))
-                {
-                    Directory.CreateDirectory(uploadsPath);
-                }
-
-                // Generar nombre único para el archivo
-                var fileName = $"{Guid.NewGuid()}_{file.Name}";
-                var filePath = Path.Combine(uploadsPath, fileName);
-
-                // Guardar el archivo
-                using var stream = file.OpenReadStream(MaxFileSize);
-                using var fileStream = new FileStream(filePath, FileMode.Create);
-                await stream.CopyToAsync(fileStream);
-
-                ProductoEdicion.Ruta_Imagen = $"/uploads/productos/{fileName}";
-                imagePreviewUrl = ProductoEdicion.Ruta_Imagen;
-
-                StateHasChanged();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error al guardar la imagen: {ex.Message}");
-            }
-        }
     }
 
     private async Task EditarProducto()
@@ -371,10 +306,9 @@
                 ProductoEdicion.Categoria.Nombre = categoriaSeleccionada;
             }
 
-            // Simular delay para mostrar que es async
             await Task.Delay(100);
             var resultado = await ProductServices.EditarProducto(ProductoEdicion!);
-            RegistroExitoso = resultado; 
+            RegistroExitoso = resultado;
             MostrarModal = true;
         }
         catch (Exception ex)
@@ -383,13 +317,14 @@
             MostrarModal = true;
             Console.WriteLine($"Error: {ex.Message}");
         }
-        
+
         StateHasChanged();
     }
 
     private void CerrarModal()
     {
         MostrarModal = false;
+        MostrarModalConfirmacion = false;
         StateHasChanged();
     }
 
@@ -398,7 +333,6 @@
         MostrarModal = false;
         if (RegistroExitoso)
         {
-            LimpiarFormulario();
             Navigation.NavigateTo("/productos");
         }
         StateHasChanged();
@@ -408,14 +342,13 @@
     {
         Navigation.NavigateTo("/productos");
     }
-
-    private void LimpiarFormulario()
+    private void MostrarModalSolicitudConfirmacion()
     {
-        ProductoEdicion = new ();
-        ProductoEdicion.Categoria = new ();
-        idCategoriaSeleccionada = -1;
-        categoriaSeleccionada = string.Empty;
-        imagePreviewUrl = string.Empty;
+        MostrarModalConfirmacion = true;
         StateHasChanged();
+    }
+    private void EliminarProducto(int id)
+    {
+        ProductServices.EliminarProducto(id);
     }
 }

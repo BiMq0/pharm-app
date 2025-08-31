@@ -19,7 +19,7 @@ namespace InventarioFarmacia_Back.Mappers
                 return Results.Ok(products);
             });
 
-            productos.MapGet(ProductsEndpoints.GetById, async (int id, IProductoService _productoService) =>
+            productos.MapGet(ProductsEndpoints.GetById, async (IProductoService _productoService, int id) =>
             {
                 var product = await _productoService.ObtenerProductoPorIdAsync(id);
                 return product is not null ? Results.Ok(product) : Results.NotFound();

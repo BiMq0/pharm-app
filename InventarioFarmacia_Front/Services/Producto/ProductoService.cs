@@ -42,12 +42,12 @@ public class ProductoService : IProductoService
     public async Task<ProductoDetalladoDTO> GetProductoPorIdAsync(int id)
     {
         string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.GetById;
+        url = url.Replace("{id}", id.ToString());
         try
         {
-            var response = await _httpClient.GetAsync(url);
-            response.EnsureSuccessStatusCode();
+            var response = await _httpClient.GetFromJsonAsync<ProductoDetalladoDTO>(url);
 
-            return await response.Content.ReadFromJsonAsync<ProductoDetalladoDTO>();
+            return response!;
         }
         catch (Exception ex)
         {
@@ -58,14 +58,13 @@ public class ProductoService : IProductoService
 
     public async Task<ProductoEdicionDTO> GetProductoPorIdForEditAsync(int id)
     {
-        var response = await GetProductoPorIdAsync(id);
-        return new ProductoEdicionDTO(response);
+        var producto = await GetProductoPorIdAsync(id);
+        return new ProductoEdicionDTO(producto);
     }
 
     public async Task<bool> CrearProducto(ProductoNuevoDTO producto)
     {
         string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.Create;
-        Console.WriteLine($"URL de creación de producto: {url}");
         try
         {
             var response = await _httpClient.PostAsJsonAsync(url, producto);

@@ -1,4 +1,6 @@
 ﻿@page "/inventarios"
+@inject IJSRuntime JS;
+@rendermode InteractiveServer
 
 <div class="container-fluid p-0" style="height: 85vh !important;">
    <div class="row g-3 h-100 px-4">
@@ -45,3 +47,39 @@
        </div>
    </div>
 </div>
+
+@if (mostrarKratos)
+{
+    <div class="kratos-container">
+        <img src="https://media.tenor.com/-mgYKYQQw8YAAAAe/warter-white-god-of-war.png" class="kratos-easteregg" />
+    </div>
+}
+
+@code{
+    private bool mostrarKratos = false;
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            try
+            {
+                var dotnetRef = DotNetObjectReference.Create(this);
+                
+                var module = await JS.InvokeAsync<IJSObjectReference>("import", "./js/easteregg.js");
+                Console.WriteLine("Modulo ingresando a konami code");
+                await module.InvokeVoidAsync("iniciarKonami", dotnetRef);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error inicializando easter egg: {ex.Message}");
+            }
+        }
+    }
+
+    [JSInvokable]
+    public void MostrarKratos()
+    {
+        mostrarKratos = !mostrarKratos;
+        StateHasChanged();
+    }
+}
