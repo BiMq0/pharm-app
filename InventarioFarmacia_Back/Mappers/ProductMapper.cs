@@ -28,17 +28,13 @@ namespace InventarioFarmacia_Back.Mappers
             productos.MapPost(ProductsEndpoints.Create, async (ProductoNuevoDTO productoDto, IProductoService _productoService) =>
             {
                 var created = await _productoService.CrearProductoAsync(productoDto);
-                return created
-                    ? Results.Created($"/api/products/{productoDto.Nombre}", productoDto)
-                    : Results.BadRequest();
+                return created ? Results.Created() : Results.BadRequest();
             });
 
             productos.MapPut(ProductsEndpoints.Update, async (ProductoEdicionDTO productoDto, IProductoService _productoService) =>
             {
                 var updated = await _productoService.ActualizarProductoAsync(productoDto);
-                return updated
-                    ? Results.NoContent()
-                    : Results.NotFound();
+                return updated ? Results.NoContent() : Results.NotFound();
             });
             productos.MapDelete(ProductsEndpoints.Delete, async (int id, IProductoService _productoService) =>
             {

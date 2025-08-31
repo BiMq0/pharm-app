@@ -16,7 +16,7 @@ public class Producto
     public int? Unidades_Por_Existencia { get; set; }
     public int Total_Existencias_Por_Caja => Tiene_Subunidades ? Existencias_Por_Caja * (Unidades_Por_Existencia ?? 1) : Existencias_Por_Caja;
     public ICollection<Producto_Individual> ProductosIndividuales { get; set; } = new List<Producto_Individual>();
-    public Categoria Categoria { get; set; } = new Categoria();
+    public Categoria Categoria { get; set; } = null!;
     public ICollection<Bitacora_Producto> BitacoraProductos { get; set; } = new List<Bitacora_Producto>();
 
 

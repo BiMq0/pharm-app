@@ -16,8 +16,8 @@
         <div class="col-12">
             <div class="d-flex align-items-center mb-3">
                 <div class="card bg-primary p-4 text-white rounded-3 shadow w-100">
-                    <h1 class="fw-bold mb-1"><i class="bi bi-box-fill"></i>Editar Producto</h1>
-                    <p class="opacity-75 mb-0">Agrega un nuevo producto al inventario de la farmacia</p>
+                    <h1 class="fw-bold mb-1"><i class="bi bi-box-fill"></i> Editar Producto</h1>
+                    <p class="opacity-75 mb-0">Modifica los datos del producto en el inventario de la farmacia</p>
                 </div>
             </div>
         </div>
@@ -347,8 +347,19 @@
         MostrarModalConfirmacion = true;
         StateHasChanged();
     }
-    private void EliminarProducto(int id)
+    private async void EliminarProducto(int id)
     {
-        ProductServices.EliminarProducto(id);
+        MostrarModalConfirmacion = false;
+        var eliminacion = await ProductServices.EliminarProducto(id);
+        if (eliminacion)
+        {
+            RegistroExitoso = true;
+        }
+        else
+        {
+            RegistroExitoso = false;
+        }
+        MostrarModal = true;
+        StateHasChanged();
     }
 }

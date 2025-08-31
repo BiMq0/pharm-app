@@ -15,6 +15,9 @@ namespace InventarioFarmacia_Shared.DTOs.Products
     public class ProductoEdicionDTO
     {
         public int Id { get; set; }
+        [Required(ErrorMessage = "El ID de la categoría es obligatorio.")]
+        public int Id_Categoria { get; set; }
+
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "El nombre debe tener más de 6 caracteres y menos de 100.")]
         public string Nombre { get; set; } = string.Empty;
@@ -41,11 +44,12 @@ namespace InventarioFarmacia_Shared.DTOs.Products
         public bool Tiene_Subunidades { get; set; }
         public int? Unidades_Por_Existencia { get; set; }
         public int Total_Existencias_Por_Caja => Tiene_Subunidades ? Existencias_Por_Caja * (Unidades_Por_Existencia ?? 1) : Existencias_Por_Caja;
-        public CategoriaToNewProductoDTO Categoria { get; set; }
+        public CategoriaToNewProductoDTO? Categoria { get; set; }
 
         public ProductoEdicionDTO(ProductoDetalladoDTO producto)
         {
             Id = producto.Id;
+            Id_Categoria = producto.Id_Categoria;
             Nombre = producto.Nombre!;
             Nombre_Clinico = producto.Nombre_Clinico!;
             Ruta_Imagen = producto.Ruta_Imagen!;
@@ -59,7 +63,6 @@ namespace InventarioFarmacia_Shared.DTOs.Products
 
         public ProductoEdicionDTO()
         {
-            Categoria = new CategoriaToNewProductoDTO();
         }
     }
 }

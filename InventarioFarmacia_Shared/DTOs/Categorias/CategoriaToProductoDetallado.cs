@@ -8,10 +8,12 @@ namespace InventarioFarmacia_Shared.DTOs.Categorias
 {
     public class CategoriaToProductoDetallado
     {
+        public int Id { get; set; }
         public string Nombre { get; set; } = string.Empty;
         public string Icono { get; set; } = string.Empty;
         public CategoriaToProductoDetallado(Categoria categoria)
         {
+            Id = categoria.Id;
             Nombre = categoria.Nombre ?? string.Empty;
             Icono = categoria.Icono ?? string.Empty;
         }

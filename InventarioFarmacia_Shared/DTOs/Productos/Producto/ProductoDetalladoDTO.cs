@@ -21,13 +21,14 @@ namespace InventarioFarmacia_Shared.DTOs.Products
         public bool Tiene_Subunidades { get; set; }
         public int? Unidades_Por_Existencia { get; set; }
         public int Total_Existencias_Por_Caja { get; set; }
-        public ICollection<Producto_Individual> ProductosIndividuales { get; set; } = new List<Producto_Individual>();
-        public CategoriaToProductoDetallado Categoria { get; set; } = new();
+        public ICollection<Producto_Individual> ProductosIndividuales { get; set; }
+        public CategoriaToProductoDetallado Categoria { get; set; }
 
 
         public ProductoDetalladoDTO(Producto producto)
         {
             Id = producto.Id;
+            Id_Categoria = producto.Id_Categoria;
             Nombre = producto.Nombre;
             Nombre_Clinico = producto.Nombre_Clinico;
             Ruta_Imagen = producto.Ruta_Imagen;

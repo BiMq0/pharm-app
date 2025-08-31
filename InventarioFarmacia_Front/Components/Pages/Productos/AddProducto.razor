@@ -142,8 +142,6 @@
                             </div>
                         </div>
 
-
-                        <!-- Categoría -->
                         <div class="mb-4">
                             <h6 class="fw-bold text-primary border-bottom pb-2 mb-3"><i class="bi bi-tag-fill"></i>
                                 Categorización</h6>
@@ -265,11 +263,6 @@
         {
             ProductoNuevo = new ProductoNuevoDTO();
         }
-
-        if (ProductoNuevo.Categoria == null)
-        {
-            ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
-        }
         categorias = await CategoriaService.GetCategoriasParaNuevoProductoAsync();
 
         await Task.CompletedTask;
@@ -280,17 +273,16 @@
     {
         if (idCategoriaSeleccionada > 0)
         {
-            var categoria = categorias.FirstOrDefault(c => c.Id == idCategoriaSeleccionada) ?? new();
+            var categoria = categorias.FirstOrDefault(c => c.Id == idCategoriaSeleccionada);
             categoriaSeleccionada = categoria.Nombre;
-            ProductoNuevo.Categoria = categoria;
+            ProductoNuevo.Id_Categoria = categoria.Id;
         }
         else
         {
             categoriaSeleccionada = string.Empty;
-            if (ProductoNuevo?.Categoria != null)
+            if (ProductoNuevo?.Id_Categoria != null)
             {
-                ProductoNuevo.Categoria.Id = -1;
-                ProductoNuevo.Categoria.Nombre = string.Empty;
+                ProductoNuevo.Id_Categoria = -1;
             }
         }
 
@@ -400,7 +392,7 @@
     private void LimpiarFormulario()
     {
         ProductoNuevo = new ProductoNuevoDTO();
-        ProductoNuevo.Categoria = new CategoriaToNewProductoDTO();
+        ProductoNuevo.Id_Categoria = 0;
         idCategoriaSeleccionada = -1;
         categoriaSeleccionada = string.Empty;
         imagePreviewUrl = string.Empty;

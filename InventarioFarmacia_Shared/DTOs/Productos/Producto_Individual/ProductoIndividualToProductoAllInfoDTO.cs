@@ -7,7 +7,7 @@ using InventarioFarmacia_Domain.Models;
 
 namespace InventarioFarmacia_Shared
 {
-    public class ProductoIndividualToProductoAllInfoDTO
+    public class ProductoIndividualToProductoDetalladoDTO
     {
         public int Id { get; set; }
         public int Id_Inventario { get; set; }
@@ -15,7 +15,7 @@ namespace InventarioFarmacia_Shared
         public string? Nro_Lote { get; set; }
         public Estados_ProductosIndividuales Estado { get; set; }
 
-        public ProductoIndividualToProductoAllInfoDTO(Producto_Individual producto_Individual)
+        public ProductoIndividualToProductoDetalladoDTO(Producto_Individual producto_Individual)
         {
             Id = producto_Individual.Id;
             Id_Inventario = producto_Individual.Id_Inventario;

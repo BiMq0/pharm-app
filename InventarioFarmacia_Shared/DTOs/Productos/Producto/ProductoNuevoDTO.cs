@@ -14,6 +14,9 @@ namespace InventarioFarmacia_Shared.DTOs.Products
 {
     public class ProductoNuevoDTO
     {
+        [Required(ErrorMessage = "El ID de la categoría es obligatorio.")]
+        public int Id_Categoria { get; set; }
+
         [Required(ErrorMessage = "El nombre es obligatorio.")]
         [StringLength(100, MinimumLength = 6, ErrorMessage = "El nombre debe tener más de 6 caracteres y menos de 100.")]
         public string Nombre { get; set; } = string.Empty;
@@ -38,26 +41,11 @@ namespace InventarioFarmacia_Shared.DTOs.Products
         public int Existencias_Por_Caja { get; set; }
 
         public bool Tiene_Subunidades { get; set; }
-        public int? Unidades_Por_Existencia { get; set; }
+        public int? Unidades_Por_Existencia { get; set; } = 1;
         public int Total_Existencias_Por_Caja => Tiene_Subunidades ? Existencias_Por_Caja * (Unidades_Por_Existencia ?? 1) : Existencias_Por_Caja;
-        public CategoriaToNewProductoDTO Categoria { get; set; }
-
-        public ProductoNuevoDTO(string nombre, string nombre_Clinico, string ruta_Imagen, decimal precio_Unitario, decimal precio_Caja, int existencias_Por_Caja, bool tiene_Subunidades, int? unidades_Por_Existencia, Categoria categoria)
-        {
-            Nombre = nombre;
-            Nombre_Clinico = nombre_Clinico;
-            Ruta_Imagen = ruta_Imagen;
-            Precio_Unitario = precio_Unitario;
-            Precio_Caja = precio_Caja;
-            Existencias_Por_Caja = existencias_Por_Caja;
-            Tiene_Subunidades = tiene_Subunidades;
-            Unidades_Por_Existencia = unidades_Por_Existencia;
-            Categoria = new CategoriaToNewProductoDTO(categoria);
-        }
 
         public ProductoNuevoDTO()
         {
-            Categoria = new CategoriaToNewProductoDTO();
         }
     }
 }

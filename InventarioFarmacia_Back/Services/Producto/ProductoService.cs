@@ -6,12 +6,10 @@ namespace InventarioFarmacia_Back;
 public class ProductoService : IProductoService
 {
     private readonly IProductoRepository _productoRepository;
-    private readonly ICategoriaRepository _categoriaRepository;
 
     public ProductoService(IProductoRepository productoRepository, ICategoriaRepository categoriaRepository)
     {
         _productoRepository = productoRepository;
-        _categoriaRepository = categoriaRepository;
     }
 
     public async Task<IEnumerable<ProductoInfoCardDTO>> ObtenerProductosAsync(string filtro = "")
@@ -38,6 +36,7 @@ public class ProductoService : IProductoService
     {
         var producto = new Producto
         {
+            Id_Categoria = productoDto.Id_Categoria,
             Nombre = productoDto.Nombre,
             Nombre_Clinico = productoDto.Nombre_Clinico,
             Ruta_Imagen = productoDto.Ruta_Imagen,
@@ -46,7 +45,7 @@ public class ProductoService : IProductoService
             Existencias_Por_Caja = productoDto.Existencias_Por_Caja,
             Tiene_Subunidades = productoDto.Tiene_Subunidades,
             Unidades_Por_Existencia = productoDto.Unidades_Por_Existencia,
-            Categoria = await _categoriaRepository.GetByIdAsync(productoDto.Categoria.Id)
+            Categoria = null!
         };
 
         return await _productoRepository.AddAsync(producto);
@@ -56,7 +55,7 @@ public class ProductoService : IProductoService
     {
         var productoExistente = await _productoRepository.GetByIdAsync(productoEdicionDTO.Id);
         if (productoExistente == null) return false;
-
+        productoExistente.Id_Categoria = productoEdicionDTO.Id_Categoria;
         productoExistente.Nombre = productoEdicionDTO.Nombre ?? productoExistente.Nombre;
         productoExistente.Nombre_Clinico = productoEdicionDTO.Nombre_Clinico ?? productoExistente.Nombre_Clinico;
         productoExistente.Ruta_Imagen = productoEdicionDTO.Ruta_Imagen ?? productoExistente.Ruta_Imagen;
@@ -65,7 +64,6 @@ public class ProductoService : IProductoService
         productoExistente.Existencias_Por_Caja = productoEdicionDTO.Existencias_Por_Caja;
         productoExistente.Tiene_Subunidades = productoEdicionDTO.Tiene_Subunidades;
         productoExistente.Unidades_Por_Existencia = productoEdicionDTO.Unidades_Por_Existencia;
-        productoExistente.Categoria = await _categoriaRepository.GetByIdAsync(productoEdicionDTO.Categoria.Id);
 
         return await _productoRepository.UpdateAsync(productoExistente);
     }
