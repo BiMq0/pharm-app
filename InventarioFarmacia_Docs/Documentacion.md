@@ -146,7 +146,7 @@ El análisis de requerimientos se centra en identificar las necesidades del usua
 | **RF-07**   | **_Gestión de Compras y Ventas_**         | Transacciones     | Alta       |
 | **RF-07.1** | Registro de Compras                       | Operaciones       | Alta       |
 | **RF-07.2** | Registro de Ventas                        | Operaciones       | Alta       |
-| **RF-07.3** | Actualización Automática                  | Sistema           | Alta       |
+| **RF-07.3** | Actualización automática de precios       | Sistema           | Alta       |
 | **RF-07.4** | Historial de Transacciones                | Auditoría         | Media      |
 | **RF-07.5** | Integración Facturación                   | Futuro            | Baja       |
 | **RF-08**   | **_Reportes y Estadísticas_**             | Analítica         | Media      |
@@ -159,76 +159,9 @@ El análisis de requerimientos se centra en identificar las necesidades del usua
 | **RF-09.2** | Registro de Operaciones                   | Auditoría         | Baja       |
 | **RF-09.3** | Trazabilidad de Acciones                  | Auditoría         | Media      |
 | **RF-10**   | **_Interfaz de Usuario_**                 | UX/UI             | Alta       |
-| **RF-10.1** | Diseño Intuitivo                          | Interface         | Alta       |
-| **RF-10.2** | Navegación Simplificada                   | Interface         | Alta       |
-| **RF-10.3** | Accesibilidad                             | Interface         | Media      |
-
-### Tabla de Seguimiento de Desarrollo
-
-| ID          | Requerimiento                             | Estado      |  Fase  | Notas                                                                 |
-| :---------- | :---------------------------------------- | :---------- | :----: | --------------------------------------------------------------------- |
-| **RF-01**   | **_Gestión de Inventarios_**              | En Progreso | Fase 1 | Estructura base implementada                                          |
-| **RF-01.1** | Inventario Local                          | Pendiente   | Fase 1 | -                                                                     |
-| **RF-01.2** | Inventario Externo                        | Pendiente   | Fase 1 | -                                                                     |
-| **RF-01.3** | Transferencias entre Inventarios          | Pendiente   | Fase 1 | -                                                                     |
-| **RF-01.4** | Sincronización Automática                 | Bloqueado   | Fase 2 | Dependiente de RF-01.3                                                |
-| **RF-02**   | **_Gestión de Productos_**                | Completado  | Fase 1 | CRUD básico implementado                                              |
-| **RF-02.1** | Crear Productos                           | Completado  | Fase 1 | Funcional                                                             |
-| **RF-02.2** | Editar Productos                          | Completado  | Fase 1 | Funcional                                                             |
-| **RF-02.3** | Eliminar Productos                        | Completado  | Fase 1 | Funcional                                                             |
-| **RF-02.4** | Categorización de Productos               | Completado  | Fase 1 | Analizar eliminación en restringida o en cascada                      |
-| **RF-03**   | **_Actualización Automática de Precios_** | Pendiente   | Fase 2 | Planificado                                                           |
-| **RF-03.1** | Actualización por Compras                 | Pendiente   | Fase 2 | -                                                                     |
-| **RF-03.2** | Historial de Precios                      | Pendiente   | Fase 2 | -                                                                     |
-| **RF-04**   | **_Gestión de Productos Individuales_**   | Bloqueado   | Fase 1 | Dependiente de RF-07.1                                                |
-| **RF-04.1** | Control por Lote y Caducidad              | Pendiente   | Fase 1 | -                                                                     |
-| **RF-04.2** | Control de Ubicación                      | Pendiente   | Fase 1 | -                                                                     |
-| **RF-05**   | **_Control de Stock y Alertas_**          | Pendiente   | Fase 2 | -                                                                     |
-| **RF-05.1** | Monitoreo Continuo                        | Pendiente   | Fase 2 | -                                                                     |
-| **RF-05.2** | Alertas de Reabastecimiento               | Pendiente   | Fase 2 | Constantes a utilizar ya creadas en capa de dominio                   |
-| **RF-05.3** | Alertas de Caducidad                      | Pendiente   | Fase 2 | Rango de fecha ya establecido en backend (1 mes)                      |
-| **RF-05.4** | Metodología FIFO                          | Pendiente   | Fase 2 | -                                                                     |
-| **RF-06**   | **_Sistema de Búsqueda y Filtrado_**      | Pendiente   | Fase 2 | Baja prioridad                                                        |
-| **RF-06.1** | Filtros por Categoría                     | Completado  | Fase 2 | -                                                                     |
-| **RF-06.2** | Búsqueda por Nombre/Código                | En Progreso | Fase 2 | Implementado en categorías y productos, pendiente inventarios         |
-| **RF-06.3** | Filtros Avanzados                         | Pendiente   | Fase 3 | -                                                                     |
-| **RF-07**   | **_Gestión de Compras y Ventas_**         | En Progreso | Fase 1 | Planeada                                                              |
-| **RF-07.1** | Registro de Compras                       | En Progreso | Fase 1 | Desarrollo en curso                                                   |
-| **RF-07.2** | Registro de Ventas                        | Pendiente   | Fase 1 | -                                                                     |
-| **RF-07.3** | Actualización Automática                  | Bloqueado   | Fase 1 | Dependiente de RF-07.1                                                |
-| **RF-07.4** | Historial de Transacciones                | Pendiente   | Fase 2 | Dependiente de RF-07.2                                                |
-| **RF-07.5** | Integración Facturación                   | Pendiente   | Futuro | No prioritario                                                        |
-| **RF-08**   | **_Reportes y Estadísticas_**             | Pendiente   | Fase 3 | Baja prioridad                                                        |
-| **RF-08.1** | Bitácora de Productos                     | Pendiente   | Fase 3 | -                                                                     |
-| **RF-08.2** | Bitácora de Inventarios                   | Pendiente   | Fase 3 | -                                                                     |
-| **RF-08.3** | Informes Automáticos                      | Pendiente   | Fase 3 | -                                                                     |
-| **RF-08.4** | Estadísticas de Ventas                    | Pendiente   | Fase 3 | -                                                                     |
-| **RF-09**   | **_Gestión de Usuarios y Seguridad_**     | Pendiente   | Fase 3 | No tan urgente al ser un negocio familiar (solicitado por el cliente) |
-| **RF-09.1** | Perfiles de Usuario                       | Pendiente   | Fase 3 | -                                                                     |
-| **RF-09.2** | Registro de Operaciones                   | Pendiente   | Fase 3 | -                                                                     |
-| **RF-09.3** | Trazabilidad de Acciones                  | Pendiente   | Fase 3 | -                                                                     |
-| **RF-10**   | **_Interfaz de Usuario_**                 | En Progreso | Fase 1 | Mejoras iterativas                                                    |
-| **RF-10.1** | Diseño Intuitivo                          | En Progreso | Fase 1 | En desarrollo                                                         |
-| **RF-10.2** | Navegación Simplificada                   | En Progreso | Fase 1 | En desarrollo                                                         |
-| **RF-10.3** | Accesibilidad                             | Pendiente   | Fase 3 | -                                                                     |
-
-### Leyenda de Estados
-
-- **Completado**: Funcionalidad desarrollada, implementada y probada
-- **En Progreso**: Actualmente en desarrollo
-- **Pendiente**: Planificado pero no iniciado
-- **Bloqueado**: Impedimento o dependencia no resuelta
-- **En Revisión**: Completado, pendiente de validación
-
-### Resumen por Fases
-
-| Fase       | Requerimientos | Completados | En Progreso | Pendientes | Bloqueados | % Avance |
-| :--------- | :------------- | :---------: | :---------: | :--------: | :--------: | :------: |
-| **Fase 1** | 14             |      4      |      3      |     6      |     1      | **~30%** |
-| **Fase 2** | 10             |      1      |      1      |     7      |     1      | **10%**  |
-| **Fase 3** | 9              |      0      |      0      |     9      |     0      |  **0%**  |
-| **Futuro** | 1              |      0      |      0      |     1      |     0      |  **0%**  |
-| **Total**  | **34**         |    **5**    |    **4**    |   **23**   |   **2**    | **~40%** |
+| **RF-10.1** | Diseño Intuitivo                          | Interfaz          | Alta       |
+| **RF-10.2** | Navegación Simplificada                   | Interfaz          | Alta       |
+| **RF-10.3** | Accesibilidad                             | Interfaz          | Media      |
 
 ## Stack Tecnológico
 
@@ -337,6 +270,31 @@ Para el desarrollo del sistema de gestión de inventario, se han seleccionado cu
 Usuario → Blazor UI → API .NET → Lógica de Negocio → Acceso a datos → SQLite
 ```
 
+### Diagrama de flujo de datos y comunicación
+
+![Diagrama de flujo de datos y comunicación](./Diagramas/DiagramaFlujoDatos.png)
+
+### Modelo de Base de Datos
+
+> **Diseño de Entidades:** El sistema utiliza SQLite como motor de base de datos con Entity Framework Core para el mapeo objeto-relacional.
+
+![Modelo de Base de Datos en SQLite](./Diagramas/DiagramaER.drawio.png)
+
+#### Entidades principales de modelo
+
+1. **Usuarios:** Representa a un usuario del sistema, con información personal y de acceso, vital para la trazabilidad en bitácoras.
+2. **Categorias:** Representa la clasificación de los productos en el sistema, facilitando la organización y búsqueda.
+3. **Productos:** Representa un producto en el sistema, con detalles relevantes para la gestión de stock y ventas.
+4. **Productos Individuales:** Representa una existencia de un producto específico, con información detallada sobre su estado, ubicación y fecha de vencimiento.
+5. **Lotes:** Representa un grupo de productos individuales que comparten un mismo lote de fabricación.
+6. **Inventarios:** Local o Externo, representa la locación de los productos individuales.
+7. **Ventas:** Representa todas las salidas por venta de los productos, con detalles relevantes como el usuario que realizó la venta y la fecha de la transacción.
+8. **Detalle de Ventas:** Representa los productos específicos incluidos en una venta, con información sobre cantidades y precios.
+9. **Compras:** Representa un pedido realizado por un usuario, incluyendo información sobre los productos solicitados y su estado.
+10. **Detalle de Compras:** Representa los productos específicos incluidos en una compra, con información sobre cantidades y precios.
+11. **Bitacora Inventario:** Registra los movimientos y cambios en el inventario, incluyendo entradas y salidas de productos.
+12. **Bitacora Productos:** Registra cambios en la información de los productos, como actualizaciones de precios o descripciones.
+
 ## Metodología de Desarrollo
 
 El proyecto sigue una metodología ágil con las siguientes características:
@@ -358,6 +316,73 @@ El proyecto sigue una metodología ágil con las siguientes características:
 4. **Distribución** → Instalador listo para cliente final
 5. **Instalación** → Cliente instala el paquete como aplicación nativa
 6. **Ejecución** → Se inicia el backend, se le proporciona un tiempo de carga y se abre el frontend en el navegador
+
+## Tabla de Seguimiento de Desarrollo
+
+| ID          | Requerimiento                             | Estado      |  Fase  | Notas                                                                 |
+| :---------- | :---------------------------------------- | :---------- | :----: | --------------------------------------------------------------------- |
+| **RF-01**   | **_Gestión de Inventarios_**              | En Progreso | Fase 1 | Estructura base implementada                                          |
+| **RF-01.1** | Inventario Local                          | Pendiente   | Fase 1 | -                                                                     |
+| **RF-01.2** | Inventario Externo                        | Pendiente   | Fase 1 | -                                                                     |
+| **RF-01.3** | Transferencias entre Inventarios          | Pendiente   | Fase 1 | -                                                                     |
+| **RF-01.4** | Sincronización Automática                 | Bloqueado   | Fase 2 | Dependiente de RF-01.3                                                |
+| **RF-02**   | **_Gestión de Productos_**                | Completado  | Fase 1 | CRUD básico implementado                                              |
+| **RF-02.1** | Crear Productos                           | Completado  | Fase 1 | Funcional                                                             |
+| **RF-02.2** | Editar Productos                          | Completado  | Fase 1 | Funcional                                                             |
+| **RF-02.3** | Eliminar Productos                        | Completado  | Fase 1 | Funcional                                                             |
+| **RF-02.4** | Categorización de Productos               | Completado  | Fase 1 | Analizar eliminación en restringida o en cascada                      |
+| **RF-03**   | **_Actualización Automática de Precios_** | Pendiente   | Fase 2 | Planificado                                                           |
+| **RF-03.1** | Actualización por Compras                 | Pendiente   | Fase 2 | -                                                                     |
+| **RF-03.2** | Historial de Precios                      | Pendiente   | Fase 2 | -                                                                     |
+| **RF-04**   | **_Gestión de Productos Individuales_**   | Bloqueado   | Fase 1 | Dependiente de RF-07.1                                                |
+| **RF-04.1** | Control por Lote y Caducidad              | Pendiente   | Fase 1 | -                                                                     |
+| **RF-04.2** | Control de Ubicación                      | Pendiente   | Fase 1 | -                                                                     |
+| **RF-05**   | **_Control de Stock y Alertas_**          | Pendiente   | Fase 2 | -                                                                     |
+| **RF-05.1** | Monitoreo Continuo                        | Pendiente   | Fase 2 | -                                                                     |
+| **RF-05.2** | Alertas de Reabastecimiento               | Pendiente   | Fase 2 | Constantes a utilizar ya creadas en capa de dominio                   |
+| **RF-05.3** | Alertas de Caducidad                      | Pendiente   | Fase 2 | Rango de fecha ya establecido en backend (1 mes)                      |
+| **RF-05.4** | Metodología FIFO                          | Pendiente   | Fase 2 | -                                                                     |
+| **RF-06**   | **_Sistema de Búsqueda y Filtrado_**      | Pendiente   | Fase 2 | Baja prioridad                                                        |
+| **RF-06.1** | Filtros por Categoría                     | Completado  | Fase 2 | -                                                                     |
+| **RF-06.2** | Búsqueda por Nombre/Código                | En Progreso | Fase 2 | Implementado en categorías y productos, pendiente inventarios         |
+| **RF-06.3** | Filtros Avanzados                         | Pendiente   | Fase 3 | -                                                                     |
+| **RF-07**   | **_Gestión de Compras y Ventas_**         | En Progreso | Fase 1 | Planeada                                                              |
+| **RF-07.1** | Registro de Compras                       | En Progreso | Fase 1 | Desarrollo en curso                                                   |
+| **RF-07.2** | Registro de Ventas                        | Pendiente   | Fase 1 | -                                                                     |
+| **RF-07.3** | Actualización Automática                  | Bloqueado   | Fase 1 | Dependiente de RF-07.1                                                |
+| **RF-07.4** | Historial de Transacciones                | Pendiente   | Fase 2 | Dependiente de RF-07.2                                                |
+| **RF-07.5** | Integración Facturación                   | Pendiente   | Futuro | No prioritario                                                        |
+| **RF-08**   | **_Reportes y Estadísticas_**             | Pendiente   | Fase 3 | Baja prioridad                                                        |
+| **RF-08.1** | Bitácora de Productos                     | Pendiente   | Fase 3 | -                                                                     |
+| **RF-08.2** | Bitácora de Inventarios                   | Pendiente   | Fase 3 | -                                                                     |
+| **RF-08.3** | Informes Automáticos                      | Pendiente   | Fase 3 | -                                                                     |
+| **RF-08.4** | Estadísticas de Ventas                    | Pendiente   | Fase 3 | -                                                                     |
+| **RF-09**   | **_Gestión de Usuarios y Seguridad_**     | Pendiente   | Fase 3 | No tan urgente al ser un negocio familiar (solicitado por el cliente) |
+| **RF-09.1** | Perfiles de Usuario                       | Pendiente   | Fase 3 | -                                                                     |
+| **RF-09.2** | Registro de Operaciones                   | Pendiente   | Fase 3 | -                                                                     |
+| **RF-09.3** | Trazabilidad de Acciones                  | Pendiente   | Fase 3 | -                                                                     |
+| **RF-10**   | **_Interfaz de Usuario_**                 | En Progreso | Fase 1 | Mejoras iterativas                                                    |
+| **RF-10.1** | Diseño Intuitivo                          | En Progreso | Fase 1 | En desarrollo                                                         |
+| **RF-10.2** | Navegación Simplificada                   | En Progreso | Fase 1 | En desarrollo                                                         |
+| **RF-10.3** | Accesibilidad                             | Pendiente   | Fase 3 | -                                                                     |
+
+### Leyenda de Estados
+
+- **Completado**: Funcionalidad desarrollada, implementada y probada
+- **En Progreso**: Actualmente en desarrollo
+- **Pendiente**: Planificado pero no iniciado
+- **Bloqueado**: Impedimento o dependencia no resuelta
+- **En Revisión**: Completado, pendiente de validación
+
+### Resumen por Fases
+
+| Fase       | Requerimientos | Completados | En Progreso | Pendientes | Bloqueados | % Avance |
+| :--------- | :------------- | :---------: | :---------: | :--------: | :--------: | :------: |
+| **Fase 1** | 14             |      4      |      3      |     6      |     1      | **~30%** |
+| **Fase 2** | 10             |      1      |      1      |     7      |     1      | **10%**  |
+| **Fase 3** | 9              |      0      |      0      |     9      |     0      |  **0%**  |
+| **Futuro** | 1              |      0      |      0      |     1      |     0      |  **0%**  |
+| **Total**  | **34**         |    **5**    |    **4**    |   **23**   |   **2**    | **~40%** |
 
 **Fecha de última actualización:** 31 de Agosto de 2025  
 **Versión del documento:** 0.4  
