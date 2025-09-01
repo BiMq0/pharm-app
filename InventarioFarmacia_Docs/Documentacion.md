@@ -50,7 +50,7 @@ El análisis de requerimientos se centra en identificar las necesidades del usua
 
 **Sistema inteligente de gestión de precios:**
 
-- **RF-03.1 Actualización por Compras**: Realizar actualización automática de precios al realizar compras de productos
+- **RF-03.1 Actualización por Compras**: Realizar actualización automática de precios al realizar compras de productos aplicando una media ponderada
 - **RF-03.2 Historial de Precios**: Contar con un historial de cambios de precios realizados en cada producto
 
 #### RF-04. Gestión de Productos Individuales
