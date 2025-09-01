@@ -16,7 +16,7 @@
 <div class="container-fluid mt-3">
     <div class="row mb-4">
         <div class="col-12">
-            <div class="bg-primary text-white p-4 rounded-3 shadow d-flex">
+            <div class="bg-primary text-white p-4 rounded-3 shadow d-flex align-items-center">
                 <div class="col-md-6">
                     <h1 class="fw-bold mb-2"><i class="bi bi-folder-fill"></i> Categorías</h1>
                 <p class="mb-0 opacity-75">Organiza y administra las categorías de productos de tu farmacia</p>
@@ -88,17 +88,18 @@
     private string filtroNombre = string.Empty;
     private bool isLoading = true;
     private bool hasRendered = false;
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+    protected override async Task OnInitializedAsync()
+{
+    isLoading = true;
+    try
     {
-        if (firstRender && !hasRendered)
-        {
-            isLoading = true;
-            hasRendered = true;
-            await CargarCategorias();
-            isLoading = false;
-            StateHasChanged();
-        }
+        await CargarCategorias();
     }
+    finally
+    {
+        isLoading = false;
+    }
+}
     private async Task CargarCategorias()
     {
         try

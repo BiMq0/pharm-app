@@ -3,60 +3,209 @@
 @inject Services.Products.IProductoService ProductServices
 
 <div class="container-fluid mt-3">
+
     <div class="row mb-4">
-        <div class="card p-0">
-            <div class="card-header bg-primary m-0 px-3">
-                <h2 class="text-white m-0"><i class="bi bi-box-fill"></i> Detalles del producto</h2>
+        <div class="card p-0 shadow border-0">
+            <div class="card-header bg-gradient bg-primary m-0 px-4 py-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h2 class="text-white m-0 fw-bold">
+                        <i class="bi bi-box-fill me-2"></i>
+                        Detalles del Producto
+                    </h2>
+                    <NavLink href="/productos" class="btn btn-outline-light btn-sm px-3 py-2">
+                        <i class="bi bi-arrow-left"></i> Regresar
+                    </NavLink>
+                </div>
             </div>
-            <div class="d-flex align-items-center card-body bg-light row">
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text">Nombre de Producto:</span>
-                    <input class="form-control" value="@Producto?.Nombre" readonly>
-                </div>
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text">Nombre Clínico del producto:</span>
-                    <input class="form-control" value="@Producto?.Nombre_Clinico" readonly>
-                </div>
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text">Existencias por caja:</span>
-                    <input class="form-control" value="@Producto?.Existencias_Por_Caja" readonly>
-                </div>
-                @if (Producto != null)
-                {
-                    <div class="input-group input-group-lg">
-                        <span class="input-group-text">Cuenta con subunidades:</span>
-                        <input value='@(Producto.Tiene_Subunidades ? "Si" : "No")' readonly class="form-control">
-
-                    </div>
-                    @if (Producto.Tiene_Subunidades)
-                    {
-
-                        <div class="input-group input-group-lg">
-                            <span class="input-group-text">Cantidad de unidades por existencia:</span>
-                            <input class="form-control" value='@Producto.Unidades_Por_Existencia' readonly>
+            <div class="card-body p-4">
+                <div class="row g-4">
+                    <div class="col-8">
+                        <div class="card border-0 mb-3 shadow-sm">
+                            <div class="card-header bg-secondary-subtle border-0">
+                                <h6 class="mb-0 fw-bold text-dark">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Información del Producto
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="border rounded p-3 bg-light">
+                                            <small class="text-muted d-block mb-1">Nombre de Producto</small>
+                                            <h6 class="mb-0 fw-bold text-dark">@Producto?.Nombre</h6>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="border rounded p-3 bg-light">
+                                            <small class="text-muted d-block mb-1">Nombre Clínico</small>
+                                            <h6 class="mb-0 fw-bold text-dark">@Producto?.Nombre_Clinico</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    }
-                }
 
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text">Precio por unidad:</span>
-                    <span class="input-group-text">Bs:</span>
-                    <input class="form-control" value="@Producto?.Precio_Unitario" readonly>
+                        <div class="card border-0 mb-3 shadow-sm">
+                            <div class="card-header bg-info-subtle border-0">
+                                <h6 class="mb-0 fw-bold text-dark">
+                                    <i class="bi bi-box-seam me-2"></i>
+                                    Información de Almacenamiento
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-5">
+                                        <div class="border rounded p-3 bg-light text-center">
+                                            <small class="text-muted d-block mb-1">Existencias por caja</small>
+                                            <span class="badge bg-secondary fs-6 px-3">
+                                                <i class="bi bi-box me-1"></i>@Producto?.Existencias_Por_Caja unidades
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="border rounded p-3 bg-light text-center">
+                                            <small class="text-muted d-block mb-1">Subunidades</small>
+                                            @if (Producto?.Tiene_Subunidades == true)
+                                            {
+                                                <span class="badge bg-dark fs-6">
+                                                    <i class="bi bi-check-circle me-1"></i>Sí
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-secondary fs-6">
+                                                    <i class="bi bi-x-circle me-1"></i>No
+                                                </span>
+                                            }
+                                        </div>
+                                    </div>
+                                    @if (Producto?.Tiene_Subunidades == true)
+                                    {
+                                        <div class="col-4">
+                                            <div class="border rounded p-3 bg-light text-center">
+                                                <small class="text-muted d-block mb-1">Unidades por existencia</small>
+                                                <span class="badge bg-dark fs-6">
+                                                    <i class="bi bi-layers me-1"></i>@Producto.Unidades_Por_Existencia
+                                                    unidades
+                                                </span>
+                                            </div>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="card border-0 mb-3 shadow-sm">
+                            <div class="card-header bg-success-subtle border-0">
+                                <h6 class="mb-0 fw-bold text-dark">
+                                    <i class="bi bi-currency-dollar me-2"></i>
+                                    Información de Precios
+                                </h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-6">
+                                        <div class="border rounded p-3 bg-light">
+                                            <small class="text-muted d-block mb-1">Precio por unidad</small>
+                                            <h5 class="mb-0 fw-bold text-success">
+                                                <i class="bi bi-cash me-1"></i>Bs.
+                                                @(Producto?.Precio_Unitario.ToString("F2"))
+                                            </h5>
+                                        </div>
+                                    </div>
+                                    <div class="col-6">
+                                        <div class="border rounded p-3 bg-light">
+                                            <small class="text-muted d-block mb-1">Precio por caja</small>
+                                            @if (Producto?.Precio_Caja > 0)
+                                            {
+                                                <h5 class="mb-0 fw-bold text-success">
+                                                    <i class="bi bi-cash-stack me-1"></i>Bs.
+                                                    @(Producto?.Precio_Caja.ToString("F2"))
+                                                </h5>
+                                            }
+                                            else
+                                            {
+                                                <h6 class="mb-0 text-muted fst-italic">
+                                                    <i class="bi bi-dash-circle me-1"></i>No definido
+                                                </h6>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-7">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body d-flex align-items-center bg-light">
+                                        <div class="me-3">
+                                            <span class="fs-1">@Producto?.Categoria.Icono</span>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted d-block mb-1">Categoría</small>
+                                            <h5 class="mb-0 fw-bold text-dark">
+                                                <i class="bi bi-tag me-1"></i>@Producto?.Categoria.Nombre
+                                            </h5>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-5">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-body text-center bg-light">
+                                        <div class="display-4 fw-bold text-primary mb-1">
+                                            @Producto?.ProductosIndividuales.Count()
+                                        </div>
+                                        <small class="text-muted">
+                                            <i class="bi bi-boxes me-1"></i>
+                                            @(@Producto?.ProductosIndividuales.Count() != 1 ? "Existencias disponibles"
+                                                                                        : "Existencia disponible")
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-4">
+                        <div class="card border-0 shadow h-100">
+                            <div class="position-relative overflow-hidden rounded">
+                                <img class="w-100 h-100 object-fit-cover" src="@Producto?.Ruta_Imagen"
+                                    alt="@Producto?.Nombre" style="min-height: 400px;" />
+                                <div class="position-absolute top-0 end-0 m-2">
+                                    <span class="badge bg-dark bg-opacity-75 px-3 py-2">
+                                        <i class="bi bi-image me-1"></i>Imagen del producto
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text">Precio por caja:</span>
-                    <span class="input-group-text">Bs:</span>
-                    <input class="form-control" value="@Producto?.Precio_Caja" readonly>
-                </div>
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text">Pertenece a la categoria:</span>
-                    <input class="form-control" value='@(Producto?.Categoria.Icono + "  " + Producto?.Categoria.Nombre)'
-                        readonly>
-                </div>
-                <div class="input-group input-group-lg">
-                    <span class="input-group-text">Imagen:</span>
-                    <img class="img-thumbnail form-control" src="@Producto?.Ruta_Imagen">
-                </div>
+            </div>
+        </div>
+
+        <div class="mt-3 card p-0 shadow-sm">
+            <div class="card-header bg-primary m-0 px-3">
+                <h3 class="text-white m-0"><i class="bi bi-journal-text"></i> Lista de Existencias</h3>
+            </div>
+            <div class="card-body">
+                @if (Producto?.ProductosIndividuales != null && Producto.ProductosIndividuales.Any())
+                {
+                    <table class="table table-hover">
+                        @foreach (var item in Producto.ProductosIndividuales)
+                        {
+
+                        }
+                    </table>
+                }
+                else
+                {
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="bi bi-hdd fs-1"></i>
+                        <span class="text-secondary-subtitle fw-semibold">No se tienen existencias disponibles.</span>
+                    </div>
+                }
             </div>
         </div>
     </div>
