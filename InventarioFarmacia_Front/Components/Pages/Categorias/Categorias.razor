@@ -89,17 +89,20 @@
     private bool isLoading = true;
     private bool hasRendered = false;
     protected override async Task OnInitializedAsync()
-{
-    isLoading = true;
-    try
     {
-        await CargarCategorias();
-    }
-    finally
-    {
-        isLoading = false;
-    }
-}
+        isLoading = true;
+        try
+        {
+            await CargarCategorias();
+        }
+        catch(Exception ex){
+            Console.WriteLine($"Error al inicializar la página de categorías: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+        }
     private async Task CargarCategorias()
     {
         try
