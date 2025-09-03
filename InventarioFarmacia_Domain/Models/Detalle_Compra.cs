@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace InventarioFarmacia_Domain.Models;
+﻿namespace InventarioFarmacia_Domain.Models;
 
 public class Detalle_Compra
 {

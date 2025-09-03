@@ -15,6 +15,6 @@ public class Producto_Individual
 
     public Producto Producto { get; set; } = null!;
     public Lote? Lote { get; set; }
-    public Inventario Inventario { get; set; } = new Inventario();
-    public Detalle_Compra DetalleCompras { get; set; } = new Detalle_Compra();
+    public Inventario Inventario { get; set; } = null!;
+    public Detalle_Compra DetalleCompras { get; set; } = null!;
 }
