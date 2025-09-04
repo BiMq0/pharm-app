@@ -4,8 +4,8 @@ using InventarioFarmacia_Domain.Constants;
 public class Orden_Compra
 {
     public int Id { get; set; }
-    public DateTime Fecha_Pedido { get; set; }
-    public DateTime Fecha_Recibo { get; set; }
+    public DateOnly Fecha_Pedido { get; set; }
+    public DateOnly Fecha_Recibo { get; set; }
     public Estados_OrdenDeCompra Estado { get; set; }
 
     public ICollection<Detalle_Compra> DetalleCompras { get; set; } = null!;

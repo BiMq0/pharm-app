@@ -9,8 +9,8 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
 {
     public class ComprasNuevaDTO
     {
-        public DateTime Fecha_Pedido { get; set; }
-        public DateTime Fecha_Recibo { get; set; }
+        public DateOnly Fecha_Pedido { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly Fecha_Recibo { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public Estados_OrdenDeCompra Estado { get; set; }
 
         public ICollection<Detalle_Compra>? DetalleCompras { get; set; }

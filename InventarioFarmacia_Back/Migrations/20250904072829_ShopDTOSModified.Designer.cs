@@ -3,6 +3,7 @@ using System;
 using InventarioFarmacia_Back;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioFarmacia_Back.Migrations
 {
     [DbContext(typeof(PharmDBContext))]
-    partial class PharmDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250904072829_ShopDTOSModified")]
+    partial class ShopDTOSModified
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");

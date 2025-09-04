@@ -35,6 +35,13 @@ public class PharmDBContext : DbContext
             .HasOne(p => p.Categoria)
             .WithMany(c => c.Productos)
             .HasForeignKey(p => p.Id_Categoria);
+
+        // Producto -> Lotes (1:N)
+        modelBuilder.Entity<Producto>()
+            .HasMany(p => p.Lotes)
+            .WithOne(l => l.Producto)
+            .HasForeignKey(p => p.Id_Producto);
+
         // Producto -> ProductosIndividuales (1:N)
         modelBuilder.Entity<Producto_Individual>()
             .HasOne(pi => pi.Producto)
@@ -116,13 +123,13 @@ public class PharmDBContext : DbContext
         modelBuilder.Entity<Producto_Individual>()
             .HasOne(pi => pi.Lote)
             .WithMany(l => l.ProductosIndividuales)
-            .HasForeignKey(pi => pi.Nro_Lote)
-            .HasPrincipalKey(l => l.Nro_Lote)
+            .HasForeignKey(pi => pi.Id_Lote)
             .OnDelete(DeleteBehavior.SetNull);
         #endregion
+
         // Indices para mejorar rendimiento en busquedas recurrentes
         modelBuilder.Entity<Producto_Individual>()
-            .HasIndex(pi => pi.Nro_Lote)
+            .HasIndex(pi => pi.Id_Lote)
             .HasDatabaseName("IX_Productos_Individuales_Nro_Lote");
 
         modelBuilder.Entity<Detalle_Venta>()

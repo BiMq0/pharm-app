@@ -17,11 +17,10 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<IEnumerable<Producto_Individual>> GetAllAsync()
     {
         return await _context.Productos_Individuales
-            .Include(pi => pi.Producto)           // ← Qué producto es
-                .ThenInclude(p => p.Categoria)   // ← Categorías del producto
-            .Include(pi => pi.Lote)               // ← Lote al que pertenece
-            .Include(pi => pi.Inventario)         // ← En qué inventario está
-            .Include(pi => pi.DetalleCompras)     // ← De qué compra vino
+            .Include(pi => pi.Producto)
+            .Include(pi => pi.Lote)
+            .Include(pi => pi.Inventario)
+            .Include(pi => pi.DetalleCompras)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -30,14 +29,11 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
             .Where(p => p.Id.ToString().Contains(filtro)
                 || p.Id_Producto.ToString().Contains(filtro)
-                || (p.Nro_Lote != null && p.Nro_Lote.Contains(filtro))
-                || p.Fecha_Vencimiento.ToString().Contains(filtro)
                 || p.Estado.ToString().Contains(filtro))
             .AsNoTracking()
             .ToListAsync();
@@ -47,7 +43,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
@@ -60,7 +55,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
@@ -73,11 +67,10 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
-            .Where(p => p.Fecha_Vencimiento == DateOnly.FromDateTime(DateTime.Now.AddDays(30)) && p.Estado != Estados_ProductosIndividuales.VENDIDO)
+            .Where(p => p.Lote.Fecha_Vencimiento.CompareTo(DateOnly.FromDateTime(DateTime.Now.AddDays(30))) < 0 && p.Estado != Estados_ProductosIndividuales.VENDIDO)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -86,7 +79,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
-                .ThenInclude(p => p.Categoria)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
@@ -114,11 +106,11 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
 
         productos.ForEach(p =>
         {
-            if (p.Fecha_Vencimiento < DateOnly.FromDateTime(DateTime.Now))
+            if (p.Lote.Fecha_Vencimiento.CompareTo(DateOnly.FromDateTime(DateTime.Now)) >= 0)
             {
                 p.Estado = Estados_ProductosIndividuales.VENCIDO;
             }
-            else if (p.Fecha_Vencimiento == DateOnly.FromDateTime(DateTime.Now.AddDays(30)))
+            else if (p.Lote.Fecha_Vencimiento.CompareTo(DateOnly.FromDateTime(DateTime.Now.AddDays(30))) == 0)
             {
                 p.Estado = Estados_ProductosIndividuales.POR_VENCER;
             }

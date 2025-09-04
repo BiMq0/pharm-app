@@ -183,8 +183,9 @@ El análisis de requerimientos se centra en identificar las necesidades del usua
 | **RNF-03.1** | RF-03.1    | Calcular media ponderada entre precio actual y precio de compra de nuevos productos                                   | Automatización    | Alta       |
 | **RNF-03.2** | RF-03.2    | Implementar una tabla de historial de precios, recuperando bitácoras de cambios                                       | Auditoría         | Media      |
 | **RNF-04**   | RF-04      | **_Gestión de Productos Individuales_**                                                                               | Control           | Alta       |
-| **RNF-04.1** | RF-04.1    | Creación de relación en base de datos para los lotes, siguiendo la fecha de caducidad de este                         | Trazabilidad      | Alta       |
-| **RNF-04.2** | RF-04.2    | Relación de cada producto con una de las dos instancias de inventario                                                 | Logística         | Alta       |
+| **RNF-04.1** | RF-04.1    | Creación de servicio y campo para crear un nuevo lote de producto                                                     | Trazabilidad      | Alta       |
+| **RNF-04.2** | RF-04.1    | Creación de relación en base de datos para los lotes, siguiendo la fecha de caducidad de este                         | Trazabilidad      | Alta       |
+| **RNF-04.3** | RF-04.2    | Relación de cada producto con una de las dos instancias de inventario                                                 | Logística         | Alta       |
 | **RNF-05**   | RF-05      | **_Control de Stock y Alertas_**                                                                                      | Monitoreo         | Alta       |
 | **RNF-05.1** | RF-05.1    | Métodos de revisión y actualización de estados de forma automática apenas se inicie el sistema                        | Sistema           | Alta       |
 | **RNF-05.2** | RF-05.2    | Actualización de estado a través del monitoreo                                                                        | Notificaciones    | Alta       |

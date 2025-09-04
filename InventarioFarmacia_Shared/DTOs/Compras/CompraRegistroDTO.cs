@@ -11,8 +11,8 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
     {
         public int Id { get; set; }
         public Estados_OrdenDeCompra Estado { get; set; }
-        public DateTime Fecha_Pedido { get; set; }
-        public DateTime Fecha_Recibo { get; set; }
+        public DateOnly Fecha_Pedido { get; set; }
+        public DateOnly Fecha_Recibo { get; set; }
         public int Cantidad_Productos { get; }
         public decimal Costo_Total { get; }
 

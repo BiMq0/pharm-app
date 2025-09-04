@@ -18,6 +18,7 @@ public class Producto
     public ICollection<Producto_Individual> ProductosIndividuales { get; set; } = new List<Producto_Individual>();
     public Categoria Categoria { get; set; } = null!;
     public ICollection<Bitacora_Producto> BitacoraProductos { get; set; } = new List<Bitacora_Producto>();
+    public ICollection<Lote> Lotes { get; set; } = new List<Lote>();
 
 
     [NotMapped]

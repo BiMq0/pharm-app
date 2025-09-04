@@ -8,9 +8,8 @@ public class Producto_Individual
     public int Id { get; set; }
     public int Id_Producto { get; set; }
     public int Id_Inventario { get; set; }
-    public DateOnly Fecha_Vencimiento { get; set; }
-    public string? Nro_Lote { get; set; }
-    public Estados_ProductosIndividuales Estado { get; set; }
+    public int Id_Lote { get; set; }
+    public Estados_ProductosIndividuales Estado { get; set; } = Estados_ProductosIndividuales.DISPONIBLE;
 
 
     public Producto Producto { get; set; } = null!;

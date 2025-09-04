@@ -75,4 +75,10 @@ public class ProductoService : IProductoService
 
         return await _productoRepository.DeleteAsync(productoExistente.Id);
     }
+
+    public async Task<IEnumerable<ProductoToNewCompraDTO>> ObtenerProductosParaCompraAsync()
+    {
+        var productos = await _productoRepository.GetAllAsync();
+        return productos.Select(p => new ProductoToNewCompraDTO(p));
+    }
 }

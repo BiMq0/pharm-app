@@ -9,4 +9,6 @@ public interface IProductoService
     Task<bool> CrearProductoAsync(ProductoNuevoDTO producto);
     Task<bool> ActualizarProductoAsync(ProductoEdicionDTO producto);
     Task<bool> EliminarProductoAsync(int id);
+
+    Task<IEnumerable<ProductoToNewCompraDTO>> ObtenerProductosParaCompraAsync();
 }

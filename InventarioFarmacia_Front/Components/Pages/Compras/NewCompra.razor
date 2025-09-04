@@ -1,5 +1,87 @@
-﻿<h3>NewCompra</h3>
+﻿@page "/compras/nuevaCompra"
+@using InventarioFarmacia_Shared.DTOs.Compras;
+@rendermode InteractiveServer
+
+<PageTitle>Ordenar Productos</PageTitle>
+<div class="container-fluid">
+    <div class="card shadow mt-3">
+        <div class="card-header bg-primary text-white fs-4">
+            <i class="bi bi-pencil-fill"></i>
+            Nueva orden de productos
+        </div>
+        <div class="card-body">
+            <EditForm OnValidSubmit="CrearOrdenDeCompra" FormName="OrdenDeCompraForm" Model="compraNueva">
+                <div
+                    class="row d-flex justify-content-between border rounded p-1 border-3 border-start-0 border-top-0 border-end-0 ">
+                    <div class="col-6 d-flex gap-3 p-0">
+                        <div
+                            class="bg-secondary-subtle rounded col-6 p-3 d-flex flex-column align-items-center justify-content-center gap-2">
+                            <span class="text-muted text-center fw-bold fs-5">Fecha de Pedido</span>
+                            <InputDate @bind-Value="compraNueva.Fecha_Pedido" class="form-control" />
+                        </div>
+                        <div
+                            class="bg-secondary-subtle rounded col-6 p-3 d-flex flex-column align-items-center justify-content-center gap-2">
+                            <span class="text-muted text-center fw-bold fs-5">Fecha de Recibo esperada</span>
+                            <InputDate @bind-Value="compraNueva.Fecha_Recibo" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="col-6 d-flex gap-3 justify-content-end align-items-center p-0">
+                        <div
+                            class="col-3 d-flex flex-column gap-2 rounded bg-warning-subtle p-4 align-items-center justify-content-center text-muted fw-semibold text-center">
+                            <span class="fs-1">2</span>
+                            <span>Costo total de pedido</span>
+                        </div>
+                        <div
+                            class="col-3 d-flex flex-column gap-2 rounded bg-success-subtle p-4 align-items-center justify-content-center text-muted fw-semibold text-center">
+                            <span class="fs-1">3</span>
+                            <span>Tipos de productos a ordenar</span>
+                        </div>
+                        <div
+                            class="col-3 d-flex flex-column gap-2 rounded bg-primary-subtle p-4 align-items-center justify-content-center text-muted fw-semibold text-center">
+                            <span class="fs-1">4</span>
+                            <span>Cantidad total de productos</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center mt-2 card">
+                    <button
+                        class="btn btn-outline-secondary fw-bold w-100 d-flex align-items-center justify-content-center gap-2 px-3"
+                        @onclick="AgregarProducto" type="button">
+                        <i class="bi bi-plus fs-4"></i>
+                        Agregar producto
+                    </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+
+    <button class="btn btn-primary position-fixed fw-bold px-2 py-0"
+        style="bottom: 20px; right: 20px; display: flex; align-items: center; justify-content: center; ">
+        <i class="bi bi-check fs-3"></i>
+        Confirmar pedido
+    </button>
+</div>
 
 @code {
+    [SupplyParameterFromForm]
+    private ComprasNuevaDTO compraNueva { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await CargarProductos();
+    }
+
+    private async Task CargarProductos()
+    {
+        await Task.CompletedTask;
+    }
+    private void AgregarProducto()
+    {
+    }
+    private void CrearOrdenDeCompra()
+    {
+
+    }
 
 }

@@ -62,6 +62,23 @@ public class ProductoService : IProductoService
         return new ProductoEdicionDTO(producto);
     }
 
+    public async Task<IEnumerable<ProductoToNewCompraDTO>> GetProductosForOrdenAsync()
+    {
+        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.GetForOrder;
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<ProductoToNewCompraDTO>>() ?? Enumerable.Empty<ProductoToNewCompraDTO>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al buscar productos para orden: {ex.Message}");
+            return new List<ProductoToNewCompraDTO>();
+        }
+    }
+
     public async Task<bool> CrearProducto(ProductoNuevoDTO producto)
     {
         string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.Create;
