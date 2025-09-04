@@ -1,5 +1,8 @@
 ﻿@page "/compras/nuevaCompra"
 @using InventarioFarmacia_Shared.DTOs.Compras;
+@using InventarioFarmacia_Shared.DTOs.Products;
+@inject NavigationManager Navigation
+@inject Services.Products.IProductoService ProductServices
 @rendermode InteractiveServer
 
 <PageTitle>Ordenar Productos</PageTitle>
@@ -67,6 +70,7 @@
     [SupplyParameterFromForm]
     private ComprasNuevaDTO compraNueva { get; set; } = new();
 
+    public List<ProductoToNewCompraDTO> productosDisponibles { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
         await CargarProductos();
@@ -74,7 +78,8 @@
 
     private async Task CargarProductos()
     {
-        await Task.CompletedTask;
+        var productos = await ProductServices.GetProductosForOrdenAsync();
+        productosDisponibles = productos.ToList();
     }
     private void AgregarProducto()
     {
