@@ -1,0 +1,84 @@
+﻿@using InventarioFarmacia_Shared.DTOs.Products;
+@rendermode InteractiveServer
+
+@if (ProductSelected && Id_Selected_Product != -1)
+{
+    <div class="container-fluid card d-flex mb-3">
+        <div class="card-body row">
+            <div class="d-flex col-4 gap-3 ">
+                <div class="d-flex flex-column col-5">
+                    <img src="@SelectedProduct.Ruta_Imagen" class="img-thumbnail object-fit-cover"
+                        style="height:200px; width: 200px;" />
+                    <span class="text-center text-muted fw-semibold">@SelectedProduct.Nombre</span>
+                </div>
+                <div class="d-flex flex-column col-7">
+                    <div
+                        class="d-flex flex-column align-items-center mb-2 border border-3 border-start-0 border-end-0 border-top-0 py-2 bg-primary rounded">
+                        <span class="fw-bold text-white">@SelectedProduct.Nombre_Clinico</span>
+                    </div>
+                    <div class="d-flex flex-column">
+                        <div class="d-flex gap-2 justify-content-between">
+                            <div
+                                class="bg-secondary-subtle rounded p-2 d-flex flex-column align-items-center justify-content-center gap-1">
+                                <span class="text-muted fs-4">Bs. @SelectedProduct.Precio_Unitario</span>
+                                <span class="text-muted">Por unidad</span>
+                            </div>
+                            <div
+                                class="bg-secondary-subtle rounded p-2 d-flex flex-column align-items-center justify-content-center gap-1">
+                                <span class="text-muted fs-4">Bs. @SelectedProduct.Precio_Caja</span>
+                                <span class="text-muted">Por caja</span>
+                            </div>
+                        </div>
+                        <div class="border border-2 rounded p-2 mt-3 text-center text-muted fw-semibold">
+                            Precios Actuales
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div>
+        <select class="form-select" @bind="Id_Selected_Product">
+            <option value="-1">Seleccione un producto</option>
+            @foreach (var item in lstProductos)
+            {
+                <option value="@item.Id">@item.Nombre</option>
+            }
+        </select>
+    </div>
+}
+
+@code {
+    [CascadingParameter(Name = "ProductosDisponibles")]
+    public List<ProductoToNewCompraDTO> lstProductos { get; set; }
+
+    public bool ProductSelected { get; set; } = false;
+    public ProductoToNewCompraDTO SelectedProduct { get; set; } = new();
+    public int Id_Selected_Product
+    {
+        get => SelectedProduct.Id is 0 ? -1 : SelectedProduct.Id;
+        set
+        {
+            SeleccionarProducto(value);
+            OnRemoveProduct.InvokeAsync(value);
+        }
+    }
+    private void SeleccionarProducto(int Id_Producto)
+    {
+        var selectedValue = Id_Producto;
+        var productoSeleccionado = lstProductos.FirstOrDefault(p => p.Id == selectedValue);
+        if (productoSeleccionado != null)
+        {
+            //lstProductos.Remove(productoSeleccionado);
+            SelectedProduct = productoSeleccionado;
+            ProductSelected = true;
+        }
+        StateHasChanged();
+    }
+
+    [Parameter]
+    public EventCallback<int> OnRemoveProduct { get; set; }
+}

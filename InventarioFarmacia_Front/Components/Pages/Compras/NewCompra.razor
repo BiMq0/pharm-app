@@ -1,5 +1,6 @@
 ﻿@page "/compras/nuevaCompra"
 @using InventarioFarmacia_Shared.DTOs.Compras;
+@using InventarioFarmacia_Front.Components.SimpleComponents.ShopComponents;
 @using InventarioFarmacia_Shared.DTOs.Products;
 @inject NavigationManager Navigation
 @inject Services.Products.IProductoService ProductServices
@@ -47,9 +48,15 @@
                         </div>
                     </div>
                 </div>
-                <div class="d-flex justify-content-center mt-2 card">
+                <div class="d-flex justify-content-center mt-2 flex-column">
+                    <CascadingValue Value="productosDisponibles" Name="ProductosDisponibles">
+                        @foreach (var item in itemsCompra)
+                        {
+                            <ProductItem />
+                        }
+                    </CascadingValue>
                     <button
-                        class="btn btn-outline-secondary fw-bold w-100 d-flex align-items-center justify-content-center gap-2 px-3"
+                        class="btn btn-outline-secondary fw-bold w-100 d-flex align-items-center justify-content-center gap-2 px-3 mt-3"
                         @onclick="AgregarProducto" type="button">
                         <i class="bi bi-plus fs-4"></i>
                         Agregar producto
@@ -71,6 +78,7 @@
     private ComprasNuevaDTO compraNueva { get; set; } = new();
 
     public List<ProductoToNewCompraDTO> productosDisponibles { get; set; } = new();
+    protected List<ProductItem> itemsCompra { get; set; } = new();
     protected override async Task OnInitializedAsync()
     {
         await CargarProductos();
@@ -83,6 +91,12 @@
     }
     private void AgregarProducto()
     {
+        itemsCompra.Add(new ProductItem());
+        StateHasChanged();
+    }
+    private void OnRemoveProductFromList(int Id_Producto)
+    {
+
     }
     private void CrearOrdenDeCompra()
     {

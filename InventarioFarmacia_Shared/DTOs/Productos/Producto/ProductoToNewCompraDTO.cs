@@ -11,15 +11,19 @@ namespace InventarioFarmacia_Shared.DTOs.Products
         public int Id { get; set; }
         public string? Nombre { get; set; }
         public string? Nombre_Clinico { get; set; }
+        public string? Ruta_Imagen { get; set; }
         public decimal Precio_Unitario { get; set; }
         public decimal Precio_Caja { get; set; }
+        public IEnumerable<Lote>? Lotes { get; set; }
         public ProductoToNewCompraDTO(Producto producto)
         {
             Id = producto.Id;
             Nombre = producto.Nombre;
             Nombre_Clinico = producto.Nombre_Clinico;
+            Ruta_Imagen = producto.Ruta_Imagen;
             Precio_Unitario = producto.Precio_Unitario;
             Precio_Caja = producto.Precio_Caja;
+            Lotes = producto.Lotes;
         }
         public ProductoToNewCompraDTO()
         {
