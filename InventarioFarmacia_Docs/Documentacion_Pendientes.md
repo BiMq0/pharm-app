@@ -1,7 +1,6 @@
 ## Lista de pendientes
 
-- [ ] Estrategia de migraciones
-- [ ] Estructura de endpoints
 - [ ] Requerimientos no funcionales
-- [ ] Análisis de riesgos
-- [ ] Criterios de aceptación
+- [ ] Historias de usuario por requerimiento
+- [ ] Criterios de aceptación por requerimiento
+- [ ] Diagramas de secuencia por requerimiento
