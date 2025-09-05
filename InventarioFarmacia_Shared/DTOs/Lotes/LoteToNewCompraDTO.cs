@@ -21,5 +21,6 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
             Nro_Lote = lote.Nro_Lote!;
             Cantidad_Productos = lote.CantidadProductos;
         }
+        public LoteToNewCompraDTO() { }
     }
 }

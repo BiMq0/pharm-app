@@ -43,7 +43,7 @@ else
     <div>
         <select class="form-select" @bind="Id_Selected_Product">
             <option value="-1">Seleccione un producto</option>
-            @foreach (var item in lstProductos)
+            @foreach (var item in lstProductos.Where(p => !lstIdProductosSeleccionados.Contains(p.Id)))
             {
                 <option value="@item.Id">@item.Nombre</option>
             }
@@ -54,6 +54,8 @@ else
 @code {
     [CascadingParameter(Name = "ProductosDisponibles")]
     public List<ProductoToNewCompraDTO> lstProductos { get; set; }
+    [CascadingParameter(Name = "ProductosSeleccionados")]
+    public List<int> lstIdProductosSeleccionados { get; set; } = new();
 
     public bool ProductSelected { get; set; } = false;
     public ProductoToNewCompraDTO SelectedProduct { get; set; } = new();
@@ -72,7 +74,6 @@ else
         var productoSeleccionado = lstProductos.FirstOrDefault(p => p.Id == selectedValue);
         if (productoSeleccionado != null)
         {
-            //lstProductos.Remove(productoSeleccionado);
             SelectedProduct = productoSeleccionado;
             ProductSelected = true;
         }

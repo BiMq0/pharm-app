@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InventarioFarmacia_Domain.Models;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 
 namespace InventarioFarmacia_Shared.DTOs.Products
 {
@@ -14,7 +15,7 @@ namespace InventarioFarmacia_Shared.DTOs.Products
         public string? Ruta_Imagen { get; set; }
         public decimal Precio_Unitario { get; set; }
         public decimal Precio_Caja { get; set; }
-        public IEnumerable<Lote>? Lotes { get; set; }
+        public IEnumerable<LoteToNewCompraDTO>? Lotes { get; set; }
         public ProductoToNewCompraDTO(Producto producto)
         {
             Id = producto.Id;
@@ -23,7 +24,7 @@ namespace InventarioFarmacia_Shared.DTOs.Products
             Ruta_Imagen = producto.Ruta_Imagen;
             Precio_Unitario = producto.Precio_Unitario;
             Precio_Caja = producto.Precio_Caja;
-            Lotes = producto.Lotes;
+            Lotes = producto.Lotes.Select(l => new LoteToNewCompraDTO(l));
         }
         public ProductoToNewCompraDTO()
         {

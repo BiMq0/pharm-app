@@ -11,6 +11,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
     {
         public DateOnly Fecha_Vencimiento { get; set; }
         public string Nro_Lote { get; set; } = null!;
+        public int Cantidad_Productos { get; set; }
         public LoteNuevoDTO() { }
     }
 }
