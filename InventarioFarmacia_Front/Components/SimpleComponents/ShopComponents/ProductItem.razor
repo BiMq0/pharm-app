@@ -4,33 +4,65 @@
 @if (ProductSelected && Id_Selected_Product != -1)
 {
     <div class="container-fluid card d-flex mb-3">
-        <div class="card-body row">
-            <div class="d-flex col-4 gap-3 ">
-                <div class="d-flex flex-column col-5">
-                    <img src="@SelectedProduct.Ruta_Imagen" class="img-thumbnail object-fit-cover"
-                        style="height:200px; width: 200px;" />
-                    <span class="text-center text-muted fw-semibold">@SelectedProduct.Nombre</span>
-                </div>
-                <div class="d-flex flex-column col-7">
-                    <div
-                        class="d-flex flex-column align-items-center mb-2 border border-3 border-start-0 border-end-0 border-top-0 py-2 bg-primary rounded">
-                        <span class="fw-bold text-white">@SelectedProduct.Nombre_Clinico</span>
+        <div class="card-body row g-3">
+            <div class="col-4">
+                <div class="border rounded p-3 bg-light d-flex">
+                    <div class="me-3">
+                        <img src="@SelectedProduct.Ruta_Imagen" class="img-fluid rounded shadow-sm"
+                            style="height: 150px; width: 175px; object-fit: cover;" />
                     </div>
-                    <div class="d-flex flex-column">
-                        <div class="d-flex gap-2 justify-content-between">
-                            <div
-                                class="bg-secondary-subtle rounded p-2 d-flex flex-column align-items-center justify-content-center gap-1">
-                                <span class="text-muted fs-4">Bs. @SelectedProduct.Precio_Unitario</span>
-                                <span class="text-muted">Por unidad</span>
+                    <div class="row">
+                        <div class="bg-primary text-white rounded p-2 text-center">
+                            <h6 class="fw-bold mb-1">@SelectedProduct.Nombre</h6>
+                            <small class="opacity-75">@SelectedProduct.Nombre_Clinico</small>
+                        </div>
+
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center bg-white">
+                                    <div class="fw-bold text-success">Bs. @SelectedProduct.Precio_Unitario</div>
+                                    <small class="text-muted">Unidad</small>
+                                </div>
                             </div>
-                            <div
-                                class="bg-secondary-subtle rounded p-2 d-flex flex-column align-items-center justify-content-center gap-1">
-                                <span class="text-muted fs-4">Bs. @SelectedProduct.Precio_Caja</span>
-                                <span class="text-muted">Por caja</span>
+                            <div class="col-6">
+                                <div class="border rounded p-2 text-center bg-white">
+                                    <div class="fw-bold text-success">Bs. @SelectedProduct.Precio_Caja</div>
+                                    <small class="text-muted">Caja</small>
+                                </div>
                             </div>
                         </div>
-                        <div class="border border-2 rounded p-2 mt-3 text-center text-muted fw-semibold">
-                            Precios Actuales
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-8">
+                <div class=" row border rounded py-3 px-2 h-100 d-flex flex-column">
+                    <div class="d-flex flex-column col-8">
+                        <div class="d-flex justify-content-around align-items-center rounded bg-secondary-subtle p-2">
+                            <div class="rounded d-flex gap-3">
+                                <label class="fw-semibold">Unidad</label>
+                                <input type="radio" name="Unidad" value="UNIT" class="form-check-input" />
+                            </div>
+
+                            <div class="rounded d-flex gap-3">
+                                <label class="fw-semibold">Caja</label>
+                                <input type="radio" name="Unidad" value="BOX" class="form-check-input" />
+                            </div>
+                        </div>
+
+                        <div
+                            class="border rounded p-2 mt-3 d-flex flex-column justify-content-between align-items-center bg-white">
+                            <CascadingValue Value="SelectedProduct.Lotes" Name="LotesDisponibles">
+                                <CascadingValue Value="lstIdLotesSeleccionados" Name="lstIdLotesSeleccionados">
+                                    @foreach (var lote in lstLotes)
+                                    {
+                                        <LoteItem OnRemoveLote="OnRemoveLote" />
+                                    }
+                                </CascadingValue>
+                            </CascadingValue>
+                            <button class="btn btn-outline-secondary w-100" type="button" @onclick="AgregarLote">
+                                <i class="bi bi-plus-lg"></i> @(AllSelected ? "Crear nuevo Lote" : "Agregar Lote")
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -40,10 +72,10 @@
 }
 else
 {
-    <div>
+    <div class="mb-3">
         <select class="form-select" @bind="Id_Selected_Product">
             <option value="-1">Seleccione un producto</option>
-            @foreach (var item in lstProductos.Where(p => !lstIdProductosSeleccionados.Contains(p.Id)))
+            @foreach (var item in lstProductosDisponibles.Where(p => !lstIdProductosSeleccionados.Contains(p.Id)))
             {
                 <option value="@item.Id">@item.Nombre</option>
             }
@@ -53,25 +85,32 @@ else
 
 @code {
     [CascadingParameter(Name = "ProductosDisponibles")]
-    public List<ProductoToNewCompraDTO> lstProductos { get; set; }
+    public List<ProductoToNewCompraDTO> lstProductosDisponibles { get; set; }
     [CascadingParameter(Name = "ProductosSeleccionados")]
     public List<int> lstIdProductosSeleccionados { get; set; } = new();
 
     public bool ProductSelected { get; set; } = false;
     public ProductoToNewCompraDTO SelectedProduct { get; set; } = new();
+    private int _idSelectedProduct = -1;
     public int Id_Selected_Product
     {
-        get => SelectedProduct.Id is 0 ? -1 : SelectedProduct.Id;
+        get => _idSelectedProduct;
         set
         {
+            _idSelectedProduct = value;
             SeleccionarProducto(value);
             OnRemoveProduct.InvokeAsync(value);
         }
     }
+
+    public bool AllSelected => SelectedProduct.Lotes.Count() <= lstLotes.Count();
+    public List<int> lstIdLotesSeleccionados { get; set; } = new();
+    public List<LoteItem> lstLotes { get; set; } = new();
+
     private void SeleccionarProducto(int Id_Producto)
     {
         var selectedValue = Id_Producto;
-        var productoSeleccionado = lstProductos.FirstOrDefault(p => p.Id == selectedValue);
+        var productoSeleccionado = lstProductosDisponibles.FirstOrDefault(p => p.Id == selectedValue);
         if (productoSeleccionado != null)
         {
             SelectedProduct = productoSeleccionado;
@@ -80,6 +119,21 @@ else
         StateHasChanged();
     }
 
+    private void AgregarLote()
+    {
+        lstLotes.Add(new LoteItem());
+        StateHasChanged();
+    }
+
+    private void OnRemoveLote(int loteId)
+    {
+        lstIdLotesSeleccionados.Add(loteId);
+        StateHasChanged();
+    }
+
     [Parameter]
     public EventCallback<int> OnRemoveProduct { get; set; }
+
+
+
 }

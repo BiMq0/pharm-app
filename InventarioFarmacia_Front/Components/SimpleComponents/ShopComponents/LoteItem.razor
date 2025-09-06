@@ -1,0 +1,162 @@
+﻿@using InventarioFarmacia_Shared.DTOs.Lotes
+<div class="d-flex gap-2 mb-2 w-100">
+    @if (AllSelected || LotesDisponibles.Count == 0)
+    {
+        <EditForm Model="LoteNuevo" OnValidSubmit="CrearLote" class="w-100">
+            <DataAnnotationsValidator />
+            <div class="d-flex gap-2">
+                <div class="w-25">
+                    <div class="input-group mb-2">
+                        <i class="bi bi-pencil input-group-text"></i>
+                        <InputNumber class="form-control" placeholder="Cantidad" @bind-Value="LoteNuevo.Cantidad_Productos"
+                            min="1" />
+                    </div>
+                    <ValidationMessage For="@(() => LoteNuevo.Cantidad_Productos)" class="text-danger small" />
+                </div>
+                <div class="d-flex flex-column w-50">
+                    <div class="input-group">
+                        <i class="bi bi-check-circle input-group-text"></i>
+                        <InputText class="form-control" placeholder="Ingrese el número de lote"
+                            @bind-Value="LoteNuevo.Nro_Lote" />
+                    </div>
+                    <ValidationMessage For="@(() => LoteNuevo.Nro_Lote)" class="text-danger small" />
+                </div>
+                <div class="d-flex flex-column w-25">
+                    <InputDate class="form-control" @bind-Value="LoteNuevo.Fecha_Vencimiento" />
+                    <ValidationMessage For="@(() => LoteNuevo.Fecha_Vencimiento)" class="text-danger small" />
+                </div>
+            </div>
+
+            <button class="btn btn-success mt-2 w-100" type="submit">
+                <i class="bi bi-box"></i>
+                @if (LotesDisponibles.Count == 0)
+                {
+                    <span> Crear primer lote</span>
+                }
+                else
+                {
+                    <span> Confirmar nuevo lote</span>
+                }
+            </button>
+        </EditForm>
+    }
+    else
+    {
+        <div class="input-group w-25">
+            <i class="bi bi-pencil input-group-text"></i>
+            <input type="number" class="form-control" min="1" placeholder="Cantidad"
+                @bind="@(SelectedLote!.Cantidad_Productos)" max="@(SelectedLote?.Cantidad_Productos ?? 999)" />
+        </div>
+
+        <select class="form-select w-50" @bind="Id_Selected_Lote">
+            <option value="-1">Seleccionar Lote</option>
+            @foreach (var lote in LotesDisponiblesLibres)
+            {
+                <option value="@lote.Id">
+                    @lote.Nro_Lote
+                </option>
+            }
+        </select>
+
+        <input type="date" class="form-control w-25" value="@(SelectedLote?.Fecha_Vencimiento.ToString("yyyy-MM-dd"))"
+            readonly />
+    }
+</div>
+
+@code {
+    [CascadingParameter(Name = "LotesDisponibles")]
+    public List<LoteToNewCompraDTO> LotesDisponibles { get; set; } = new();
+
+    [CascadingParameter(Name = "lstIdLotesSeleccionados")]
+    public List<int> lstIdLotesSeleccionados { get; set; } = new();
+
+    private string ComponentId { get; set; } = Guid.NewGuid().ToString("N")[..8];
+
+    public LoteToNewCompraDTO SelectedLote { get; set; } = new();
+    public LoteNuevoDTO LoteNuevo { get; set; } = new();
+
+    private int CantidadSeleccionada { get; set; } = 1;
+
+    public bool AllSelected => lstIdLotesSeleccionados.Count >= LotesDisponibles.Count;
+    public IEnumerable<LoteToNewCompraDTO> LotesDisponiblesLibres =>
+    LotesDisponibles.Where(l => !lstIdLotesSeleccionados.Contains(l.Id));
+
+
+    private int _idSelected_Lote = -1;
+    public int Id_Selected_Lote
+    {
+        get => _idSelected_Lote;
+        set
+        {
+            _idSelected_Lote = value;
+            SeleccionarLote(value);
+
+            if (value != -1)
+            {
+                OnLoteSeleccionado.InvokeAsync(value);
+            }
+        }
+    }
+
+    [Parameter] public EventCallback<int> OnLoteSeleccionado { get; set; }
+    [Parameter] public EventCallback<int> OnRemoveLote { get; set; }
+    [Parameter] public EventCallback OnLoteCreado { get; set; }
+
+    public void SeleccionarLote(int id)
+    {
+        if (id != -1)
+        {
+            var lote = LotesDisponibles.FirstOrDefault(l => l.Id == id);
+            if (lote != null)
+            {
+                SelectedLote = lote;
+
+                if (CantidadSeleccionada > lote.Cantidad_Productos)
+                {
+                    CantidadSeleccionada = lote.Cantidad_Productos;
+                }
+
+                StateHasChanged();
+            }
+        }
+    }
+
+
+    public void CrearLote()
+    {
+        var nuevoLote = new LoteToNewCompraDTO
+        {
+            Id = DateTime.Now.Millisecond + new Random().Next(1000, 9999),
+            Cantidad_Productos = LoteNuevo.Cantidad_Productos,
+            Nro_Lote = LoteNuevo.Nro_Lote,
+            Fecha_Vencimiento = LoteNuevo.Fecha_Vencimiento
+        };
+
+        LotesDisponibles.Add(nuevoLote);
+
+        Id_Selected_Lote = nuevoLote.Id;
+        CantidadSeleccionada = nuevoLote.Cantidad_Productos;
+        SelectedLote = nuevoLote;
+
+        OnLoteCreado.InvokeAsync();
+        OnLoteSeleccionado.InvokeAsync(nuevoLote.Id);
+
+        LoteNuevo = new();
+
+        StateHasChanged();
+    }
+
+    public void RemoverLote()
+    {
+        if (Id_Selected_Lote != -1)
+        {
+            OnRemoveLote.InvokeAsync(Id_Selected_Lote);
+
+            Id_Selected_Lote = -1;
+            SelectedLote = new();
+            CantidadSeleccionada = 1;
+
+            StateHasChanged();
+        }
+    }
+}
