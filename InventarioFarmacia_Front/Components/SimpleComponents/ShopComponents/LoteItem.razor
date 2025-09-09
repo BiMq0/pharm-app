@@ -1,6 +1,7 @@
 ﻿@using InventarioFarmacia_Shared.DTOs.Lotes
+@rendermode InteractiveServer
 <div class="d-flex gap-2 mb-2 w-100">
-    @if (AllSelected || LotesDisponibles.Count == 0)
+    @if (CreandoLote) // Modo formulario para crear nuevo lote
     {
         <EditForm Model="LoteNuevo" OnValidSubmit="CrearLote" class="w-100">
             <DataAnnotationsValidator />
@@ -9,7 +10,7 @@
                     <div class="input-group mb-2">
                         <i class="bi bi-pencil input-group-text"></i>
                         <InputNumber class="form-control" placeholder="Cantidad" @bind-Value="LoteNuevo.Cantidad_Productos"
-                            min="1" />
+                            min="0" />
                     </div>
                     <ValidationMessage For="@(() => LoteNuevo.Cantidad_Productos)" class="text-danger small" />
                 </div>
@@ -29,58 +30,65 @@
 
             <button class="btn btn-success mt-2 w-100" type="submit">
                 <i class="bi bi-box"></i>
-                @if (LotesDisponibles.Count == 0)
-                {
-                    <span> Crear primer lote</span>
-                }
-                else
-                {
-                    <span> Confirmar nuevo lote</span>
-                }
+                <span>Crear nuevo lote</span>
             </button>
         </EditForm>
     }
-    else
+    else if (!AllSelected) // Modo selección de lote existente
     {
-        <div class="input-group w-25">
-            <i class="bi bi-pencil input-group-text"></i>
-            <input type="number" class="form-control" min="1" placeholder="Cantidad"
-                @bind="@(SelectedLote!.Cantidad_Productos)" max="@(SelectedLote?.Cantidad_Productos ?? 999)" />
-        </div>
-
-        <select class="form-select w-50" @bind="Id_Selected_Lote">
+        <select class="form-select w-75" @bind="Id_Selected_Lote">
             <option value="-1">Seleccionar Lote</option>
             @foreach (var lote in LotesDisponiblesLibres)
             {
                 <option value="@lote.Id">
-                    @lote.Nro_Lote
+                    @lote.Nro_Lote - @lote.Cantidad_Productos unidades - Vence: @lote.Fecha_Vencimiento.ToString("dd/MM/yyyy")
                 </option>
             }
         </select>
 
-        <input type="date" class="form-control w-25" value="@(SelectedLote?.Fecha_Vencimiento.ToString("yyyy-MM-dd"))"
-            readonly />
+        <button class="btn btn-outline-danger btn-sm w-25" @onclick="RemoverLote" type="button">
+            <i class="bi bi-trash"></i> Cancelar
+        </button>
+    }
+    else // Modo lote seleccionado con cantidad editable
+    {
+        <div class="input-group w-25">
+            <i class="bi bi-pencil input-group-text"></i>
+            <input type="number" class="form-control" min="0" placeholder="Cantidad" @bind="CantidadSeleccionada"
+                @bind:after="OnCantidadChangedAfterBinding" max="@LoteData.Cantidad_Productos" />
+        </div>
+
+        <div class="w-50 d-flex align-items-center">
+            <span class="badge bg-primary me-2">@LoteData.Nro_Lote</span>
+            <span class="text-muted small">Vence: @LoteData.Fecha_Vencimiento.ToString("dd/MM/yyyy")</span>
+        </div>
+
+        <button class="btn btn-outline-danger btn-sm w-25" @onclick="RemoverLote" type="button">
+            <i class="bi bi-trash"></i> Remover
+        </button>
     }
 </div>
 
+
 @code {
+    [Parameter]
+    public LoteToNewCompraDTO LoteData { get; set; } = new();
+
     [CascadingParameter(Name = "LotesDisponibles")]
     public List<LoteToNewCompraDTO> LotesDisponibles { get; set; } = new();
 
     [CascadingParameter(Name = "lstIdLotesSeleccionados")]
     public List<int> lstIdLotesSeleccionados { get; set; } = new();
 
-    private string ComponentId { get; set; } = Guid.NewGuid().ToString("N")[..8];
-
     public LoteToNewCompraDTO SelectedLote { get; set; } = new();
     public LoteNuevoDTO LoteNuevo { get; set; } = new();
 
     private int CantidadSeleccionada { get; set; } = 1;
+    private bool LoteSeleccionado = false;
 
     public bool AllSelected => lstIdLotesSeleccionados.Count >= LotesDisponibles.Count;
     public IEnumerable<LoteToNewCompraDTO> LotesDisponiblesLibres =>
     LotesDisponibles.Where(l => !lstIdLotesSeleccionados.Contains(l.Id));
-
 
     private int _idSelected_Lote = -1;
     public int Id_Selected_Lote
@@ -89,7 +97,7 @@
         set
         {
             _idSelected_Lote = value;
-            SeleccionarLote(value);
+            _ = SeleccionarLote(value);
 
             if (value != -1)
             {
@@ -97,32 +105,72 @@
             }
         }
     }
-
     [Parameter] public EventCallback<int> OnLoteSeleccionado { get; set; }
     [Parameter] public EventCallback<int> OnRemoveLote { get; set; }
-    [Parameter] public EventCallback OnLoteCreado { get; set; }
+    [Parameter] public EventCallback<LoteToNewCompraDTO> OnLoteCreado { get; set; }
+    [Parameter] public EventCallback<(int loteId, int cantidad)> OnCantidadChanged { get; set; }
 
-    public void SeleccionarLote(int id)
+    public bool CreandoLote { get; set; } = false;
+    protected override void OnInitialized()
+    {
+        if (LoteData.Id != -1)
+        {
+            Id_Selected_Lote = LoteData.Id;
+            SelectedLote = LoteData;
+            CantidadSeleccionada = LoteData.Cantidad_Productos;
+            LoteSeleccionado = false;
+            CreandoLote = false;
+        }
+        else
+        {
+            CreandoLote = true;
+            LoteSeleccionado = false;
+        }
+        StateHasChanged();
+    }
+
+    public async Task SeleccionarLote(int id)
     {
         if (id != -1)
         {
             var lote = LotesDisponibles.FirstOrDefault(l => l.Id == id);
             if (lote != null)
             {
+                LoteSeleccionado = true;
                 SelectedLote = lote;
+                LoteData = lote;
+                CantidadSeleccionada = lote.Cantidad_Productos;
+                lstIdLotesSeleccionados.Add(id);
 
-                if (CantidadSeleccionada > lote.Cantidad_Productos)
-                {
-                    CantidadSeleccionada = lote.Cantidad_Productos;
-                }
-
+                await OnCantidadChanged.InvokeAsync((id, CantidadSeleccionada));
                 StateHasChanged();
             }
         }
     }
 
+    private async Task OnCantidadChangedAfterBinding()
+    {
+        var maxCantidad = LoteData?.Cantidad_Productos ?? 999;
 
-    public void CrearLote()
+        if (CantidadSeleccionada < 0)
+        {
+            CantidadSeleccionada = 0;
+        }
+        else if (CantidadSeleccionada > maxCantidad)
+        {
+            CantidadSeleccionada = maxCantidad;
+        }
+
+        if (LoteData?.Id != -1 && LoteData != null)
+        {
+            await OnCantidadChanged.InvokeAsync((LoteData.Id, CantidadSeleccionada));
+        }
+
+        StateHasChanged();
+    }
+
+
+    public async Task CrearLote()
     {
         var nuevoLote = new LoteToNewCompraDTO
         {
@@ -132,31 +180,46 @@
             Fecha_Vencimiento = LoteNuevo.Fecha_Vencimiento
         };
 
-        LotesDisponibles.Add(nuevoLote);
+        // Agregar a la lista de lotes disponibles si no existe
+        if (!LotesDisponibles.Any(l => l.Id == nuevoLote.Id))
+        {
+            LotesDisponibles.Add(nuevoLote);
+        }
 
+        LoteData = nuevoLote;
         Id_Selected_Lote = nuevoLote.Id;
         CantidadSeleccionada = nuevoLote.Cantidad_Productos;
         SelectedLote = nuevoLote;
+        lstIdLotesSeleccionados.Add(nuevoLote.Id);
 
-        OnLoteCreado.InvokeAsync();
-        OnLoteSeleccionado.InvokeAsync(nuevoLote.Id);
+        CreandoLote = false;
+        LoteSeleccionado = true;
+
+        await OnLoteCreado.InvokeAsync(nuevoLote);
+        await OnLoteSeleccionado.InvokeAsync(nuevoLote.Id);
+        await OnCantidadChanged.InvokeAsync((nuevoLote.Id, CantidadSeleccionada));
 
         LoteNuevo = new();
 
         StateHasChanged();
     }
 
-    public void RemoverLote()
+    public async Task RemoverLote()
     {
-        if (Id_Selected_Lote != -1)
+        var loteId = LoteData?.Id ?? Id_Selected_Lote;
+
+        if (loteId != -1)
         {
-            OnRemoveLote.InvokeAsync(Id_Selected_Lote);
+            // Remover de la lista de lotes seleccionados para que quede disponible en futuros dropdowns
+            lstIdLotesSeleccionados.Remove(loteId);
 
-            Id_Selected_Lote = -1;
-            SelectedLote = new();
-            CantidadSeleccionada = 1;
-
-            StateHasChanged();
+            // Notificar cambio de cantidad a 0 para actualizar totales
+            await OnCantidadChanged.InvokeAsync((loteId, 0));
         }
+
+        // Notificar al padre para que remueva este LoteItem de la lista
+        await OnRemoveLote.InvokeAsync(loteId);
+
+        StateHasChanged();
     }
 }

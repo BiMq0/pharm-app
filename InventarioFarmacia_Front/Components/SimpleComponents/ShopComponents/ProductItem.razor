@@ -1,4 +1,7 @@
-﻿@using InventarioFarmacia_Shared.DTOs.Products;
+﻿@using InventarioFarmacia_Front.Services
+@using InventarioFarmacia_Shared.DTOs.Products;
+@using InventarioFarmacia_Shared.DTOs.Lotes;
+@using System.ComponentModel
 @rendermode InteractiveServer
 
 @if (ProductSelected && Id_Selected_Product != -1)
@@ -50,18 +53,26 @@
                             </div>
                         </div>
 
+                        <!-- Mostrar total de productos individuales -->
+                        <div class="alert alert-info mt-2 d-flex justify-content-between align-items-center">
+                            <span><strong>Total de productos individuales:</strong></span>
+                            <span class="badge bg-primary-subtle fs-6">@TotalProductosIndividuales unidades</span>
+                        </div>
+
                         <div
-                            class="border rounded p-2 mt-3 d-flex flex-column justify-content-between align-items-center bg-white">
+                            class="border rounded p-2 d-flex flex-column justify-content-between align-items-center bg-white">
                             <CascadingValue Value="SelectedProduct.Lotes" Name="LotesDisponibles">
                                 <CascadingValue Value="lstIdLotesSeleccionados" Name="lstIdLotesSeleccionados">
-                                    @foreach (var lote in lstLotes)
+                                    @foreach (var lote in LotesSeleccionados)
                                     {
-                                        <LoteItem OnRemoveLote="OnRemoveLote" />
+                                        <LoteItem LoteData="@lote" OnRemoveLote="OnRemoveLote"
+                                            OnCantidadChanged="OnCantidadLoteChanged" OnLoteCreado="OnLoteCreado" />
                                     }
                                 </CascadingValue>
                             </CascadingValue>
-                            <button class="btn btn-outline-secondary w-100" type="button" @onclick="AgregarLote">
-                                <i class="bi bi-plus-lg"></i> @(AllSelected ? "Crear nuevo Lote" : "Agregar Lote")
+                            <button class="btn btn-outline-secondary w-100" type="button" @onclick="AgregarLote" 
+                                    disabled="@LotesSeleccionados.Any(l => l.Id == -1)">
+                                <i class="bi bi-plus-lg"></i> @(LotesSeleccionados.Any(l => l.Id == -1) ? "Completar lote actual" : "Agregar Lote")
                             </button>
                         </div>
                     </div>
@@ -72,7 +83,7 @@
 }
 else
 {
-    <div class="mb-3">
+    <div class="my-3">
         <select class="form-select" @bind="Id_Selected_Product">
             <option value="-1">Seleccione un producto</option>
             @foreach (var item in lstProductosDisponibles.Where(p => !lstIdProductosSeleccionados.Contains(p.Id)))
@@ -85,7 +96,7 @@ else
 
 @code {
     [CascadingParameter(Name = "ProductosDisponibles")]
-    public List<ProductoToNewCompraDTO> lstProductosDisponibles { get; set; }
+    public List<ProductoToNewCompraDTO> lstProductosDisponibles { get; set; } = new();
     [CascadingParameter(Name = "ProductosSeleccionados")]
     public List<int> lstIdProductosSeleccionados { get; set; } = new();
 
@@ -103,9 +114,13 @@ else
         }
     }
 
-    public bool AllSelected => SelectedProduct.Lotes.Count() <= lstLotes.Count();
+    public bool AllSelected => SelectedProduct?.Lotes?.Count() <= LotesSeleccionados.Count;
     public List<int> lstIdLotesSeleccionados { get; set; } = new();
-    public List<LoteItem> lstLotes { get; set; } = new();
+    public List<LoteToNewCompraDTO> LotesSeleccionados { get; set; } = new();
+
+    private Dictionary<int, int> CantidadesPorLote { get; set; } = new();
+
+    public int TotalProductosIndividuales => CantidadesPorLote.Values.Sum();
 
     private void SeleccionarProducto(int Id_Producto)
     {
@@ -121,18 +136,69 @@ else
 
     private void AgregarLote()
     {
-        lstLotes.Add(new LoteItem());
+        // Solo agregar un nuevo lote si no hay ninguno temporal (Id == -1)
+        if (!LotesSeleccionados.Any(l => l.Id == -1))
+        {
+            var nuevoLote = new LoteToNewCompraDTO
+            {
+                Id = -1, // ID temporal para indicar que es un nuevo lote
+                Cantidad_Productos = 0,
+                Nro_Lote = "",
+                Fecha_Vencimiento = DateOnly.FromDateTime(DateTime.Now.AddMonths(6))
+            };
+            
+            LotesSeleccionados.Add(nuevoLote);
+            StateHasChanged();
+        }
+    }
+
+    private void OnCantidadLoteChanged((int loteId, int cantidad) cambio)
+    {
+        CantidadesPorLote[cambio.loteId] = cambio.cantidad;
+        OnTotalChanged.InvokeAsync(TotalProductosIndividuales);
         StateHasChanged();
     }
 
     private void OnRemoveLote(int loteId)
     {
-        lstIdLotesSeleccionados.Add(loteId);
+        lstIdLotesSeleccionados.Remove(loteId);
+        if (CantidadesPorLote.ContainsKey(loteId))
+        {
+            CantidadesPorLote.Remove(loteId);
+        }
+
+        // Remover el lote de la lista
+        var loteToRemove = LotesSeleccionados.FirstOrDefault(l => l.Id == loteId);
+        if (loteToRemove != null)
+        {
+            LotesSeleccionados.Remove(loteToRemove);
+        }
+
+        OnTotalChanged.InvokeAsync(TotalProductosIndividuales);
+        StateHasChanged();
+    }
+
+    private void OnLoteCreado(LoteToNewCompraDTO nuevoLote)
+    {
+        // Encontrar el lote temporal (Id == -1) y reemplazarlo por el nuevo lote
+        var index = LotesSeleccionados.FindIndex(l => l.Id == -1);
+        if (index != -1)
+        {
+            LotesSeleccionados[index] = nuevoLote;
+        }
+        
+        // Agregar el nuevo lote al diccionario de cantidades
+        CantidadesPorLote[nuevoLote.Id] = nuevoLote.Cantidad_Productos;
+        
+        OnTotalChanged.InvokeAsync(TotalProductosIndividuales);
         StateHasChanged();
     }
 
     [Parameter]
     public EventCallback<int> OnRemoveProduct { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnTotalChanged { get; set; }
 
 
 

@@ -43,7 +43,7 @@
                         </div>
                         <div
                             class="col-3 d-flex flex-column gap-2 rounded bg-primary-subtle p-4 align-items-center justify-content-center text-muted fw-semibold text-center">
-                            <span class="fs-1">0</span>
+                            <span class="fs-1">@TotalProductosIndividuales</span>
                             <span>Cantidad total de productos</span>
                         </div>
                     </div>
@@ -51,9 +51,11 @@
                 <div class="d-flex justify-content-center mt-2 flex-column">
                     <CascadingValue Value="lstProductosDisponibles" Name="ProductosDisponibles">
                         <CascadingValue Value="lstIdProductosSeleccionados" Name="ProductosSeleccionados">
-                            @foreach (var item in itemsCompra)
+                            @for (int i = 0; i < itemsCompra.Count; i++)
                             {
-                                <ProductItem OnRemoveProduct="OnRemoveProductFromList" />
+                                var index = i; // Capturar el índice para el closure
+                                               <ProductItem OnRemoveProduct="OnRemoveProductFromList"
+                                                   OnTotalChanged="@(total => OnTotalProductosChanged(index, total))" />
                             }
                         </CascadingValue>
                     </CascadingValue>
@@ -63,12 +65,12 @@
                         @if (AllSelected)
                         {
                             <i class="bi bi-box fs-4"></i>
-                            <span>No hay más productos disponibles</span>
+                            <span>No se tienen más productos disponibles</span>
                         }
                         else
                         {
                             <i class="bi bi-plus fs-4"></i>
-                            <span>Agregar otro producto</span>
+                            <span>Agregar producto</span>
                         }
                     </button>
                 </div>
@@ -91,6 +93,13 @@
     public int cantidadProductosAgregados = 0;
     protected List<ProductItem> itemsCompra { get; set; } = new();
     private bool AllSelected => lstProductosDisponibles.Count == cantidadProductosAgregados;
+
+    // Diccionario para mantener el total de productos por índice
+    private Dictionary<int, int> TotalesPorProducto { get; set; } = new();
+
+    // Total global de productos individuales
+    public int TotalProductosIndividuales => TotalesPorProducto.Values.Sum();
+
     protected override async Task OnInitializedAsync()
     {
         await CargarProductos();
@@ -101,22 +110,34 @@
         var productos = await ProductServices.GetProductosForOrdenAsync();
         lstProductosDisponibles = productos.ToList();
     }
+
     private void AgregarProducto()
     {
         if (!AllSelected)
         {
+            var nuevoIndice = itemsCompra.Count;
             itemsCompra.Add(new ProductItem());
+            TotalesPorProducto[nuevoIndice] = 0; // Inicializar con 0
             cantidadProductosAgregados++;
             StateHasChanged();
         }
     }
+
     private void OnRemoveProductFromList(int Id_Producto)
     {
         lstIdProductosSeleccionados.Add(Id_Producto);
     }
-    private void CrearOrdenDeCompra()
-    {
 
+    private void OnTotalProductosChanged(int indiceProducto, int nuevoTotal)
+    {
+        // Actualizar el total para este producto específico
+        TotalesPorProducto[indiceProducto] = nuevoTotal;
+        StateHasChanged();
     }
 
+    private Task CrearOrdenDeCompra()
+    {
+        // Implementar lógica de creación de orden
+        return Task.CompletedTask;
+    }
 }
