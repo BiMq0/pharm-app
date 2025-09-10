@@ -7,12 +7,12 @@ namespace InventarioFarmacia_Back;
 public class LoteService : ILoteService
 {
     private readonly ILoteRepository _loteRepository;
-    private readonly IProducto_IndividualRepository _productoIndividualRepository;
+    private readonly IProducto_IndividualService _productoService;
 
-    public LoteService(ILoteRepository loteRepository, IProducto_IndividualRepository productoIndividualRepository)
+    public LoteService(ILoteRepository loteRepository, IProducto_IndividualService productoService)
     {
         _loteRepository = loteRepository;
-        _productoIndividualRepository = productoIndividualRepository;
+        _productoService = productoService;
     }
 
     public async Task<IEnumerable<Lote>> ObtenerLotesAsync()
@@ -54,7 +54,7 @@ public class LoteService : ILoteService
             });
         }
 
-        return loteCreado != null && await _productoIndividualRepository.AddAsync(lstProductosIndividuales);
+        return loteCreado != null && await _productoService.CrearProductoIndividualAsync(lstProductosIndividuales);
     }
 
     public async Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote)

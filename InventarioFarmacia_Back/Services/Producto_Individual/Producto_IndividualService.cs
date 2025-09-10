@@ -41,12 +41,12 @@ public class Producto_IndividualService : IProducto_IndividualService
         return await _productoIndividualRepository.GetByIdAsync(id);
     }
 
-    public async Task<bool> CrearProductoIndividualAsync(Producto_Individual productoIndividual)
+    public async Task<bool> CrearProductoIndividualAsync(List<Producto_Individual> productosIndividuales)
     {
         // TODO: Agregar validaciones de negocio
         // TODO: Verificar que el producto exists
         // TODO: Verificar que el lote exists
-        return await _productoIndividualRepository.AddAsync(productoIndividual);
+        return await _productoIndividualRepository.AddAsync(productosIndividuales);
     }
 
     public async Task<bool> ActualizarProductoIndividualAsync(Producto_Individual productoIndividual)

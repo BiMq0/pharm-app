@@ -1,5 +1,4 @@
 ﻿using InventarioFarmacia_Domain.Models;
-// using InventarioFarmacia_Shared;
 
 namespace InventarioFarmacia_Back;
 

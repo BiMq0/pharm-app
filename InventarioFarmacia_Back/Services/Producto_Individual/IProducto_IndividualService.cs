@@ -11,7 +11,7 @@ public interface IProducto_IndividualService
     Task<IEnumerable<Producto_Individual>> ObtenerProductosPorEstadoAsync(Estados_ProductosIndividuales estado);
     Task<IEnumerable<Producto_Individual>> ObtenerProductosProximosAVencerAsync();
     Task<Producto_Individual> ObtenerProductoIndividualPorIdAsync(int id);
-    Task<bool> CrearProductoIndividualAsync(Producto_Individual productoIndividual);
+    Task<bool> CrearProductoIndividualAsync(List<Producto_Individual> productoIndividuales);
     Task<bool> ActualizarProductoIndividualAsync(Producto_Individual productoIndividual);
     Task<bool> ActualizarEstadosPorFechaVencimientoAsync();
     Task<bool> MarcarComoVendidoAsync(int productId);

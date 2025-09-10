@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 using InventarioFarmacia_Shared.Endpoints;
 namespace InventarioFarmacia_Back.Mappers
 {
@@ -11,36 +12,36 @@ namespace InventarioFarmacia_Back.Mappers
         {
             var lotes = app.MapGroup(LotesEndpoints.BASE);
 
-            lotes.MapGet(LotesEndpoints.GET_ALL, async () =>
+            lotes.MapGet(LotesEndpoints.GET_ALL, async (ILoteService loteService) =>
             {
-                // Placeholder for actual service call
-                return Results.Ok(new List<string> { "Lote1", "Lote2" });
+                var lotes = await loteService.ObtenerLotesAsync();
+                return Results.Ok(lotes);
             });
 
-            lotes.MapGet(LotesEndpoints.GET_FOR_PRODUCT, async (int idProducto) =>
+            lotes.MapGet(LotesEndpoints.GET_FOR_PRODUCT, async (ILoteService loteService, int idProducto) =>
             {
-                // Placeholder for actual service call
-                return Results.Ok();
+                var lotes = await loteService.ObtenerLotesPorIdProductoParaCompraAsync(idProducto);
+                return Results.Ok(lotes);
             });
 
-            lotes.MapGet(LotesEndpoints.GET_BY_ID, async (int id) =>
+            lotes.MapGet(LotesEndpoints.GET_BY_ID, async (ILoteService loteService, int id) =>
             {
-                // Placeholder for actual service call
-                return Results.Ok($"Lote{id}");
-            });
-
-
-            lotes.MapPost(LotesEndpoints.CREATE, async (string nuevoLote) =>
-            {
-                // Placeholder for actual service call
-                return Results.Created($"/lotes/{nuevoLote}", nuevoLote);
+                var lote = await loteService.ObtenerLotePorIdAsync(id);
+                return lote is not null ? Results.Ok(lote) : Results.NotFound();
             });
 
 
-            lotes.MapPut(LotesEndpoints.UPDATE, async (int id, string loteActualizado) =>
+            lotes.MapPost(LotesEndpoints.CREATE, async (LoteNuevoDTO nuevoLote, ILoteService loteService) =>
             {
-                // Placeholder for actual service call
-                return Results.Ok($"Lote{id} actualizado a {loteActualizado}");
+                var loteCreado = await loteService.CrearLoteAsync(nuevoLote);
+                return Results.Ok(loteCreado);
+            });
+
+
+            lotes.MapPut(LotesEndpoints.UPDATE, async (int id, /*LoteActualizadoDTO */ string loteActualizado, ILoteService loteService) =>
+            {
+                await Task.Delay(1);
+                throw new NotImplementedException();
             });
 
 

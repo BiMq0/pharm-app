@@ -10,6 +10,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
     public class LoteToNewCompraDTO
     {
         public int Id { get; set; }
+        public int Id_Producto { get; set; }
         public DateOnly Fecha_Vencimiento { get; set; }
         public string Nro_Lote { get; set; } = null!;
         public int Cantidad_Productos { get; set; }
@@ -17,6 +18,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
         public LoteToNewCompraDTO(Lote lote)
         {
             Id = lote.Id;
+            Id_Producto = lote.Id_Producto;
             Fecha_Vencimiento = lote.Fecha_Vencimiento;
             Nro_Lote = lote.Nro_Lote!;
             Cantidad_Productos = lote.CantidadProductos;
