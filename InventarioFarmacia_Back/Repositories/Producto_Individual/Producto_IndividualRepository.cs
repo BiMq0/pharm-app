@@ -86,10 +86,10 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             ?? throw new KeyNotFoundException($"Producto Individual con id {id} no encontrado.");
     }
 
-    public async Task<bool> AddAsync(Producto_Individual productoIndividual)
+    public async Task<bool> AddAsync(List<Producto_Individual> productosIndividuales)
     {
-        await _context.Productos_Individuales.AddAsync(productoIndividual);
-        return await _context.SaveChangesAsync() > 0;
+        await _context.Productos_Individuales.AddRangeAsync(productosIndividuales);
+        return await _context.SaveChangesAsync() == productosIndividuales.Count;
     }
 
     public async Task<bool> UpdateAsync(Producto_Individual productoIndividual)

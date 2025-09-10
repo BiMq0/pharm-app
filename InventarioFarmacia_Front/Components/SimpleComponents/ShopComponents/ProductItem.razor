@@ -41,39 +41,39 @@
             <div class="col-8">
                 <div class=" row border rounded py-3 px-2 h-100 d-flex flex-column">
                     <div class="d-flex flex-column col-8">
-                        <div class="d-flex justify-content-around align-items-center rounded bg-secondary-subtle p-2">
-                            <div class="rounded d-flex gap-3">
-                                <label class="fw-semibold">Unidad</label>
-                                <input type="radio" name="Unidad" value="UNIT" class="form-check-input" />
-                            </div>
+                        <div class="d-flex justify-content-evenly align-items-center rounded bg-secondary-subtle p-2">
+                            <div class="d-flex gap-3 border-end pe-3 border-2 border-dark">
+                                <div class="d-flex gap-3">
+                                    <label class="fw-semibold">Unidad</label>
+                                    <input type="radio" name="Unidad" value="UNIT" class="form-check-input" />
+                                </div>
 
-                            <div class="rounded d-flex gap-3">
-                                <label class="fw-semibold">Caja</label>
-                                <input type="radio" name="Unidad" value="BOX" class="form-check-input" />
+                                <div class="d-flex gap-3">
+                                    <label class="fw-semibold">Caja</label>
+                                    <input type="radio" name="Unidad" value="BOX" class="form-check-input" />
+                                </div>
                             </div>
-                        </div>
-
-                        <!-- Mostrar total de productos individuales -->
-                        <div class="alert alert-info mt-2 d-flex justify-content-between align-items-center">
-                            <span><strong>Total de productos individuales:</strong></span>
-                            <span class="badge bg-primary-subtle fs-6">@TotalProductosIndividuales unidades</span>
+                            <div class="d-flex gap-3">
+                                <span><strong>Total de productos individuales:</strong></span>
+                                <span class="badge bg-primary fs-6">0 unidades</span>
+                            </div>
                         </div>
 
                         <div
                             class="border rounded p-2 d-flex flex-column justify-content-between align-items-center bg-white">
-                            <CascadingValue Value="SelectedProduct.Lotes" Name="LotesDisponibles">
-                                <CascadingValue Value="lstIdLotesSeleccionados" Name="lstIdLotesSeleccionados">
-                                    @foreach (var lote in LotesSeleccionados)
-                                    {
-                                        <LoteItem LoteData="@lote" OnRemoveLote="OnRemoveLote"
-                                            OnCantidadChanged="OnCantidadLoteChanged" OnLoteCreado="OnLoteCreado" />
-                                    }
-                                </CascadingValue>
-                            </CascadingValue>
-                            <button class="btn btn-outline-secondary w-100" type="button" @onclick="AgregarLote" 
-                                    disabled="@LotesSeleccionados.Any(l => l.Id == -1)">
-                                <i class="bi bi-plus-lg"></i> @(LotesSeleccionados.Any(l => l.Id == -1) ? "Completar lote actual" : "Agregar Lote")
-                            </button>
+                            <div class="input-group">
+                                <span class="input-group-text bg-white border-end-0">
+                                    <i class="bi bi-search"></i>
+                                </span>
+                                <input type="text" class="form-control border-start-0"
+                                    placeholder="Buscar lotes por número de lote..." @oninput="(e) => FiltrarLotes(e)" />
+                            </div>
+                            <div class="container">
+                                @foreach (var lote in SelectedProduct.Lotes ?? Enumerable.Empty<LoteToNewCompraDTO>())
+                                {
+                                    <input type="number" class="form-control my-2" value="@lote.Cantidad_Productos" disabled />
+                                }
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -114,14 +114,6 @@ else
         }
     }
 
-    public bool AllSelected => SelectedProduct?.Lotes?.Count() <= LotesSeleccionados.Count;
-    public List<int> lstIdLotesSeleccionados { get; set; } = new();
-    public List<LoteToNewCompraDTO> LotesSeleccionados { get; set; } = new();
-
-    private Dictionary<int, int> CantidadesPorLote { get; set; } = new();
-
-    public int TotalProductosIndividuales => CantidadesPorLote.Values.Sum();
-
     private void SeleccionarProducto(int Id_Producto)
     {
         var selectedValue = Id_Producto;
@@ -134,63 +126,20 @@ else
         StateHasChanged();
     }
 
-    private void AgregarLote()
+
+    private void FiltrarLotes(ChangeEventArgs e)
     {
-        // Solo agregar un nuevo lote si no hay ninguno temporal (Id == -1)
-        if (!LotesSeleccionados.Any(l => l.Id == -1))
+        var filtro = e.Value?.ToString()?.Trim().ToLower() ?? string.Empty;
+        if (string.IsNullOrEmpty(filtro))
         {
-            var nuevoLote = new LoteToNewCompraDTO
-            {
-                Id = -1, // ID temporal para indicar que es un nuevo lote
-                Cantidad_Productos = 0,
-                Nro_Lote = "",
-                Fecha_Vencimiento = DateOnly.FromDateTime(DateTime.Now.AddMonths(6))
-            };
-            
-            LotesSeleccionados.Add(nuevoLote);
-            StateHasChanged();
+            SelectedProduct.Lotes = SelectedProduct.Lotes;
         }
-    }
-
-    private void OnCantidadLoteChanged((int loteId, int cantidad) cambio)
-    {
-        CantidadesPorLote[cambio.loteId] = cambio.cantidad;
-        OnTotalChanged.InvokeAsync(TotalProductosIndividuales);
-        StateHasChanged();
-    }
-
-    private void OnRemoveLote(int loteId)
-    {
-        lstIdLotesSeleccionados.Remove(loteId);
-        if (CantidadesPorLote.ContainsKey(loteId))
+        else
         {
-            CantidadesPorLote.Remove(loteId);
+            SelectedProduct.Lotes = SelectedProduct.Lotes?
+            .Where(l => l.Nro_Lote.ToLower().Contains(filtro))
+            .ToList() ?? new List<LoteToNewCompraDTO>();
         }
-
-        // Remover el lote de la lista
-        var loteToRemove = LotesSeleccionados.FirstOrDefault(l => l.Id == loteId);
-        if (loteToRemove != null)
-        {
-            LotesSeleccionados.Remove(loteToRemove);
-        }
-
-        OnTotalChanged.InvokeAsync(TotalProductosIndividuales);
-        StateHasChanged();
-    }
-
-    private void OnLoteCreado(LoteToNewCompraDTO nuevoLote)
-    {
-        // Encontrar el lote temporal (Id == -1) y reemplazarlo por el nuevo lote
-        var index = LotesSeleccionados.FindIndex(l => l.Id == -1);
-        if (index != -1)
-        {
-            LotesSeleccionados[index] = nuevoLote;
-        }
-        
-        // Agregar el nuevo lote al diccionario de cantidades
-        CantidadesPorLote[nuevoLote.Id] = nuevoLote.Cantidad_Productos;
-        
-        OnTotalChanged.InvokeAsync(TotalProductosIndividuales);
         StateHasChanged();
     }
 

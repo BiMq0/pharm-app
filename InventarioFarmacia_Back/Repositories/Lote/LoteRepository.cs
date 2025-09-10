@@ -14,34 +14,33 @@ public class LoteRepository : ILoteRepository
     public async Task<IEnumerable<Lote>> GetAllLotesAsync()
     {
         return await _context.Lotes
-            .Include(l => l.ProductosIndividuales)
-                .ThenInclude(pi => pi.Producto)
             .AsNoTracking()
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Lote>> GetAllByNroLoteAsync(string nroLote)
+    public async Task<IEnumerable<Lote>> GetAllForProductoAsync(int idProducto)
     {
         return await _context.Lotes
-            .Include(l => l.ProductosIndividuales)
-            .ThenInclude(pi => pi.Producto)
-            .Where(l => l.Nro_Lote == nroLote)
+            .Where(l => l.Id_Producto == idProducto)
+            .AsNoTracking()
             .ToListAsync();
     }
 
     public async Task<Lote> GetLoteByIdAsync(int id)
     {
         return await _context.Lotes
-            .Include(l => l.ProductosIndividuales)     // ← Unidades en el lote
-                .ThenInclude(pi => pi.Producto)        // ← Información del producto
+            .Include(l => l.ProductosIndividuales)
+            .Include(l => l.Producto)
+            .AsNoTracking()
             .FirstOrDefaultAsync(l => l.Id == id)
             ?? throw new KeyNotFoundException($"Lote con id {id} no encontrado.");
     }
 
-    public async Task<bool> AddLoteAsync(Lote lote)
+    public async Task<Lote> AddLoteAsync(Lote lote)
     {
         await _context.Lotes.AddAsync(lote);
-        return await _context.SaveChangesAsync() > 0;
+        await _context.SaveChangesAsync();
+        return lote;
     }
 
     public async Task<bool> UpdateLoteAsync(Lote lote)
