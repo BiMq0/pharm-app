@@ -38,11 +38,11 @@
                 </div>
             </div>
 
-            <div class="col-8">
-                <div class=" row border rounded py-3 px-2 h-100 d-flex flex-column">
-                    <div class="d-flex flex-column col-8">
+            <div class="col-6 d-flex justify-content-between">
+                <div class=" row border rounded py-3 px-2 h-100 d-flex flex-column w-100">
+                    <div class="d-flex flex-column col-12">
                         <div class="d-flex justify-content-evenly align-items-center rounded bg-secondary-subtle p-2">
-                            <div class="d-flex gap-3 border-end pe-3 border-2 border-dark">
+                            @* <div class="d-flex gap-3 border-end pe-3 border-2 border-dark">
                                 <div class="d-flex gap-3">
                                     <label class="fw-semibold">Unidad</label>
                                     <input type="radio" name="Unidad" value="UNIT" class="form-check-input" />
@@ -52,7 +52,7 @@
                                     <label class="fw-semibold">Caja</label>
                                     <input type="radio" name="Unidad" value="BOX" class="form-check-input" />
                                 </div>
-                            </div>
+                            </div> *@
                             <div class="d-flex gap-3">
                                 <span><strong>Total de productos individuales:</strong></span>
                                 <span class="badge bg-primary fs-6">0 unidades</span>
@@ -68,12 +68,49 @@
                                 <input type="text" class="form-control border-start-0"
                                     placeholder="Buscar lotes por número de lote..." @oninput="(e) => FiltrarLotes(e)" />
                             </div>
-                            <div class="container">
+                            <div class="container overflow-auto" style="max-height: 150px;">
                                 @foreach (var lote in SelectedProduct.Lotes ?? Enumerable.Empty<LoteToNewCompraDTO>())
                                 {
-                                    <input type="number" class="form-control my-2" value="@lote.Cantidad_Productos" disabled />
+                                    <div class="d-flex justify-content-around align-items-center my-2 border rounded p-2">
+                                        <input class="form-control text-center" style="max-width: 15%;" type="number" min="0"
+                                            value="0" />
+                                        <div class="p-2 border rounded mx-2 d-flex justify-content-between gap-2"
+                                            style="max-width: 60%;">
+                                            <div class="d-flex  align-items-center">
+                                                <span class="fw-semibold">Lote: @lote.Nro_Lote</span>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-2">
+                                                <span class="fw-semibold" style="font-size: small;">Vence en:</span>
+                                                <span
+                                                    class="badge bg-primary">@lote.Fecha_Vencimiento.ToShortDateString()</span>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="d-flex justify-content-between align-items-center flex-column bg-warning-subtle p-2 rounded">
+                                            <span class="text-muted text-center fw-bold fs-3">@lote.Cantidad_Productos</span>
+                                            <span class="text-muted text-center" style="font-size: smaller;">Stock Actual</span>
+                                        </div>
+
+                                    </div>
                                 }
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-2">
+                <div class="card shadow-sm border-primary">
+                    <div class="card-body p-3">
+                        <h6 class="card-title text-center text-primary mb-3">Nuevo Precio (Bs)</h6>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-primary text-white"><i
+                                    class="bi bi-currency-dollar"></i></span>
+                            <input type="number" class="form-control" min="0" step="0.01" placeholder="Ej: 12.50" />
+                        </div>
+                        <h6 class="card-title text-center text-secondary mt-4 mb-2">Inventario destino</h6>
+                        <div class="input-group">
+                            <span class="input-group-text bg-secondary text-white"><i class="bi bi-box-seam"></i></span>
+                            <input type="number" class="form-control" min="1" value="2" />
                         </div>
                     </div>
                 </div>
@@ -114,6 +151,15 @@ else
         }
     }
 
+    public List<LoteToNewCompraDTO> LotesToAddProducts { get; set; } = new();
+
+    protected override void OnInitialized()
+    {
+        LotesToAddProducts = SelectedProduct.Lotes?.ToList() ?? new List<LoteToNewCompraDTO>();
+        StateHasChanged();
+        base.OnInitialized();
+    }
+
     private void SeleccionarProducto(int Id_Producto)
     {
         var selectedValue = Id_Producto;
@@ -137,7 +183,7 @@ else
         else
         {
             SelectedProduct.Lotes = SelectedProduct.Lotes?
-            .Where(l => l.Nro_Lote.ToLower().Contains(filtro))
+            .OrderByDescending(l => l.Nro_Lote.ToLower().Contains(filtro))
             .ToList() ?? new List<LoteToNewCompraDTO>();
         }
         StateHasChanged();
