@@ -2,6 +2,7 @@
 @using InventarioFarmacia_Shared.DTOs.Products;
 @using InventarioFarmacia_Shared.DTOs.Lotes;
 @using System.ComponentModel
+@inject Services.Lotes.ILoteService LoteService
 @rendermode InteractiveServer
 
 @if (ProductSelected && Id_Selected_Product != -1)
@@ -86,13 +87,22 @@
                                             </div>
                                         </div>
                                         <div
-                                            class="d-flex justify-content-between align-items-center flex-column bg-warning-subtle p-2 rounded">
+                                            class="d-flex justify-content-between align-items-center bg-warning-subtle py-1 px-2 rounded gap-2">
+                                            <span class="text-muted text-center" style="font-size: smaller;">Stock Actual: </span>
                                             <span class="text-muted text-center fw-bold fs-3">@lote.Cantidad_Productos</span>
-                                            <span class="text-muted text-center" style="font-size: smaller;">Stock Actual</span>
                                         </div>
 
                                     </div>
                                 }
+
+                                @if (CreandoNuevoLote)
+                                {
+                                    <NewLoteForm OnCrearLote="HandleCrearLote"
+                                        OnCancelarCreacion="@(() => CreandoNuevoLote = false)" />
+                                }
+                                <button class="btn btn-outline-primary w-100 mt-2" disabled="@CreandoNuevoLote" @onclick="() => CreandoNuevoLote = true">
+                                    <i class="bi bi-plus-circle"></i> @(CreandoNuevoLote ? "Creando Lote..." : "Agregar Nuevo Lote")
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -153,13 +163,15 @@ else
 
     public List<LoteToNewCompraDTO> LotesToAddProducts { get; set; } = new();
 
-    protected override void OnInitialized()
+    public bool CreandoNuevoLote { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
     {
         LotesToAddProducts = SelectedProduct.Lotes?.ToList() ?? new List<LoteToNewCompraDTO>();
         StateHasChanged();
-        base.OnInitialized();
+        await base.OnInitializedAsync();
     }
-
+    
     private void SeleccionarProducto(int Id_Producto)
     {
         var selectedValue = Id_Producto;
@@ -195,6 +207,15 @@ else
     [Parameter]
     public EventCallback<int> OnTotalChanged { get; set; }
 
-
+    public async Task HandleCrearLote(LoteNuevoDTO loteNuevo)
+    {
+        loteNuevo.Id_Producto = SelectedProduct.Id;
+        var resultado = await LoteService.CrearLoteAsync(loteNuevo);
+        if (resultado)
+        {
+            CreandoNuevoLote = false;
+        }
+        StateHasChanged();
+    }
 
 }

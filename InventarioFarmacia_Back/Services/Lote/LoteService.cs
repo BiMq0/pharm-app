@@ -41,7 +41,6 @@ public class LoteService : ILoteService
 
     public async Task<bool> CrearLoteAsync(LoteNuevoDTO lote, int idInventario = 2)
     {
-        if (lote.Cantidad_Productos <= 0) throw new ArgumentException("La cantidad de productos debe ser mayor a 0");
 
         if (lote.Fecha_Vencimiento <= DateOnly.FromDateTime(DateTime.Now)) throw new ArgumentException("La fecha de vencimiento debe ser futura");
 
@@ -53,17 +52,7 @@ public class LoteService : ILoteService
             Fecha_Vencimiento = lote.Fecha_Vencimiento,
             Nro_Lote = lote.Nro_Lote,
         };
-
-        var loteCreado = await _loteRepository.AddLoteAsync(nuevoLote);
-        if (loteCreado == null) return false;
-
-        var lstProductosIndividuales = CrearProductosIndividuales(
-            lote.Id_Producto,
-            loteCreado.Id,
-            lote.Cantidad_Productos,
-            idInventario);
-
-        return await _productoService.CrearProductoIndividualAsync(lstProductosIndividuales);
+        return await _loteRepository.AddLoteAsync(nuevoLote);
     }
 
     private List<Producto_Individual> CrearProductosIndividuales(int idProducto, int idLote, int cantidad, int idInventario)

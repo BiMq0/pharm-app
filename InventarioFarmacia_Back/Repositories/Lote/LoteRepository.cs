@@ -40,11 +40,10 @@ public class LoteRepository : ILoteRepository
             ?? throw new KeyNotFoundException($"Lote con id {id} no encontrado.");
     }
 
-    public async Task<Lote> AddLoteAsync(Lote lote)
+    public async Task<bool> AddLoteAsync(Lote lote)
     {
         await _context.Lotes.AddAsync(lote);
-        await _context.SaveChangesAsync();
-        return lote;
+        return await _context.SaveChangesAsync() > 0;
     }
 
     public async Task<bool> UpdateLoteAsync(Lote lote)

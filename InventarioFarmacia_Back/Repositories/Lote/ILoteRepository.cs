@@ -7,7 +7,7 @@ public interface ILoteRepository
     Task<IEnumerable<Lote>> GetAllLotesAsync();
     Task<IEnumerable<Lote>> GetAllForProductoAsync(int idProducto);
     Task<Lote> GetLoteByIdAsync(int id);
-    Task<Lote> AddLoteAsync(Lote lote);
+    Task<bool> AddLoteAsync(Lote lote);
     Task<bool> UpdateLoteAsync(Lote lote);
     Task<bool> DeleteLoteAsync(int id);
 }

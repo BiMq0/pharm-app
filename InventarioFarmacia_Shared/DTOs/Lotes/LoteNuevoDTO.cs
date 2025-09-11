@@ -16,8 +16,6 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
         public DateOnly Fecha_Vencimiento { get; set; }
         [Required(ErrorMessage = "El Nro de Lote es obligatorio")]
         public string Nro_Lote { get; set; } = null!;
-        [Range(1, int.MaxValue, ErrorMessage = "La cantidad de productos debe ser al menos 1")]
-        public int Cantidad_Productos { get; set; }
         public LoteNuevoDTO() { }
     }
 }
