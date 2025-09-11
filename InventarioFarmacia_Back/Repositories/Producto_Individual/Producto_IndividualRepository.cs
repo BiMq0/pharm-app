@@ -11,7 +11,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public Producto_IndividualRepository(PharmDBContext context)
     {
         _context = context;
-        UpdateStatesByExpirationDateAsync().GetAwaiter().GetResult();
     }
 
     public async Task<IEnumerable<Producto_Individual>> GetAllAsync()
@@ -39,14 +38,14 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Producto_Individual>> GetAllByProductIdAsync(int productId)
+    public async Task<IEnumerable<Producto_Individual>> GetAllByLoteIdAsync(int loteId)
     {
         return await _context.Productos_Individuales
             .Include(pi => pi.Producto)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
             .Include(pi => pi.DetalleCompras)
-            .Where(p => p.Id_Producto == productId)
+            .Where(p => p.Id_Lote == loteId)
             .AsNoTracking()
             .ToListAsync();
     }

@@ -14,6 +14,8 @@ public class LoteRepository : ILoteRepository
     public async Task<IEnumerable<Lote>> GetAllLotesAsync()
     {
         return await _context.Lotes
+        .Include(l => l.Producto)
+            .Include(l => l.ProductosIndividuales)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -21,6 +23,8 @@ public class LoteRepository : ILoteRepository
     public async Task<IEnumerable<Lote>> GetAllForProductoAsync(int idProducto)
     {
         return await _context.Lotes
+            .Include(l => l.Producto)
+            .Include(l => l.ProductosIndividuales)
             .Where(l => l.Id_Producto == idProducto)
             .AsNoTracking()
             .ToListAsync();

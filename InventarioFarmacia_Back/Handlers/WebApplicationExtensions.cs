@@ -15,10 +15,12 @@ namespace InventarioFarmacia_Back.Handlers
                 var productMapper = scope.ServiceProvider.GetRequiredService<ProductMapper>();
                 var categoriesMapper = scope.ServiceProvider.GetRequiredService<CategoriesMapper>();
                 var loteMapper = scope.ServiceProvider.GetRequiredService<LotesMapper>();
+                var inventarioMapper = scope.ServiceProvider.GetRequiredService<InventoryMapper>();
 
                 productMapper.Map(app);
                 categoriesMapper.Map(app);
                 loteMapper.Map(app);
+                inventarioMapper.Map(app);
             }
         }
     }

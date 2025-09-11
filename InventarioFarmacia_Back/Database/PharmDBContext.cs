@@ -34,19 +34,27 @@ public class PharmDBContext : DbContext
         modelBuilder.Entity<Producto>()
             .HasOne(p => p.Categoria)
             .WithMany(c => c.Productos)
-            .HasForeignKey(p => p.Id_Categoria);
+            .HasForeignKey(p => p.Id_Categoria)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Producto -> Lotes (1:N)
         modelBuilder.Entity<Producto>()
             .HasMany(p => p.Lotes)
             .WithOne(l => l.Producto)
-            .HasForeignKey(p => p.Id_Producto);
+            .HasForeignKey(p => p.Id_Producto)
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Producto -> ProductosIndividuales (1:N)
         modelBuilder.Entity<Producto_Individual>()
             .HasOne(pi => pi.Producto)
             .WithMany(p => p.ProductosIndividuales)
             .HasForeignKey(pi => pi.Id_Producto)
+            .OnDelete(DeleteBehavior.Cascade);
+        // Producto_Individual -> Lote (N:1)
+        modelBuilder.Entity<Producto_Individual>()
+            .HasOne(pi => pi.Lote)
+            .WithMany(l => l.ProductosIndividuales)
+            .HasForeignKey(pi => pi.Id_Lote)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Producto -> Inventario (1:N)

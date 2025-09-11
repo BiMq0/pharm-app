@@ -1,5 +1,6 @@
 ﻿using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Domain.Constants;
+using InventarioFarmacia_Shared.DTOs.Products.Individual;
 
 namespace InventarioFarmacia_Back;
 
@@ -21,9 +22,10 @@ public class Producto_IndividualService : IProducto_IndividualService
         return await _productoIndividualRepository.GetAllAsync(filtro);
     }
 
-    public async Task<IEnumerable<Producto_Individual>> ObtenerProductosPorProductoAsync(int productId)
+    public async Task<IEnumerable<ProductoIndividualToLoteDTO>> ObtenerProductosPorLoteAsync(int loteId)
     {
-        return await _productoIndividualRepository.GetAllByProductIdAsync(productId);
+        var productos = await _productoIndividualRepository.GetAllByLoteIdAsync(loteId);
+        return productos.Select(p => new ProductoIndividualToLoteDTO(p));
     }
 
     public async Task<IEnumerable<Producto_Individual>> ObtenerProductosPorEstadoAsync(Estados_ProductosIndividuales estado)

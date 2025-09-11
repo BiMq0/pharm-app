@@ -1,12 +1,12 @@
 ﻿using InventarioFarmacia_Domain.Models;
-
+using InventarioFarmacia_Shared.DTOs.Inventarios;
 namespace InventarioFarmacia_Back;
 
 public interface IInventarioService
 {
-    Task<IEnumerable<Inventario>> ObtenerInventariosAsync();
-    Task<Inventario> ObtenerInventarioPorIdAsync(int id);
-    Task<bool> CrearInventarioAsync(Inventario inventario);
+    Task<IEnumerable<InventarioGeneralDTO>> ObtenerInventariosAsync();
+    Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id);
+    Task<bool> CrearInventarioAsync(InventarioNuevoDTO inventario);
     Task<bool> ActualizarInventarioAsync(Inventario inventario);
     Task<bool> EliminarInventarioAsync(int id);
     Task<bool> ActualizarStockAsync(int inventarioId, int cantidad);

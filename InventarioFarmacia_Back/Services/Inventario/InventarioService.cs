@@ -1,4 +1,5 @@
 ﻿using InventarioFarmacia_Domain.Models;
+using InventarioFarmacia_Shared.DTOs.Inventarios;
 
 namespace InventarioFarmacia_Back;
 
@@ -11,21 +12,25 @@ public class InventarioService : IInventarioService
         _inventarioRepository = inventarioRepository;
     }
 
-    public async Task<IEnumerable<Inventario>> ObtenerInventariosAsync()
+    public async Task<IEnumerable<InventarioGeneralDTO>> ObtenerInventariosAsync()
     {
-        return await _inventarioRepository.GetAllInventariosAsync();
+        var inventarios = await _inventarioRepository.GetAllInventariosAsync();
+        return inventarios.Select(i => new InventarioGeneralDTO(i));
     }
 
-    public async Task<Inventario> ObtenerInventarioPorIdAsync(int id)
+    public async Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id)
     {
-        return await _inventarioRepository.GetInventarioByIdAsync(id);
+        var inventario = await _inventarioRepository.GetInventarioByIdAsync(id);
+        return inventario is not null ? new InventarioGeneralDTO(inventario) : null;
     }
 
-    public async Task<bool> CrearInventarioAsync(Inventario inventario)
+    public async Task<bool> CrearInventarioAsync(InventarioNuevoDTO inventario)
     {
-        // TODO: Agregar validaciones de negocio
-        // TODO: Verificar que el producto existe
-        return await _inventarioRepository.AddInventarioAsync(inventario);
+        var nuevoInventario = new Inventario
+        {
+            Nombre = inventario.Nombre,
+        };
+        return await _inventarioRepository.AddInventarioAsync(nuevoInventario);
     }
 
     public async Task<bool> ActualizarInventarioAsync(Inventario inventario)

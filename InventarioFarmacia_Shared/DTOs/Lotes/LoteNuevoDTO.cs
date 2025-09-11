@@ -13,7 +13,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
         [Required(ErrorMessage = "El Id del producto es obligatorio")]
         public int Id_Producto { get; set; }
         [Required(ErrorMessage = "La fecha de vencimiento es obligatoria")]
-        public DateOnly Fecha_Vencimiento { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+        public DateOnly Fecha_Vencimiento { get; set; }
         [Required(ErrorMessage = "El Nro de Lote es obligatorio")]
         public string Nro_Lote { get; set; } = null!;
         [Range(1, int.MaxValue, ErrorMessage = "La cantidad de productos debe ser al menos 1")]

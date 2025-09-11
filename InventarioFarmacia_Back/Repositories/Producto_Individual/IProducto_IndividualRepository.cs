@@ -8,7 +8,7 @@ public interface IProducto_IndividualRepository
 {
     Task<IEnumerable<Producto_Individual>> GetAllAsync();
     Task<IEnumerable<Producto_Individual>> GetAllAsync(string filtro);
-    Task<IEnumerable<Producto_Individual>> GetAllByProductIdAsync(int productId);
+    Task<IEnumerable<Producto_Individual>> GetAllByLoteIdAsync(int loteId);
     Task<IEnumerable<Producto_Individual>> GetAllProductByStateAsync(Estados_ProductosIndividuales estado);
     Task<IEnumerable<Producto_Individual>> GetAllProductsAboutToExpire();
     Task<Producto_Individual> GetByIdAsync(int id);

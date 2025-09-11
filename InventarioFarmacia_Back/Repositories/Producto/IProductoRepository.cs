@@ -7,6 +7,7 @@ public interface IProductoRepository
 {
     Task<IEnumerable<Producto>> GetAllAsync();
     Task<IEnumerable<Producto>> GetAllAsync(string filtro);
+    Task<IEnumerable<Producto>> GetAllForOrderAsync();
     Task<Producto> GetByIdAsync(int id);
     Task<bool> AddAsync(Producto producto);
     Task<bool> UpdateAsync(Producto producto);

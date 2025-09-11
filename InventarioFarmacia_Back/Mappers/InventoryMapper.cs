@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using InventarioFarmacia_Shared.Endpoints;
+using InventarioFarmacia_Shared.DTOs.Inventarios;
 
 namespace InventarioFarmacia_Back.Mappers
 {
-    public static class InventoryMapper
+    public class InventoryMapper
     {
-        public static void Map(WebApplication app)
+        public void Map(WebApplication app)
         {
             var inventarios = app.MapGroup(InventoryEndpoints.BASE);
 

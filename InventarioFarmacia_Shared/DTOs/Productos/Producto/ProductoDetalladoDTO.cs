@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using InventarioFarmacia_Domain.Constants;
 using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Categorias;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 using InventarioFarmacia_Shared.DTOs.Products.Individual;
 
 namespace InventarioFarmacia_Shared.DTOs.Products
@@ -22,8 +23,8 @@ namespace InventarioFarmacia_Shared.DTOs.Products
         public bool Tiene_Subunidades { get; set; }
         public int? Unidades_Por_Existencia { get; set; }
         public int Total_Existencias_Por_Caja { get; set; }
-        public ICollection<Producto_Individual> ProductosIndividuales { get; set; }
-        public CategoriaToProductoDetallado Categoria { get; set; }
+        public ICollection<LoteToProductoDetalladoDTO>? Lotes { get; set; } = new List<LoteToProductoDetalladoDTO>();
+        public CategoriaToProductoDetallado Categoria { get; set; } = null!;
 
 
         public ProductoDetalladoDTO(Producto producto)
@@ -39,8 +40,8 @@ namespace InventarioFarmacia_Shared.DTOs.Products
             Tiene_Subunidades = producto.Tiene_Subunidades;
             Unidades_Por_Existencia = producto.Unidades_Por_Existencia;
             Total_Existencias_Por_Caja = producto.Total_Existencias_Por_Caja;
-            ProductosIndividuales = producto.ProductosIndividuales;
             Categoria = new CategoriaToProductoDetallado(producto.Categoria);
+            Lotes = producto.Lotes?.Select(l => new LoteToProductoDetalladoDTO(l)).ToList();
         }
         public ProductoDetalladoDTO()
         {

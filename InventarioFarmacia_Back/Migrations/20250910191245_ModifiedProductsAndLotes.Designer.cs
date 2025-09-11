@@ -3,6 +3,7 @@ using System;
 using InventarioFarmacia_Back;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioFarmacia_Back.Migrations
 {
     [DbContext(typeof(PharmDBContext))]
-    partial class PharmDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250910191245_ModifiedProductsAndLotes")]
+    partial class ModifiedProductsAndLotes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
@@ -419,7 +422,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.HasOne("InventarioFarmacia_Domain.Models.Producto", "Producto")
                         .WithMany("Lotes")
                         .HasForeignKey("Id_Producto")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Producto");
@@ -430,7 +433,7 @@ namespace InventarioFarmacia_Back.Migrations
                     b.HasOne("InventarioFarmacia_Domain.Models.Categoria", "Categoria")
                         .WithMany("Productos")
                         .HasForeignKey("Id_Categoria")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Categoria");

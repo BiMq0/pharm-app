@@ -24,6 +24,12 @@ namespace InventarioFarmacia_Back.Mappers
                 return Results.Ok(lotes);
             });
 
+            lotes.MapGet(LotesEndpoints.GET_FOR_PRODUCT_TO_SHOP, async (ILoteService loteService, int idProducto) =>
+            {
+                var lotes = await loteService.ObtenerLotesPorIdProductoParaCompraAsync(idProducto);
+                return Results.Ok(lotes);
+            });
+
             lotes.MapGet(LotesEndpoints.GET_BY_ID, async (ILoteService loteService, int id) =>
             {
                 var lote = await loteService.ObtenerLotePorIdAsync(id);
@@ -48,6 +54,7 @@ namespace InventarioFarmacia_Back.Mappers
             lotes.MapDelete(LotesEndpoints.DELETE, async (int id) =>
             {
                 // Placeholder for actual service call
+                await Task.Delay(1);
                 return Results.Ok($"Lote{id} eliminado");
             });
         }

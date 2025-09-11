@@ -48,6 +48,8 @@ namespace InventarioFarmacia_Back
         {
             services.AddScoped<ProductMapper>();
             services.AddScoped<CategoriesMapper>();
+            services.AddScoped<LotesMapper>();
+            services.AddScoped<InventoryMapper>();
             return services;
         }
     }

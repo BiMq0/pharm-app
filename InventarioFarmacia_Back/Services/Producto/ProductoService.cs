@@ -78,7 +78,7 @@ public class ProductoService : IProductoService
 
     public async Task<IEnumerable<ProductoToNewCompraDTO>> ObtenerProductosParaCompraAsync()
     {
-        var productos = await _productoRepository.GetAllAsync();
+        var productos = await _productoRepository.GetAllForOrderAsync();
         return productos.Select(p => new ProductoToNewCompraDTO(p));
     }
 }

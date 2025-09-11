@@ -1,13 +1,13 @@
 ﻿using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Domain.Constants;
-// using InventarioFarmacia_Shared;
+using InventarioFarmacia_Shared.DTOs.Products.Individual;
 
 namespace InventarioFarmacia_Back;
 
 public interface IProducto_IndividualService
 {
     Task<IEnumerable<Producto_Individual>> ObtenerProductosIndividualesAsync(string filtro = "");
-    Task<IEnumerable<Producto_Individual>> ObtenerProductosPorProductoAsync(int productId);
+    Task<IEnumerable<ProductoIndividualToLoteDTO>> ObtenerProductosPorLoteAsync(int loteId);
     Task<IEnumerable<Producto_Individual>> ObtenerProductosPorEstadoAsync(Estados_ProductosIndividuales estado);
     Task<IEnumerable<Producto_Individual>> ObtenerProductosProximosAVencerAsync();
     Task<Producto_Individual> ObtenerProductoIndividualPorIdAsync(int id);
@@ -17,7 +17,4 @@ public interface IProducto_IndividualService
     Task<bool> MarcarComoVendidoAsync(int productId);
     Task<bool> MarcarComoVencidoAsync(int productId);
     Task<bool> MarcarComoProximoAVencerAsync(int productId);
-    // TODO: Agregar métodos con DTOs cuando estén creados
-    // Task<IEnumerable<ProductoIndividualDTO>> ObtenerProductosIndividualesDTOAsync(string filtro = "");
-    // Task<ProductoIndividualDTO> ObtenerProductoIndividualDTOPorIdAsync(int id);
 }
