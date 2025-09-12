@@ -5,7 +5,9 @@ public enum Estados_ProductosIndividuales
     DISPONIBLE,
     VENDIDO,
     POR_VENCER,
-    VENCIDO
+    VENCIDO,
+    PENDIENTE,
+    ORDEN_CANCELADA
 }
 
 public static class Colores_ProductosIndividuales
@@ -14,5 +16,5 @@ public static class Colores_ProductosIndividuales
     public const string VENDIDO = "#109aafff";
     public const string POR_VENCER = "#ffc107";
     public const string VENCIDO = "#dc3545";
-
+    public const string PENDIENTE = "#6c757d";
 }
