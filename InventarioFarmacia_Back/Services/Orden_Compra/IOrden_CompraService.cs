@@ -6,8 +6,7 @@ public interface IOrden_CompraService
 {
     Task<IEnumerable<Orden_Compra>> ObtenerOrdenesCompraAsync(string filtro = "");
     Task<Orden_Compra> ObtenerOrdenCompraPorIdAsync(int id);
-    Task<bool> CrearOrdenCompraAsync(ComprasNuevaDTO ordenCompra);
+    Task<ComprasNuevaDTO> CrearOrdenCompraAsync(ComprasNuevaDTO ordenCompra);
     Task<bool> ActualizarOrdenCompraAsync(Orden_Compra ordenCompra);
     Task<bool> EliminarOrdenCompraAsync(int id);
-    Task<bool> ProcesarOrdenCompraAsync(int ordenId);
 }

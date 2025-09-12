@@ -6,12 +6,10 @@ namespace InventarioFarmacia_Back;
 public class Orden_CompraService : IOrden_CompraService
 {
     private readonly IOrden_CompraRepository _ordenCompraRepository;
-    private readonly IDetalle_CompraService _detalleCompraService;
 
-    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, IDetalle_CompraService detalleCompraService)
+    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository)
     {
         _ordenCompraRepository = ordenCompraRepository;
-        _detalleCompraService = detalleCompraService;
     }
 
     public async Task<IEnumerable<Orden_Compra>> ObtenerOrdenesCompraAsync(string filtro = "")
@@ -36,7 +34,17 @@ public class Orden_CompraService : IOrden_CompraService
             Fecha_Recibo = ordenCompra.Fecha_Recibo,
             Estado = ordenCompra.Estado
         };
-        return await _ordenCompraRepository.AddAsync(nuevaCompra);
+        var nuevaOrdenCreada = await _ordenCompraRepository.AddAsync(nuevaCompra);
+
+        nuevaOrdenCreada.Lotes = ordenCompra.LotesInvolucrados.Select(l => new Lote
+        {
+            Id_Producto = l.Id_Producto,
+            Id_LastOrdenCompra = nuevaOrdenCreada.Id_Orden_Compra,
+            Fecha_Vencimiento = l.Fecha_Vencimiento,
+            Nro_Lote = l.Nro_Lote,
+        }).ToList();
+
+        return await _ordenCompraRepository.UpdateAsync(nuevaOrdenCreada);
     }
 
     public async Task<bool> ActualizarOrdenCompraAsync(Orden_Compra ordenCompra)

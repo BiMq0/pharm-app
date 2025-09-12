@@ -85,18 +85,17 @@ public class PharmDBContext : DbContext
             .HasForeignKey(dv => dv.Id_Producto)
             .OnDelete(DeleteBehavior.Cascade);
 
-        // Orden_Compra -> DetalleCompras (1:N)
-        modelBuilder.Entity<Detalle_Compra>()
-            .HasOne(dc => dc.OrdenCompra)
-            .WithMany(oc => oc.DetalleCompras)
-            .HasForeignKey(dc => dc.Id_OrdenDeCompra)
-            .OnDelete(DeleteBehavior.Cascade);
+        // Orden_Compra -> Lotes (N:M)
+        modelBuilder.Entity<Lote>()
+            .HasMany(l => l.OrdenesCompra)
+            .WithMany(oc => oc.Lotes)
+            .UsingEntity(j => j.ToTable("OrdenCompraLote"));
 
-        // ProductoIndividual -> DetalleCompras (1:1)
-        modelBuilder.Entity<Detalle_Compra>()
-            .HasOne(dc => dc.ProductoIndividual)
-            .WithOne(pi => pi.DetalleCompras)
-            .HasForeignKey<Detalle_Compra>(dc => dc.Id_ProductoIndividual)
+        // Orden_Compra -> Productos Individuales (1:N)
+        modelBuilder.Entity<Producto_Individual>()
+            .HasOne(dc => dc.OrdenCompra)
+            .WithMany<Producto_Individual>()
+            .HasForeignKey(dc => dc.Id_OrdenCompra)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Usuario -> BitacoraInventarios (1:N)

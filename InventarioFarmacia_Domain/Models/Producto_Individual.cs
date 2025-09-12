@@ -9,10 +9,12 @@ public class Producto_Individual
     public int Id_Producto { get; set; }
     public int Id_Inventario { get; set; }
     public int Id_Lote { get; set; }
+    public int Id_OrdenCompra { get; set; }
     public Estados_ProductosIndividuales Estado { get; set; } = Estados_ProductosIndividuales.DISPONIBLE;
 
 
     public Producto Producto { get; set; } = null!;
     public Lote Lote { get; set; } = null!;
     public Inventario Inventario { get; set; } = null!;
+    public Orden_Compra OrdenCompra { get; set; } = null!;
 }
