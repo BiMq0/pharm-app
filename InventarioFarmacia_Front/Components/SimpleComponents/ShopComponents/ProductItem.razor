@@ -74,7 +74,7 @@
                                 {
                                     <div class="d-flex justify-content-around align-items-center my-2 border rounded p-2">
                                         <input class="form-control text-center" style="max-width: 15%;" type="number" min="0"
-                                            value="0" />
+                                            value="0" @onchange="(e) => ActualizarTotalLote(e, lote.Id)" />
                                         <div class="p-2 border rounded mx-2 d-flex justify-content-between gap-2"
                                             style="max-width: 60%;">
                                             <div class="d-flex  align-items-center">
@@ -115,12 +115,12 @@
                         <div class="input-group mb-3">
                             <span class="input-group-text bg-primary text-white"><i
                                     class="bi bi-currency-dollar"></i></span>
-                            <input type="number" class="form-control" min="0" step="0.01" placeholder="Ej: 12.50" />
+                            <input type="number" class="form-control" min="0" step="0.01" placeholder="Ej: 12.50" @bind="NuevoPrecio" />
                         </div>
                         <h6 class="card-title text-center text-secondary mt-4 mb-2">Inventario destino</h6>
                         <div class="input-group">
                             <span class="input-group-text bg-secondary text-white"><i class="bi bi-box-seam"></i></span>
-                            <input type="number" class="form-control" min="1" value="2" />
+                            <input type="number" class="form-control" min="1" max="2" @bind="InventarioDestino"/>
                         </div>
                     </div>
                 </div>
@@ -142,6 +142,7 @@ else
 }
 
 @code {
+    @code {
     [CascadingParameter(Name = "ProductosDisponibles")]
     public List<ProductoToNewCompraDTO> lstProductosDisponibles { get; set; } = new();
     [CascadingParameter(Name = "ProductosSeleccionados")]
@@ -162,13 +163,17 @@ else
     }
 
     public List<LoteToNewCompraDTO> LotesToAddProducts { get; set; } = new();
+    public Dictionary<int, int> CantidadesPorLote { get; set; } = new();
+    
+    public decimal NuevoPrecio { get; set; } = 0;
+    public int InventarioDestino { get; set; } = 2;
 
     public bool CreandoNuevoLote { get; set; } = false;
 
     protected override async Task OnInitializedAsync()
     {
-        LotesToAddProducts = SelectedProduct.Lotes?.ToList() ?? new List<LoteToNewCompraDTO>();
-        StateHasChanged();
+        LotesToAddProducts = new List<LoteToNewCompraDTO>();
+        CantidadesPorLote = new Dictionary<int, int>();
         await base.OnInitializedAsync();
     }
     
@@ -180,32 +185,50 @@ else
         {
             SelectedProduct = productoSeleccionado;
             ProductSelected = true;
+            
+            SincronizarLotesAuxiliares();
         }
         StateHasChanged();
     }
 
+    private void SincronizarLotesAuxiliares()
+    {
+        if (SelectedProduct.Lotes != null)
+        {
+            LotesToAddProducts = SelectedProduct.Lotes.ToList();
+            
+            CantidadesPorLote.Clear();
+            foreach (var lote in LotesToAddProducts)
+            {
+                CantidadesPorLote[lote.Id] = 0;
+            }
+        }
+        else
+        {
+            LotesToAddProducts = new List<LoteToNewCompraDTO>();
+            CantidadesPorLote = new Dictionary<int, int>();
+        }
+    }
 
     private void FiltrarLotes(ChangeEventArgs e)
     {
         var filtro = e.Value?.ToString()?.Trim().ToLower() ?? string.Empty;
         if (string.IsNullOrEmpty(filtro))
         {
-            SelectedProduct.Lotes = SelectedProduct.Lotes;
+            LotesToAddProducts = SelectedProduct.Lotes?.ToList() ?? new List<LoteToNewCompraDTO>();
         }
         else
         {
-            SelectedProduct.Lotes = SelectedProduct.Lotes?
-            .OrderByDescending(l => l.Nro_Lote.ToLower().Contains(filtro))
-            .ToList() ?? new List<LoteToNewCompraDTO>();
+            LotesToAddProducts = SelectedProduct.Lotes?
+                .Where(l => l.Nro_Lote.ToLower().Contains(filtro))
+                .OrderByDescending(l => l.Nro_Lote.ToLower().Contains(filtro))
+                .ToList() ?? new List<LoteToNewCompraDTO>();
         }
         StateHasChanged();
     }
 
     [Parameter]
     public EventCallback<int> OnRemoveProduct { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnTotalChanged { get; set; }
 
     public async Task HandleCrearLote(LoteNuevoDTO loteNuevo)
     {
@@ -214,8 +237,37 @@ else
         if (resultado)
         {
             CreandoNuevoLote = false;
+            
+            var nuevoLoteTemporal = new LoteToNewCompraDTO
+            {
+                Id = DateTime.Now.Millisecond + new Random().Next(1000, 9999),
+                Nro_Lote = loteNuevo.Nro_Lote,
+                Fecha_Vencimiento = loteNuevo.Fecha_Vencimiento
+            };
+            
+            SelectedProduct.Lotes?.Add(nuevoLoteTemporal);
+            LotesToAddProducts.Add(nuevoLoteTemporal);
+            CantidadesPorLote[nuevoLoteTemporal.Id] = 0;
         }
         StateHasChanged();
     }
 
+    private int cantidadTotalProductosIndividuales = 0;
+    
+    private void ActualizarTotalLote(ChangeEventArgs e, int loteId)
+    {
+        if (int.TryParse(e.Value?.ToString(), out var cantidad))
+        {
+            CantidadesPorLote[loteId] = cantidad;
+            
+            cantidadTotalProductosIndividuales = CantidadesPorLote.Values.Sum();
+            
+            OnTotalChanged.InvokeAsync(cantidadTotalProductosIndividuales);
+        }
+        StateHasChanged();
+    }
+    
+    [Parameter]
+    public EventCallback<int> OnTotalChanged { get; set; }
+}
 }
