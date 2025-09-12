@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using InventarioFarmacia_Domain.Constants;
 
 namespace InventarioFarmacia_Shared.DTOs.Products.Individual
 {
@@ -10,6 +11,7 @@ namespace InventarioFarmacia_Shared.DTOs.Products.Individual
         public int Id_Producto { get; set; }
         public int Id_Inventario { get; set; }
         public int Id_Lote { get; set; }
+        public Estados_ProductosIndividuales Estado { get; set; } = Estados_ProductosIndividuales.DISPONIBLE;
         public ProductoIndividualToNewCompraDTO() { }
     }
 }
