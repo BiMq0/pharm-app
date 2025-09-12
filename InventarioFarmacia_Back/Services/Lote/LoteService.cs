@@ -55,22 +55,22 @@ public class LoteService : ILoteService
         return await _loteRepository.AddLoteAsync(nuevoLote);
     }
 
-    private List<Producto_Individual> CrearProductosIndividuales(int idProducto, int idLote, int cantidad, int idInventario)
+    private Task<bool> CrearProductosIndividuales(int idProducto, int idLote, int cantidad, int idInventario)
     {
-        var productos = new List<Producto_Individual>();
+        var productos = new List<ProductoIndividualToNewCompraDTO>();
 
         for (int i = 0; i < cantidad; i++)
         {
-            productos.Add(new Producto_Individual
+            productos.Add(new ProductoIndividualToNewCompraDTO
             {
                 Id_Producto = idProducto,
                 Id_Lote = idLote,
-                Id_Inventario = idInventario,
-                Estado = Estados_ProductosIndividuales.DISPONIBLE
+                Id_Inventario = idInventario
             });
         }
+        var resultado = _productoService.CrearProductoIndividualAsync(productos);
 
-        return productos;
+        return resultado;
     }
 
     public async Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote)
@@ -84,12 +84,8 @@ public class LoteService : ILoteService
 
         if (diferencia > 0)
         {
-            var productosAdicionales = CrearProductosIndividuales(loteExistente.Id_Producto, loteExistente.Id, diferencia, 2);
-
-            foreach (var producto in productosAdicionales)
-            {
-                loteExistente.ProductosIndividuales?.Add(producto);
-            }
+            var productosAdicionales = await CrearProductosIndividuales(loteExistente.Id_Producto, loteExistente.Id, diferencia, 2);
+            if (!productosAdicionales) return false;
         }
 
         loteExistente.Fecha_Vencimiento = lote.Fecha_Vencimiento;

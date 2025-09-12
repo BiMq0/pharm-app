@@ -15,5 +15,4 @@ public class Producto_Individual
     public Producto Producto { get; set; } = null!;
     public Lote Lote { get; set; } = null!;
     public Inventario Inventario { get; set; } = null!;
-    public Detalle_Compra DetalleCompras { get; set; } = null!;
 }

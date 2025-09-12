@@ -6,10 +6,12 @@ public class Lote
 {
     public int Id { get; set; }
     public int Id_Producto { get; set; }
+    public int? Id_LastOrdenCompra { get; set; }
     public DateOnly Fecha_Vencimiento { get; set; }
     public string Nro_Lote { get; set; } = null!;
     public ICollection<Producto_Individual>? ProductosIndividuales { get; set; }
     public Producto Producto { get; set; } = null!;
+    public Orden_Compra? LastOrdenCompra { get; set; }
 
     [NotMapped]
     public int CantidadProductos => ProductosIndividuales?.Count ?? 0;

@@ -1,16 +1,17 @@
 ﻿using InventarioFarmacia_Domain.Models;
+using InventarioFarmacia_Shared.DTOs.Compras;
 
 namespace InventarioFarmacia_Back;
 
 public class Orden_CompraService : IOrden_CompraService
 {
     private readonly IOrden_CompraRepository _ordenCompraRepository;
-    private readonly IDetalle_CompraRepository _detalleCompraRepository;
+    private readonly IDetalle_CompraService _detalleCompraService;
 
-    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, IDetalle_CompraRepository detalleCompraRepository)
+    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, IDetalle_CompraService detalleCompraService)
     {
         _ordenCompraRepository = ordenCompraRepository;
-        _detalleCompraRepository = detalleCompraRepository;
+        _detalleCompraService = detalleCompraService;
     }
 
     public async Task<IEnumerable<Orden_Compra>> ObtenerOrdenesCompraAsync(string filtro = "")
@@ -27,11 +28,15 @@ public class Orden_CompraService : IOrden_CompraService
         return await _ordenCompraRepository.GetByIdAsync(id);
     }
 
-    public async Task<bool> CrearOrdenCompraAsync(Orden_Compra ordenCompra)
+    public async Task<bool> CrearOrdenCompraAsync(ComprasNuevaDTO ordenCompra)
     {
-        // TODO: Agregar validaciones de negocio
-        // TODO: Verificar datos del proveedor
-        return await _ordenCompraRepository.AddAsync(ordenCompra);
+        var nuevaCompra = new Orden_Compra
+        {
+            Fecha_Pedido = ordenCompra.Fecha_Pedido,
+            Fecha_Recibo = ordenCompra.Fecha_Recibo,
+            Estado = ordenCompra.Estado
+        };
+        return await _ordenCompraRepository.AddAsync(nuevaCompra);
     }
 
     public async Task<bool> ActualizarOrdenCompraAsync(Orden_Compra ordenCompra)

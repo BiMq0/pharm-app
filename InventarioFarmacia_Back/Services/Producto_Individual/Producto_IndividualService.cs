@@ -43,12 +43,16 @@ public class Producto_IndividualService : IProducto_IndividualService
         return await _productoIndividualRepository.GetByIdAsync(id);
     }
 
-    public async Task<bool> CrearProductoIndividualAsync(List<Producto_Individual> productosIndividuales)
+    public async Task<bool> CrearProductoIndividualAsync(List<ProductoIndividualToNewCompraDTO> productosIndividuales)
     {
-        // TODO: Agregar validaciones de negocio
-        // TODO: Verificar que el producto exists
-        // TODO: Verificar que el lote exists
-        return await _productoIndividualRepository.AddAsync(productosIndividuales);
+        var newProductos = productosIndividuales.Select(p => new Producto_Individual
+        {
+            Id_Producto = p.Id_Producto,
+            Id_Lote = p.Id_Lote,
+            Id_Inventario = p.Id_Inventario,
+            Estado = p.Estado
+        }).ToList();
+        return await _productoIndividualRepository.AddAsync(newProductos);
     }
 
     public async Task<bool> ActualizarProductoIndividualAsync(Producto_Individual productoIndividual)
