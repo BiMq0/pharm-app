@@ -131,5 +131,21 @@ public class ProductoService : IProductoService
             return false;
         }
     }
+    public async Task EditarProductoToNewPrecio(int id, decimal nuevoPrecio)
+    {
+        string url = Config.ApiBaseUrl + ProductsEndpoints.Base + ProductsEndpoints.Update;
+        url = url.Replace("{id}", id.ToString());
 
+        var producto = await GetProductoPorIdForEditAsync(id);
+        producto.Precio_Unitario = nuevoPrecio;
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync(url, producto);
+            response.EnsureSuccessStatusCode();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al actualizar el precio del producto: {ex.Message}");
+        }
+    }
 }

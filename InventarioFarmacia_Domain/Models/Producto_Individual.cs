@@ -14,14 +14,18 @@ public class Producto_Individual
     {
         get
         {
-            if (OrdenCompra.Estado == Estados_OrdenDeCompra.PENDIENTE) return Estados_ProductosIndividuales.PENDIENTE;
-            else if (OrdenCompra.Estado == Estados_OrdenDeCompra.RECIBIDO)
+            if (OrdenCompra != null)
             {
-                if (Lote.Fecha_Vencimiento.AddDays(30) > DateOnly.FromDateTime(DateTime.Now)) return Estados_ProductosIndividuales.DISPONIBLE;
-                else if (Lote.Fecha_Vencimiento > DateOnly.FromDateTime(DateTime.Now)) return Estados_ProductosIndividuales.POR_VENCER;
-                else return Estados_ProductosIndividuales.VENCIDO;
+                if (OrdenCompra.Estado == Estados_OrdenDeCompra.PENDIENTE) return Estados_ProductosIndividuales.PENDIENTE;
+                else if (OrdenCompra.Estado == Estados_OrdenDeCompra.RECIBIDO)
+                {
+                    if (Lote.Fecha_Vencimiento.AddDays(30) > DateOnly.FromDateTime(DateTime.Now)) return Estados_ProductosIndividuales.DISPONIBLE;
+                    else if (Lote.Fecha_Vencimiento > DateOnly.FromDateTime(DateTime.Now)) return Estados_ProductosIndividuales.POR_VENCER;
+                    else return Estados_ProductosIndividuales.VENCIDO;
+                }
+                else return Estados_ProductosIndividuales.ORDEN_CANCELADA;
             }
-            else return Estados_ProductosIndividuales.ORDEN_CANCELADA;
+            else return Estados_ProductosIndividuales.PENDIENTE;
         }
         set { }
     }

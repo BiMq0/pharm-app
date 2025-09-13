@@ -50,7 +50,7 @@ public class Producto_IndividualService : IProducto_IndividualService
             Id_Producto = p.Id_Producto,
             Id_Lote = p.Id_Lote,
             Id_Inventario = p.Id_Inventario,
-            Estado = p.Estado
+            Id_OrdenCompra = p.Id_OrdenCompra
         }).ToList();
         return await _productoIndividualRepository.AddAsync(newProductos);
     }

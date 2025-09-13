@@ -1,9 +1,12 @@
 ﻿@page "/compras/nuevaCompra"
 @using InventarioFarmacia_Shared.DTOs.Compras;
 @using InventarioFarmacia_Front.Components.SimpleComponents.ShopComponents;
+@using InventarioFarmacia_Shared.DTOs.Lotes
 @using InventarioFarmacia_Shared.DTOs.Products;
+@inject Services.Compras.ICompraService CompraServices
 @inject NavigationManager Navigation
 @inject Services.Products.IProductoService ProductServices
+@inject Services.Compras.ICompraService CompraServices
 @rendermode InteractiveServer
 
 <PageTitle>Ordenar Productos</PageTitle>
@@ -140,14 +143,16 @@
         {
             if (item.SelectedProduct != null)
             {
-                var nuevoPrecio = (item.SelectedProduct.Precio_Unitario + item.SelectedProduct.Precio_Unitario) / 2;
-                Console.WriteLine($"Producto ID: {item.SelectedProduct.Id}");
-                Console.WriteLine($" - Nuevo Precio: {item.NuevoPrecio}, Precio Anterior: {item.SelectedProduct.Precio_Unitario}, Precio Promedio: {nuevoPrecio}");
-                foreach(var lote in item.LotesToAddProducts)
+
+                decimal nuevoPrecio = Math.Round((item.SelectedProduct.Precio_Unitario + item.NuevoPrecio) / 2, 2);
+                await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
+                foreach (var lote in item.SelectedProduct!.Lotes!)
                 {
-                    Console.WriteLine($" - Lote: {lote.Nro_Lote }, Cantidad: {item.CantidadesPorLote[lote.Id]}, Precio Total: {item.CantidadesPorLote[lote.Id] * item.NuevoPrecio }");
+                    lote.Cantidad_Productos += item.CantidadesPorLote[lote.Id];
+                    compraNueva.LotesInvolucrados.Add(lote);
                 }
             }
         }
+        var resultado = await CompraServices.CreateOrdenCompra(compraNueva);
     }
 }

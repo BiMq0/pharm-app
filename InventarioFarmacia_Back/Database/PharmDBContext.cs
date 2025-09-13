@@ -19,7 +19,6 @@ public class PharmDBContext : DbContext
     public DbSet<Venta> Ventas => Set<Venta>();
     public DbSet<Producto_Individual> Productos_Individuales => Set<Producto_Individual>();
     public DbSet<Detalle_Venta> Detalle_Ventas => Set<Detalle_Venta>();
-    public DbSet<Detalle_Compra> Detalle_Compras => Set<Detalle_Compra>();
     public DbSet<Bitacora_Inventario> Bitacora_Inventarios => Set<Bitacora_Inventario>();
     public DbSet<Bitacora_Producto> Bitacora_Productos => Set<Bitacora_Producto>();
     #endregion
@@ -88,14 +87,14 @@ public class PharmDBContext : DbContext
         // Orden_Compra -> Lotes (N:M)
         modelBuilder.Entity<Lote>()
             .HasMany(l => l.OrdenesCompra)
-            .WithMany(oc => oc.Lotes)
+            .WithMany(oc => oc.LotesInvolucrados)
             .UsingEntity(j => j.ToTable("OrdenCompraLote"));
 
         // Orden_Compra -> Productos Individuales (1:N)
-        modelBuilder.Entity<Producto_Individual>()
-            .HasOne(dc => dc.OrdenCompra)
-            .WithMany<Producto_Individual>()
-            .HasForeignKey(dc => dc.Id_OrdenCompra)
+        modelBuilder.Entity<Orden_Compra>()
+            .HasMany<Producto_Individual>()
+            .WithOne(pi => pi.OrdenCompra)
+            .HasForeignKey(pi => pi.Id_OrdenCompra)
             .OnDelete(DeleteBehavior.Cascade);
 
         // Usuario -> BitacoraInventarios (1:N)

@@ -1,15 +1,18 @@
 ﻿using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Compras;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 
 namespace InventarioFarmacia_Back;
 
 public class Orden_CompraService : IOrden_CompraService
 {
     private readonly IOrden_CompraRepository _ordenCompraRepository;
+    private readonly ILoteService _loteService;
 
-    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository)
+    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, ILoteService loteService)
     {
         _ordenCompraRepository = ordenCompraRepository;
+        _loteService = loteService;
     }
 
     public async Task<IEnumerable<Orden_Compra>> ObtenerOrdenesCompraAsync(string filtro = "")
@@ -28,40 +31,33 @@ public class Orden_CompraService : IOrden_CompraService
 
     public async Task<bool> CrearOrdenCompraAsync(ComprasNuevaDTO ordenCompra)
     {
+
         var nuevaCompra = new Orden_Compra
         {
             Fecha_Pedido = ordenCompra.Fecha_Pedido,
             Fecha_Recibo = ordenCompra.Fecha_Recibo,
-            Estado = ordenCompra.Estado
         };
-        var nuevaOrdenCreada = await _ordenCompraRepository.AddAsync(nuevaCompra);
 
-        nuevaOrdenCreada.Lotes = ordenCompra.LotesInvolucrados.Select(l => new Lote
-        {
-            Id_Producto = l.Id_Producto,
-            Id_LastOrdenCompra = nuevaOrdenCreada.Id_Orden_Compra,
-            Fecha_Vencimiento = l.Fecha_Vencimiento,
-            Nro_Lote = l.Nro_Lote,
-        }).ToList();
+        var nuevaCompraCreada = await _ordenCompraRepository.AddAsync(nuevaCompra);
 
-        return await _ordenCompraRepository.UpdateAsync(nuevaOrdenCreada);
+        var lotesCasteados = await _loteService.CastLotesParaNuevaCompra(ordenCompra.LotesInvolucrados.ToList(), nuevaCompraCreada.Id);
+
+        nuevaCompraCreada.LotesInvolucrados = lotesCasteados.ToList();
+
+        return await ActualizarOrdenCompraAsync(nuevaCompraCreada);
     }
 
     public async Task<bool> ActualizarOrdenCompraAsync(Orden_Compra ordenCompra)
     {
-        // TODO: Agregar validaciones de negocio
-        // TODO: Verificar que la orden existe
-        return await _ordenCompraRepository.UpdateAsync(ordenCompra);
-    }
+        var ordenExistente = await _ordenCompraRepository.GetByIdAsync(ordenCompra.Id);
+        if (ordenExistente == null) return false;
 
-    public async Task<bool> EliminarOrdenCompraAsync(int id)
-    {
-        // TODO: Verificar que la orden existe
-        // TODO: Verificar que no esté procesada
-        return await _ordenCompraRepository.DeleteAsync(id);
+        ordenExistente.Fecha_Pedido = ordenCompra.Fecha_Pedido;
+        ordenExistente.Fecha_Recibo = ordenCompra.Fecha_Recibo;
+        ordenExistente.LotesInvolucrados = ordenCompra.LotesInvolucrados;
+        return await _ordenCompraRepository.UpdateAsync(ordenExistente);
     }
-
-    public async Task<bool> ProcesarOrdenCompraAsync(int ordenId)
+    public async Task<bool> ProcesarOrdenCompraRecibidaAsync(int ordenId)
     {
         // TODO: Implementar lógica de procesamiento
         // TODO: Actualizar inventario con los productos recibidos
@@ -71,5 +67,12 @@ public class Orden_CompraService : IOrden_CompraService
 
         // Lógica de procesamiento aquí
         return true;
+    }
+
+    public async Task<bool> ProcesarOrdenCompraCanceladaAsync(int id)
+    {
+        // TODO: Verificar que la orden existe
+        // TODO: Verificar que no esté procesada
+        return await _ordenCompraRepository.DeleteAsync(id);
     }
 }

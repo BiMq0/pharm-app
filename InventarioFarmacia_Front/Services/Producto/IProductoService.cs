@@ -11,4 +11,5 @@ public interface IProductoService
     Task<bool> CrearProducto(ProductoNuevoDTO producto);
     Task<bool> EditarProducto(ProductoEdicionDTO producto);
     Task<bool> EliminarProducto(int id);
+    Task EditarProductoToNewPrecio(int id, decimal nuevoPrecio);
 }

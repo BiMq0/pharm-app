@@ -19,7 +19,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             .Include(pi => pi.Producto)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
-            .Include(pi => pi.DetalleCompras)
+            .Include(pi => pi.OrdenCompra)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -30,7 +30,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             .Include(pi => pi.Producto)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
-            .Include(pi => pi.DetalleCompras)
+            .Include(pi => pi.OrdenCompra)
             .Where(p => p.Id.ToString().Contains(filtro)
                 || p.Id_Producto.ToString().Contains(filtro)
                 || p.Estado.ToString().Contains(filtro))
@@ -44,7 +44,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             .Include(pi => pi.Producto)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
-            .Include(pi => pi.DetalleCompras)
+            .Include(pi => pi.OrdenCompra)
             .Where(p => p.Id_Lote == loteId)
             .AsNoTracking()
             .ToListAsync();
@@ -56,7 +56,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             .Include(pi => pi.Producto)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
-            .Include(pi => pi.DetalleCompras)
+            .Include(pi => pi.OrdenCompra)
             .Where(p => p.Estado == estado)
             .AsNoTracking()
             .ToListAsync();
@@ -68,7 +68,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             .Include(pi => pi.Producto)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
-            .Include(pi => pi.DetalleCompras)
+            .Include(pi => pi.OrdenCompra)
             .Where(p => p.Lote.Fecha_Vencimiento.CompareTo(DateOnly.FromDateTime(DateTime.Now.AddDays(30))) < 0 && p.Estado != Estados_ProductosIndividuales.VENDIDO)
             .AsNoTracking()
             .ToListAsync();
@@ -80,7 +80,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
             .Include(pi => pi.Producto)
             .Include(pi => pi.Lote)
             .Include(pi => pi.Inventario)
-            .Include(pi => pi.DetalleCompras)
+            .Include(pi => pi.OrdenCompra)
             .FirstOrDefaultAsync(pi => pi.Id == id)
             ?? throw new KeyNotFoundException($"Producto Individual con id {id} no encontrado.");
     }

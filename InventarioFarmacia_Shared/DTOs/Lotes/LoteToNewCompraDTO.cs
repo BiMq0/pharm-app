@@ -22,7 +22,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
             Id_Producto = lote.Id_Producto;
             Fecha_Vencimiento = lote.Fecha_Vencimiento;
             Nro_Lote = lote.Nro_Lote!;
-            Cantidad_Productos = lote.CantidadProductos;
+            Cantidad_Productos = lote.CantidadProductosDisponibles;
         }
         public LoteToNewCompraDTO() { }
     }

@@ -11,8 +11,7 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
     {
         public DateOnly Fecha_Pedido { get; set; } = DateOnly.FromDateTime(DateTime.Now);
         public DateOnly Fecha_Recibo { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-        public Estados_OrdenDeCompra Estado { get; set; } = Estados_OrdenDeCompra.PENDIENTE;
-        public ICollection<LoteToNewCompraDTO> LotesInvolucrados { get; set; }
+        public ICollection<LoteToNewCompraDTO> LotesInvolucrados { get; set; } = new List<LoteToNewCompraDTO>();
 
         public ComprasNuevaDTO()
         {
