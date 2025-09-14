@@ -54,7 +54,19 @@ public class Orden_CompraService : IOrden_CompraService
 
         ordenExistente.Fecha_Pedido = ordenCompra.Fecha_Pedido;
         ordenExistente.Fecha_Recibo = ordenCompra.Fecha_Recibo;
-        ordenExistente.LotesInvolucrados = ordenCompra.LotesInvolucrados;
+
+        var lotesActualizados = new List<Lote>();
+        if (ordenCompra.LotesInvolucrados != null)
+        {
+            foreach (var lote in ordenCompra.LotesInvolucrados)
+            {
+                var loteActual = ordenExistente.LotesInvolucrados?
+                    .FirstOrDefault(l => l.Id == lote.Id)
+                    ?? lote;
+                lotesActualizados.Add(loteActual);
+            }
+        }
+        ordenExistente.LotesInvolucrados = lotesActualizados;
         return await _ordenCompraRepository.UpdateAsync(ordenExistente);
     }
     public async Task<bool> ProcesarOrdenCompraRecibidaAsync(int ordenId)

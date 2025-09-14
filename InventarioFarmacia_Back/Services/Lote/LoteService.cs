@@ -136,6 +136,6 @@ public class LoteService : ILoteService
                 lotes.Add(lote);
             }
         }
-        return await Task.FromResult(lotes);
+        return lotes;
     }
 }
