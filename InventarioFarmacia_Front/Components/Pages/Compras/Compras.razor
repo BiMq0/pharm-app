@@ -1,4 +1,8 @@
 ﻿@page "/compras"
+@using InventarioFarmacia_Shared.DTOs.Compras
+@inject NavigationManager Navigation
+@inject Services.Compras.ICompraService CompraService
+@using InventarioFarmacia_Domain.Constants;
 @rendermode InteractiveServer
 
 <PageTitle>Compras</PageTitle>
@@ -21,28 +25,71 @@
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row mb-4">
-        <div class="col-md-8">
-            <div class="input-group">
-                <span class="input-group-text bg-white border-end-0">
-                    <i class="bi bi-search"></i>
-                </span>
-                <input type="text" class="form-control border-start-0" placeholder="Buscar productos..." />
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body">
+                    <table class="table table-hover table-responsive table-bordered table-striped">
+                        <thead>
+                            <tr class="align-middle text-center">
+                                <th>Id de Pedido</th>
+                                <th>Fecha de Inicio de pedido</th>
+                                <th>Fecha de Recepción Esperada</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var compra in lstRegistroCompras)
+                            {
+                                var color = compra.Estado switch
+                                {
+                                    Estados_OrdenDeCompra.RECIBIDO => Colores_EstadosCompra.RECIBIDO,
+                                    Estados_OrdenDeCompra.PENDIENTE => Colores_EstadosCompra.PENDIENTE,
+                                    Estados_OrdenDeCompra.CANCELADO => Colores_EstadosCompra.CANCELADO
+                                };
+                                var valorEstado = compra.Estado switch
+                                {
+                                    Estados_OrdenDeCompra.RECIBIDO => "Completado",
+                                    Estados_OrdenDeCompra.PENDIENTE => "Pendiente",
+                                    Estados_OrdenDeCompra.CANCELADO => "Cancelado",
+                                    _ => "Desconocido"
+                                };
+                                <tr class="align-middle text-center">
+                                    <td>@compra.Id</td>
+                                    <td>@compra.Fecha_Pedido.ToString("dd/MM/yyyy")</td>
+                                    <td>@compra.Fecha_Recibo.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <span class="badge" style="background-color: @color">@valorEstado</span>
+                                    </td>
+                                    <td>
+                                        <button class="btn btn-sm btn-outline-primary"
+                                            @onclick="() => NavegarToDetalle(compra.Id)">
+                                            Ver Detalles
+                                        </button>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-        <div class="col-md-4 text-end">
-            <button class="btn btn-outline-secondary me-2">
-                <i class="bi bi-arrow-clockwise "></i> Limpiar
-            </button>
-        </div>
-    </div>
 
-    <NavLink href="/compras/nuevaCompra" class="btn btn-primary position-fixed"
-        style="bottom: 20px; right: 20px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
-        <i class="bi bi-plus-lg"></i>
-    </NavLink>
+        <NavLink href="/compras/nuevaCompra" class="btn btn-primary position-fixed"
+            style="bottom: 20px; right: 20px; border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+            <i class="bi bi-plus-lg"></i>
+        </NavLink>
+    </div>
 </div>
 @code {
-
+    private IEnumerable<CompraRegistroDTO> lstRegistroCompras = new List<CompraRegistroDTO>();
+    protected override async Task OnInitializedAsync()
+    {
+        lstRegistroCompras = await CompraService.GetAllCompras();
+        StateHasChanged();
+    }
+    private void NavegarToDetalle(int idCompra)
+    {
+        Navigation.NavigateTo($"/compras/{idCompra}");
+    }
 }

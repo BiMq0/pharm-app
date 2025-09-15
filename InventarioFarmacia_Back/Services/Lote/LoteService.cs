@@ -56,6 +56,18 @@ public class LoteService : ILoteService
         return await _loteRepository.AddLoteAsync(nuevoLote);
     }
 
+
+    public async Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote, int cantidadProductos, int idLastOrdenCompra)
+    {
+        var loteExistente = await _loteRepository.GetLoteByIdAsync(lote.Id);
+        if (loteExistente == null) return false;
+
+        int diferenciaToCreate = cantidadProductos - loteExistente.CantidadProductos;
+        var resultado = await CrearProductosIndividuales(loteExistente.Id_Producto, loteExistente.Id, diferenciaToCreate, 2, idLastOrdenCompra);
+
+        if (!resultado) return false;
+        else return await _loteRepository.UpdateLoteAsync(loteExistente);
+    }
     private Task<bool> CrearProductosIndividuales(int idProducto, int idLote, int cantidad, int idInventario, int idLastOrdenCompra)
     {
         var productos = new List<ProductoIndividualToNewCompraDTO>();
@@ -73,19 +85,6 @@ public class LoteService : ILoteService
         var resultado = _productoService.CrearProductoIndividualAsync(productos);
 
         return resultado;
-    }
-
-    public async Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote)
-    {
-        var loteExistente = await _loteRepository.GetLoteByIdAsync(lote.Id);
-        if (loteExistente == null) return false;
-
-        loteExistente.Id_LastOrdenCompra = lote.Id_LastOrdenCompra;
-
-        var resultado = await CrearProductosIndividuales(loteExistente.Id_Producto, loteExistente.Id, lote.Cantidad_Productos, 2, lote.Id_LastOrdenCompra!.Value);
-
-        if (!resultado) return false;
-        else return await _loteRepository.UpdateLoteAsync(loteExistente);
     }
 
     public async Task<bool> EliminarLoteAsync(int id)

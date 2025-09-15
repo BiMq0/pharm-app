@@ -28,5 +28,9 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
             Costo_Total = ordenCompra.Costo_Total;
             LotesInvolucrados = ordenCompra.LotesInvolucrados!.Select(lote => new LoteToCompraRegistroDTO(lote)).ToList();
         }
+        public CompraRegistroDTO()
+        {
+
+        }
     }
 }

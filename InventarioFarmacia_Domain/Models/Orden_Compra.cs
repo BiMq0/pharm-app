@@ -10,8 +10,20 @@ public class Orden_Compra
 
     public ICollection<Lote>? LotesInvolucrados { get; set; } = new List<Lote>();
 
-    public int Cantidad_Tipos_Producto => LotesInvolucrados?.GroupBy(l => l.Id_Producto).Count() ?? 0;
-    public int Cantidad_Productos => LotesInvolucrados?.Sum(l => l.CantidadProductos) ?? 0;
-    public decimal Costo_Total => LotesInvolucrados?.Sum(l => l.Producto.Precio_Unitario * l.CantidadProductos) ?? 0;
+    public int Cantidad_Tipos_Producto =>
+    LotesInvolucrados != null && LotesInvolucrados.Count > 0
+        ? LotesInvolucrados.Where(l => l != null).GroupBy(l => l.Id_Producto).Count()
+        : 0;
+
+    public int Cantidad_Productos =>
+        LotesInvolucrados != null && LotesInvolucrados.Count > 0
+            ? LotesInvolucrados.Where(l => l != null).Sum(l => l.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == l.Id_LastOrdenCompra).Count())
+            : 0;
+
+    public decimal Costo_Total =>
+        LotesInvolucrados != null && LotesInvolucrados.Count > 0
+            ? LotesInvolucrados.Where(l => l?.Producto != null)
+                .Sum(l => l.Producto.Precio_Unitario * l.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == l.Id_LastOrdenCompra).Count())
+            : 0;
 
 }

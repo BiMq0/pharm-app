@@ -5,7 +5,7 @@ namespace InventarioFarmacia_Back;
 public interface IOrden_CompraService
 {
     Task<IEnumerable<CompraRegistroDTO>> ObtenerOrdenesCompraAsync(string filtro = "");
-    Task<Orden_Compra> ObtenerOrdenCompraPorIdAsync(int id);
+    Task<CompraDetalladaDTO> ObtenerOrdenCompraPorIdAsync(int id);
     Task<bool> CrearOrdenCompraAsync(ComprasNuevaDTO ordenCompra);
     Task<bool> ActualizarOrdenCompraAsync(Orden_Compra ordenCompra);
     Task<bool> ProcesarOrdenCompraRecibidaAsync(int ordenId);

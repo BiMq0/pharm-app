@@ -16,14 +16,23 @@ public class Orden_CompraRepository : IOrden_CompraRepository
     {
         if (string.IsNullOrEmpty(filtro))
         {
-            return await _dbContext.Orden_Compras.Include(o => o.LotesInvolucrados).ToListAsync();
+            return await _dbContext.Orden_Compras
+                                .Include(o => o.LotesInvolucrados!)
+                                .ThenInclude(l => l.ProductosIndividuales)
+                                .ToListAsync();
         }
-        return await _dbContext.Orden_Compras.Include(o => o.LotesInvolucrados).ToListAsync();
+        return await _dbContext.Orden_Compras
+                                .Include(o => o.LotesInvolucrados!)
+                                .ThenInclude(l => l.ProductosIndividuales)
+                                .ToListAsync();
     }
 
     public async Task<Orden_Compra> GetByIdAsync(int id)
     {
-        return await _dbContext.Orden_Compras.Include(o => o.LotesInvolucrados).FirstOrDefaultAsync(o => o.Id == id) ?? throw new KeyNotFoundException("Orden de compra no encontrada");
+        return await _dbContext.Orden_Compras.Include(o => o.LotesInvolucrados!)
+                                            .ThenInclude(l => l.Producto)
+                                            .ThenInclude(l => l.ProductosIndividuales)
+                                            .FirstOrDefaultAsync(o => o.Id == id) ?? throw new KeyNotFoundException("Orden de compra no encontrada");
     }
 
     public async Task<Orden_Compra> AddAsync(Orden_Compra ordenCompra)

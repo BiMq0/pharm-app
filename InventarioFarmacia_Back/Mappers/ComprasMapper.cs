@@ -18,6 +18,12 @@ namespace InventarioFarmacia_Back.Mappers
                 return Results.Ok(result);
             });
 
+            compras.MapGet(ComprasEndpoints.GET_BY_ID, async (int id, IOrden_CompraService service) =>
+            {
+                var result = await service.ObtenerOrdenCompraPorIdAsync(id);
+                return result != null ? Results.Ok(result) : Results.NotFound();
+            });
+
             compras.MapPost(ComprasEndpoints.CREATE, async (ComprasNuevaDTO nuevaCompra, IOrden_CompraService service) =>
             {
                 var result = await service.CrearOrdenCompraAsync(nuevaCompra);

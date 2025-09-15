@@ -80,7 +80,8 @@
                 </div>
 
                 <button class="btn btn-primary position-fixed fw-bold px-2 py-0"
-                    style="bottom: 20px; right: 20px; display: flex; align-items: center; justify-content: center;">
+                    style="bottom: 20px; right: 20px; display: flex; align-items: center; justify-content: center;"
+                    type="submit" @onclick="BtnToCreateCompraClicked">
                     <i class="bi bi-check fs-3"></i>
                     Confirmar pedido
                 </button>
@@ -103,6 +104,7 @@
 
     public int TotalProductosIndividuales => TotalesPorProducto.Values.Sum();
 
+    private bool SubmitBtnClicked = false;
     protected override async Task OnInitializedAsync()
     {
         await CargarProductos();
@@ -136,32 +138,39 @@
         TotalesPorProducto[indiceProducto] = nuevoTotal;
         StateHasChanged();
     }
+    private void BtnToCreateCompraClicked()
+    {
+        SubmitBtnClicked = true;
+    }
 
     private async Task CrearOrdenDeCompra()
     {
-        foreach (var item in itemsCompra)
+        if (SubmitBtnClicked && TotalProductosIndividuales > 0)
         {
-            if (item.SelectedProduct != null)
+            foreach (var item in itemsCompra)
             {
-
-                decimal nuevoPrecio = Math.Round((item.SelectedProduct.Precio_Unitario + item.NuevoPrecio) / 2, 2);
-                await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
-                foreach (var lote in item.SelectedProduct!.Lotes!)
+                if (item.SelectedProduct != null)
                 {
-                    lote.Cantidad_Productos += item.CantidadesPorLote[lote.Id];
-                    compraNueva.LotesInvolucrados.Add(lote);
+
+                    decimal nuevoPrecio = Math.Round((item.SelectedProduct.Precio_Unitario + item.NuevoPrecio) / 2, 2);
+                    await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
+                    foreach (var lote in item.SelectedProduct!.Lotes!)
+                    {
+                        lote.Cantidad_Productos += item.CantidadesPorLote[lote.Id];
+                        compraNueva.LotesInvolucrados.Add(lote);
+                    }
                 }
             }
-        }
-        var resultado = await CompraServices.CreateOrdenCompra(compraNueva);
+            var resultado = await CompraServices.CreateOrdenCompra(compraNueva);
 
-        if (resultado)
-        {
-            Navigation.NavigateTo("/compras");
-        }
-        else
-        {
-            // Poner caso de error uwu, mejor si es con el modal
+            if (resultado)
+            {
+                Navigation.NavigateTo("/compras");
+            }
+            else
+            {
+                // Poner caso de error, mejor si es con el modal
+            }
         }
     }
 }
