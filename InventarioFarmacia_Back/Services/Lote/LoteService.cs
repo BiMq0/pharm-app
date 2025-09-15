@@ -40,7 +40,7 @@ public class LoteService : ILoteService
         return await _loteRepository.GetLoteByIdAsync(id);
     }
 
-    public async Task<bool> CrearLoteAsync(LoteNuevoDTO lote, int idInventario = 2)
+    public async Task<LoteToNewCompraDTO> CrearLoteAsync(LoteNuevoDTO lote, int idInventario = 2)
     {
 
         if (lote.Fecha_Vencimiento <= DateOnly.FromDateTime(DateTime.Now)) throw new ArgumentException("La fecha de vencimiento debe ser futura");
@@ -53,7 +53,8 @@ public class LoteService : ILoteService
             Fecha_Vencimiento = lote.Fecha_Vencimiento,
             Nro_Lote = lote.Nro_Lote,
         };
-        return await _loteRepository.AddLoteAsync(nuevoLote);
+        var loteCreado = await _loteRepository.AddLoteAsync(nuevoLote);
+        return new LoteToNewCompraDTO(loteCreado);
     }
 
 

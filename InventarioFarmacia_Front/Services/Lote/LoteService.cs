@@ -68,7 +68,7 @@ public class LoteService : ILoteService
         }
     }
 
-    public async Task<bool> CrearLoteAsync(LoteNuevoDTO lote)
+    public async Task<LoteToNewCompraDTO> CrearLoteAsync(LoteNuevoDTO lote)
     {
         string url = Config.ApiBaseUrl + LotesEndpoints.BASE + LotesEndpoints.CREATE;
 
@@ -76,12 +76,13 @@ public class LoteService : ILoteService
         {
             var response = await _httpClient.PostAsJsonAsync(url, lote);
             response.EnsureSuccessStatusCode();
-            return response.IsSuccessStatusCode;
+            return await response.Content.ReadFromJsonAsync<LoteToNewCompraDTO>()
+                   ?? throw new Exception("La respuesta del servidor es nula.");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al crear lote: {ex.Message}");
-            return false;
+            throw;
         }
     }
 

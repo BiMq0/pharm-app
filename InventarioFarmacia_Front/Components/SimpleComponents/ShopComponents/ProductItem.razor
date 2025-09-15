@@ -234,21 +234,14 @@ else
     public async Task HandleCrearLote(LoteNuevoDTO loteNuevo)
     {
         loteNuevo.Id_Producto = SelectedProduct.Id;
-        var resultado = await LoteService.CrearLoteAsync(loteNuevo);
-        if (resultado)
+        var loteCreado = await LoteService.CrearLoteAsync(loteNuevo);
+        if (loteCreado != null)
         {
             CreandoNuevoLote = false;
-            
-            var nuevoLoteTemporal = new LoteToNewCompraDTO
-            {
-                Id = DateTime.Now.Millisecond + new Random().Next(1000, 9999),
-                Nro_Lote = loteNuevo.Nro_Lote,
-                Fecha_Vencimiento = loteNuevo.Fecha_Vencimiento
-            };
-            
-            SelectedProduct.Lotes?.Add(nuevoLoteTemporal);
-            LotesToAddProducts.Add(nuevoLoteTemporal);
-            CantidadesPorLote[nuevoLoteTemporal.Id] = 0;
+
+            SelectedProduct.Lotes?.Add(loteCreado);
+            LotesToAddProducts.Add(loteCreado);
+            CantidadesPorLote[loteCreado.Id] = 0;
         }
         StateHasChanged();
     }
