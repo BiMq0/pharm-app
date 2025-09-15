@@ -46,4 +46,11 @@ public class Lote
     [NotMapped]
     public IEnumerable<Producto_Individual> ProductosVencidos =>
         ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.VENCIDO) ?? Enumerable.Empty<Producto_Individual>();
+
+    [NotMapped]
+    public int CantidadProductosPendientes => ProductosIndividuales
+        ?.Count(pi => pi.Estado == Estados_ProductosIndividuales.PENDIENTE) ?? 0;
+    [NotMapped]
+    public IEnumerable<Producto_Individual> ProductosPendientes =>
+        ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.PENDIENTE) ?? Enumerable.Empty<Producto_Individual>();
 }

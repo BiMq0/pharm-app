@@ -15,13 +15,14 @@ public class Orden_CompraService : IOrden_CompraService
         _loteService = loteService;
     }
 
-    public async Task<IEnumerable<Orden_Compra>> ObtenerOrdenesCompraAsync(string filtro = "")
+    public async Task<IEnumerable<CompraRegistroDTO>> ObtenerOrdenesCompraAsync(string filtro = "")
     {
+        var ordenesDeCompra = await _ordenCompraRepository.GetAllAsync();
         if (string.IsNullOrEmpty(filtro))
         {
-            return await _ordenCompraRepository.GetAllAsync();
+            return ordenesDeCompra.Select(oc => new CompraRegistroDTO(oc));
         }
-        return await _ordenCompraRepository.GetAllAsync(filtro);
+        return ordenesDeCompra.Select(oc => new CompraRegistroDTO(oc));
     }
 
     public async Task<Orden_Compra> ObtenerOrdenCompraPorIdAsync(int id)
@@ -40,9 +41,14 @@ public class Orden_CompraService : IOrden_CompraService
 
         var nuevaCompraCreada = await _ordenCompraRepository.AddAsync(nuevaCompra);
 
-        var lotesCasteados = await _loteService.CastLotesParaNuevaCompra(ordenCompra.LotesInvolucrados.ToList(), nuevaCompraCreada.Id);
-
-        nuevaCompraCreada.LotesInvolucrados = lotesCasteados.ToList();
+        nuevaCompraCreada.LotesInvolucrados = await Task.WhenAll(ordenCompra.LotesInvolucrados.Select(async loteDto =>
+            {
+                var lote = await _loteService.ObtenerLotePorIdAsync(loteDto.Id);
+                lote.Id_LastOrdenCompra = nuevaCompraCreada.Id;
+                await _loteService.ActualizarLoteAsync(new LoteToNewCompraDTO(lote));
+                return lote;
+            }
+        ));
 
         return await ActualizarOrdenCompraAsync(nuevaCompraCreada);
     }
@@ -56,17 +62,15 @@ public class Orden_CompraService : IOrden_CompraService
         ordenExistente.Fecha_Recibo = ordenCompra.Fecha_Recibo;
 
         var lotesActualizados = new List<Lote>();
-        if (ordenCompra.LotesInvolucrados != null)
+        foreach (var lote in ordenCompra.LotesInvolucrados ?? Enumerable.Empty<Lote>())
         {
-            foreach (var lote in ordenCompra.LotesInvolucrados)
-            {
-                var loteActual = ordenExistente.LotesInvolucrados?
-                    .FirstOrDefault(l => l.Id == lote.Id)
-                    ?? lote;
-                lotesActualizados.Add(loteActual);
-            }
+            await _loteService.ActualizarLoteAsync(new LoteToNewCompraDTO(lote));
+            var trackedLote = await _loteService.ObtenerLotePorIdAsync(lote.Id);
+            if (trackedLote != null)
+                lotesActualizados.Add(trackedLote);
         }
         ordenExistente.LotesInvolucrados = lotesActualizados;
+
         return await _ordenCompraRepository.UpdateAsync(ordenExistente);
     }
     public async Task<bool> ProcesarOrdenCompraRecibidaAsync(int ordenId)

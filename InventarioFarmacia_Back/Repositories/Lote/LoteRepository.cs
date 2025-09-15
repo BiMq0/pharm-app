@@ -16,7 +16,6 @@ public class LoteRepository : ILoteRepository
         return await _context.Lotes
         .Include(l => l.Producto)
             .Include(l => l.ProductosIndividuales)
-            .AsNoTracking()
             .ToListAsync();
     }
 
@@ -26,16 +25,13 @@ public class LoteRepository : ILoteRepository
             .Include(l => l.Producto)
             .Include(l => l.ProductosIndividuales)
             .Where(l => l.Id_Producto == idProducto)
-            .AsNoTracking()
             .ToListAsync();
     }
 
     public async Task<Lote> GetLoteByIdAsync(int id)
     {
-        return await _context.Lotes
+        return await _context.Lotes.Include(l => l.Producto)
             .Include(l => l.ProductosIndividuales)
-            .Include(l => l.Producto)
-            .AsNoTracking()
             .FirstOrDefaultAsync(l => l.Id == id)
             ?? throw new KeyNotFoundException($"Lote con id {id} no encontrado.");
     }

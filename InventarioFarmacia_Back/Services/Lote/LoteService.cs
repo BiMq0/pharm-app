@@ -75,26 +75,17 @@ public class LoteService : ILoteService
         return resultado;
     }
 
-    public async Task<LoteToNewCompraDTO> ActualizarLoteAsync(LoteToNewCompraDTO lote)
+    public async Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote)
     {
         var loteExistente = await _loteRepository.GetLoteByIdAsync(lote.Id);
-        if (loteExistente == null) return null;
+        if (loteExistente == null) return false;
 
-        var cantidadActual = loteExistente.ProductosIndividuales?.Count ?? 0;
-        var cantidadNueva = lote.Cantidad_Productos;
-        var diferencia = cantidadNueva - cantidadActual;
-
-        if (diferencia > 0)
-        {
-            var productosAdicionales = await CrearProductosIndividuales(loteExistente.Id_Producto, loteExistente.Id, diferencia, 2, lote.Id_LastOrdenCompra ?? 0);
-            if (!productosAdicionales) return null;
-        }
-
-        loteExistente.Fecha_Vencimiento = lote.Fecha_Vencimiento;
-        loteExistente.Nro_Lote = lote.Nro_Lote;
         loteExistente.Id_LastOrdenCompra = lote.Id_LastOrdenCompra;
 
-        return await _loteRepository.UpdateLoteAsync(loteExistente) ? new LoteToNewCompraDTO(loteExistente) : null;
+        var resultado = await CrearProductosIndividuales(loteExistente.Id_Producto, loteExistente.Id, lote.Cantidad_Productos, 2, lote.Id_LastOrdenCompra!.Value);
+
+        if (!resultado) return false;
+        else return await _loteRepository.UpdateLoteAsync(loteExistente);
     }
 
     public async Task<bool> EliminarLoteAsync(int id)
@@ -116,26 +107,5 @@ public class LoteService : ILoteService
         var fechaLimite = DateOnly.FromDateTime(DateTime.Now.AddDays(dias));
 
         return lotes.Where(l => l.Fecha_Vencimiento <= fechaLimite && l.Fecha_Vencimiento >= DateOnly.FromDateTime(DateTime.Now));
-    }
-
-    public async Task<IEnumerable<Lote>> CastLotesParaNuevaCompra(List<LoteToNewCompraDTO> lotesDTO, int idOrdenCompra)
-    {
-        var lotes = new List<Lote>();
-        var Id_Producto = lotesDTO.First().Id_Producto;
-        await Task.WhenAll(lotesDTO.Select(async l =>
-        {
-            l.Id_LastOrdenCompra = idOrdenCompra;
-            l = await ActualizarLoteAsync(l);
-        }));
-        var lotesExistentes = await _loteRepository.GetAllForProductoAsync(Id_Producto);
-        foreach (var loteDTO in lotesDTO)
-        {
-            var lote = lotesExistentes.FirstOrDefault(l => l.Nro_Lote == loteDTO.Nro_Lote);
-            if (lote != null)
-            {
-                lotes.Add(lote);
-            }
-        }
-        return lotes;
     }
 }

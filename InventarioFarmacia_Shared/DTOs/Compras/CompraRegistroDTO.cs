@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Domain.Constants;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 
 namespace InventarioFarmacia_Shared.DTOs.Compras
 {
@@ -15,6 +16,7 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
         public DateOnly Fecha_Recibo { get; set; }
         public int Cantidad_Productos { get; }
         public decimal Costo_Total { get; }
+        public IEnumerable<LoteToCompraRegistroDTO> LotesInvolucrados { get; set; } = new List<LoteToCompraRegistroDTO>();
 
         public CompraRegistroDTO(Orden_Compra ordenCompra)
         {
@@ -24,6 +26,7 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
             Fecha_Recibo = ordenCompra.Fecha_Recibo;
             Cantidad_Productos = ordenCompra.Cantidad_Productos;
             Costo_Total = ordenCompra.Costo_Total;
+            LotesInvolucrados = ordenCompra.LotesInvolucrados!.Select(lote => new LoteToCompraRegistroDTO(lote)).ToList();
         }
     }
 }

@@ -154,5 +154,14 @@
             }
         }
         var resultado = await CompraServices.CreateOrdenCompra(compraNueva);
+
+        if (resultado)
+        {
+            Navigation.NavigateTo("/compras");
+        }
+        else
+        {
+            // Poner caso de error uwu, mejor si es con el modal
+        }
     }
 }
