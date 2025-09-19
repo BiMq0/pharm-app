@@ -156,8 +156,11 @@
                     await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
                     foreach (var lote in item.SelectedProduct!.Lotes!)
                     {
-                        lote.Cantidad_Productos += item.CantidadesPorLote[lote.Id];
-                        compraNueva.LotesInvolucrados.Add(lote);
+                        if ()
+                        {
+                            lote.Cantidad_Productos += item.CantidadesPorLote[lote.Id];
+                            compraNueva.LotesInvolucrados.Add(lote);
+                        }
                     }
                 }
             }
@@ -169,7 +172,7 @@
             }
             else
             {
-                // Poner caso de error, mejor si es con el modal
+                // Poner caso de error, mejor si es con el modal, porque de momento no dice nada, imbecil
             }
         }
     }

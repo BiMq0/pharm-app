@@ -42,25 +42,6 @@
             <div class="col-6 d-flex justify-content-between">
                 <div class=" row border rounded py-3 px-2 h-100 d-flex flex-column w-100">
                     <div class="d-flex flex-column col-12">
-                        <div class="d-flex justify-content-evenly align-items-center rounded bg-secondary-subtle p-2">
-                            @* <div class="d-flex gap-3 border-end pe-3 border-2 border-dark">
-                                <div class="d-flex gap-3">
-                                    <label class="fw-semibold">Unidad</label>
-                                    <input type="radio" name="Unidad" value="UNIT" class="form-check-input" />
-                                </div>
-
-                                <div class="d-flex gap-3">
-                                    <label class="fw-semibold">Caja</label>
-                                    <input type="radio" name="Unidad" value="BOX" class="form-check-input" />
-                                </div>
-                            </div> 
-                            <div class="d-flex gap-3">
-                                <span><strong>Total de productos individuales:</strong></span>
-                                <span class="badge bg-primary fs-6">0 unidades</span>
-                            </div>
-                            *@
-                        </div>
-
                         <div
                             class="border rounded p-2 d-flex flex-column justify-content-between align-items-center bg-white">
                             <div class="input-group">
@@ -71,11 +52,11 @@
                                     placeholder="Buscar lotes por número de lote..." @oninput="(e) => FiltrarLotes(e)" />
                             </div>
                             <div class="container overflow-auto" style="max-height: 150px;">
-                                @foreach (var lote in SelectedProduct.Lotes ?? Enumerable.Empty<LoteToNewCompraDTO>())
+                                @foreach (var lote in LotesToAddProducts ?? Enumerable.Empty<LoteToNewCompraDTO>())
                                 {
                                     <div class="d-flex justify-content-around align-items-center my-2 border rounded p-2">
                                         <input class="form-control text-center" style="max-width: 15%;" type="number" min="0"
-                                            value="0" @onchange="(e) => ActualizarTotalLote(e, lote.Id)" />
+                                            value="@(CantidadesPorLote.ContainsKey(lote.Id) ? CantidadesPorLote[lote.Id] : 0)" @onchange="(e) => ActualizarTotalLote(e, lote.Id)" />
                                         <div class="p-2 border rounded mx-2 d-flex justify-content-between gap-2"
                                             style="max-width: 60%;">
                                             <div class="d-flex  align-items-center">
@@ -196,7 +177,7 @@ else
     {
         if (SelectedProduct.Lotes != null)
         {
-            LotesToAddProducts = SelectedProduct.Lotes.ToList();
+            LotesToAddProducts = SelectedProduct.Lotes.OrderBy(l => l.Nro_Lote).ToList();
             
             CantidadesPorLote.Clear();
             foreach (var lote in LotesToAddProducts)
@@ -216,13 +197,13 @@ else
         var filtro = e.Value?.ToString()?.Trim().ToLower() ?? string.Empty;
         if (string.IsNullOrEmpty(filtro))
         {
-            LotesToAddProducts = SelectedProduct.Lotes?.ToList() ?? new List<LoteToNewCompraDTO>();
+            LotesToAddProducts = SelectedProduct.Lotes?.OrderBy(l => l.Nro_Lote).ToList() ?? new List<LoteToNewCompraDTO>();
         }
         else
         {
             LotesToAddProducts = SelectedProduct.Lotes?
                 .Where(l => l.Nro_Lote.ToLower().Contains(filtro))
-                .OrderByDescending(l => l.Nro_Lote.ToLower().Contains(filtro))
+                .OrderBy(l => l.Nro_Lote)
                 .ToList() ?? new List<LoteToNewCompraDTO>();
         }
         StateHasChanged();
