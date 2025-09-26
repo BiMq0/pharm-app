@@ -12,10 +12,10 @@ public class InventarioService : IInventarioService
         _inventarioRepository = inventarioRepository;
     }
 
-    public async Task<IEnumerable<InventarioGeneralDTO>> ObtenerInventariosAsync()
+    public async Task<IEnumerable<InventarioToListDTO>> ObtenerInventariosAsync()
     {
         var inventarios = await _inventarioRepository.GetAllInventariosAsync();
-        return inventarios.Select(i => new InventarioGeneralDTO(i));
+        return inventarios.Select(i => new InventarioToListDTO(i));
     }
 
     public async Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id)

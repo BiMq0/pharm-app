@@ -156,7 +156,7 @@
                     await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
                     foreach (var lote in item.SelectedProduct!.Lotes!)
                     {
-                        if ()
+                        if (item.CantidadesPorLote.ContainsKey(lote.Id))
                         {
                             lote.Cantidad_Productos += item.CantidadesPorLote[lote.Id];
                             compraNueva.LotesInvolucrados.Add(lote);

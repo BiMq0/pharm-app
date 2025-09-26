@@ -4,7 +4,7 @@ namespace InventarioFarmacia_Back;
 
 public interface IInventarioService
 {
-    Task<IEnumerable<InventarioGeneralDTO>> ObtenerInventariosAsync();
+    Task<IEnumerable<InventarioToListDTO>> ObtenerInventariosAsync();
     Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id);
     Task<bool> CrearInventarioAsync(InventarioNuevoDTO inventario);
     Task<bool> ActualizarInventarioAsync(Inventario inventario);
