@@ -6,7 +6,6 @@ using InventarioFarmacia_Domain.Constants;
 using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Categorias;
 using InventarioFarmacia_Shared.DTOs.Lotes;
-using InventarioFarmacia_Shared.DTOs.Products.Individual;
 
 namespace InventarioFarmacia_Shared.DTOs.Products
 {

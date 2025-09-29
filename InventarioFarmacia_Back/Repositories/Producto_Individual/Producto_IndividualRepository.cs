@@ -16,10 +16,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<IEnumerable<Producto_Individual>> GetAllAsync()
     {
         return await _context.Productos_Individuales
-            .Include(pi => pi.Producto)
-            .Include(pi => pi.Lote)
-            .Include(pi => pi.Inventario)
-            .Include(pi => pi.OrdenCompra)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -27,12 +23,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<IEnumerable<Producto_Individual>> GetAllAsync(string filtro)
     {
         return await _context.Productos_Individuales
-            .Include(pi => pi.Producto)
-            .Include(pi => pi.Lote)
-            .Include(pi => pi.Inventario)
-            .Include(pi => pi.OrdenCompra)
             .Where(p => p.Id.ToString().Contains(filtro)
-                || p.Id_Producto.ToString().Contains(filtro)
                 || p.Estado.ToString().Contains(filtro))
             .AsNoTracking()
             .ToListAsync();
@@ -41,10 +32,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<IEnumerable<Producto_Individual>> GetAllByLoteIdAsync(int loteId)
     {
         return await _context.Productos_Individuales
-            .Include(pi => pi.Producto)
-            .Include(pi => pi.Lote)
-            .Include(pi => pi.Inventario)
-            .Include(pi => pi.OrdenCompra)
             .Where(p => p.Id_Lote == loteId)
             .AsNoTracking()
             .ToListAsync();
@@ -53,10 +40,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<IEnumerable<Producto_Individual>> GetAllProductByStateAsync(Estados_ProductosIndividuales estado)
     {
         return await _context.Productos_Individuales
-            .Include(pi => pi.Producto)
-            .Include(pi => pi.Lote)
-            .Include(pi => pi.Inventario)
-            .Include(pi => pi.OrdenCompra)
             .Where(p => p.Estado == estado)
             .AsNoTracking()
             .ToListAsync();
@@ -65,11 +48,7 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<IEnumerable<Producto_Individual>> GetAllProductsAboutToExpire()
     {
         return await _context.Productos_Individuales
-            .Include(pi => pi.Producto)
-            .Include(pi => pi.Lote)
-            .Include(pi => pi.Inventario)
-            .Include(pi => pi.OrdenCompra)
-            .Where(p => p.Lote.Fecha_Vencimiento.CompareTo(DateOnly.FromDateTime(DateTime.Now.AddDays(30))) < 0 && p.Estado != Estados_ProductosIndividuales.VENDIDO)
+            .Where(p => p.Estado != Estados_ProductosIndividuales.VENDIDO)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -77,10 +56,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<Producto_Individual> GetByIdAsync(int id)
     {
         return await _context.Productos_Individuales
-            .Include(pi => pi.Producto)
-            .Include(pi => pi.Lote)
-            .Include(pi => pi.Inventario)
-            .Include(pi => pi.OrdenCompra)
             .FirstOrDefaultAsync(pi => pi.Id == id)
             ?? throw new KeyNotFoundException($"Producto Individual con id {id} no encontrado.");
     }
@@ -94,28 +69,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
     public async Task<bool> UpdateAsync(Producto_Individual productoIndividual)
     {
         _context.Productos_Individuales.Update(productoIndividual);
-        return await _context.SaveChangesAsync() > 0;
-    }
-
-    public async Task<bool> UpdateStatesByExpirationDateAsync()
-    {
-        var productos = await _context.Productos_Individuales
-            .Where(p => p.Estado != Estados_ProductosIndividuales.VENDIDO)
-            .ToListAsync();
-
-        productos.ForEach(p =>
-        {
-            if (p.Lote.Fecha_Vencimiento.CompareTo(DateOnly.FromDateTime(DateTime.Now)) >= 0)
-            {
-                p.Estado = Estados_ProductosIndividuales.VENCIDO;
-            }
-            else if (p.Lote.Fecha_Vencimiento.CompareTo(DateOnly.FromDateTime(DateTime.Now.AddDays(30))) == 0)
-            {
-                p.Estado = Estados_ProductosIndividuales.POR_VENCER;
-            }
-        });
-
-        _context.Productos_Individuales.UpdateRange(productos);
         return await _context.SaveChangesAsync() > 0;
     }
 

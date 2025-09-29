@@ -1,6 +1,7 @@
 using InventarioFarmacia_Back;
 using InventarioFarmacia_Back.Handlers;
 using InventarioFarmacia_Back.Mappers;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -19,7 +20,6 @@ builder.Services.AddScopedServices();
 builder.Services.AddScopedMappers();
 
 var app = builder.Build();
-app.MapEndpoints();
 
 if (app.Environment.IsDevelopment())
 {
@@ -30,5 +30,6 @@ if (app.Environment.IsDevelopment())
    });
 }
 
-app.MapGet("/", () => "Welcome to the Pharm API!");
+app.MapEndpoints();
+app.MapGet("/", () => Results.Redirect("/swagger"));
 app.Run();

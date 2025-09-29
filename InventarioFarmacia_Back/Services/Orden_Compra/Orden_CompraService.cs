@@ -8,72 +8,60 @@ public class Orden_CompraService : IOrden_CompraService
 {
     private readonly IOrden_CompraRepository _ordenCompraRepository;
     private readonly ILoteService _loteService;
+    private readonly IProducto_IndividualService _productoIndividualService;
 
-    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, ILoteService loteService)
+    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, ILoteService loteService, IProducto_IndividualService productoIndividualService)
     {
         _ordenCompraRepository = ordenCompraRepository;
         _loteService = loteService;
+        _productoIndividualService = productoIndividualService;
     }
 
     public async Task<IEnumerable<CompraRegistroDTO>> ObtenerOrdenesCompraAsync(string filtro = "")
     {
-        var ordenesDeCompra = await _ordenCompraRepository.GetAllAsync();
-        if (string.IsNullOrEmpty(filtro))
-        {
-            return ordenesDeCompra.Select(oc =>
-            {
-                return new CompraRegistroDTO(oc);
-            });
-        }
-        return ordenesDeCompra.Select(oc => new CompraRegistroDTO(oc));
+        var ordenesFiltradas = string.IsNullOrEmpty(filtro)
+            ? await _ordenCompraRepository.GetAllAsync()
+            : (await _ordenCompraRepository.GetAllAsync()).Where(oc => oc.Estado.ToString().Contains(filtro, StringComparison.OrdinalIgnoreCase));
+
+        return ordenesFiltradas.Select(oc => new CompraRegistroDTO(oc));
+
     }
 
     public async Task<CompraDetalladaDTO> ObtenerOrdenCompraPorIdAsync(int id)
     {
         var ordenCompra = await _ordenCompraRepository.GetByIdAsync(id);
-        return new CompraDetalladaDTO(ordenCompra);
+        return ordenCompra != null ? new CompraDetalladaDTO(ordenCompra) : throw new KeyNotFoundException("Orden de compra no encontrada");
     }
 
     public async Task<bool> CrearOrdenCompraAsync(ComprasNuevaDTO ordenCompra)
     {
+        var lotesToAdd = await Task.WhenAll(ordenCompra.LotesInvolucrados.Select(async loteDto =>
+        {
+            var lote = await _loteService.ObtenerLotePorIdAsync(loteDto.Id);
+            if (lote == null) throw new Exception("Error al recuperar el lote.");
+            return lote;
+        }).ToList());
 
         var nuevaCompra = new Orden_Compra
         {
             Fecha_Pedido = ordenCompra.Fecha_Pedido,
             Fecha_Recibo = ordenCompra.Fecha_Recibo,
+            LotesInvolucrados = lotesToAdd
         };
 
         var nuevaCompraCreada = await _ordenCompraRepository.AddAsync(nuevaCompra);
 
-        nuevaCompraCreada.LotesInvolucrados = await Task.WhenAll(ordenCompra.LotesInvolucrados.Select(async loteDto =>
-            {
-                var lote = await _loteService.ObtenerLotePorIdAsync(loteDto.Id);
-                lote.Id_LastOrdenCompra = nuevaCompraCreada.Id;
-                await _loteService.ActualizarLoteAsync(new LoteToNewCompraDTO(lote), loteDto.Cantidad_Productos, nuevaCompraCreada.Id);
-                return lote;
-            }
-        ));
-
-        return await ActualizarOrdenCompraAsync(nuevaCompraCreada);
+        foreach (var lote in ordenCompra.LotesInvolucrados)
+        {
+            await _productoIndividualService.CrearProductoIndividualAsync(lote.CantidadProductosPedidos, lote.Id, nuevaCompraCreada.Id, 2);
+        }
+        return nuevaCompraCreada != null;
     }
 
     public async Task<bool> ActualizarOrdenCompraAsync(Orden_Compra ordenCompra)
     {
         var ordenExistente = await _ordenCompraRepository.GetByIdAsync(ordenCompra.Id);
         if (ordenExistente == null) return false;
-
-        ordenExistente.Fecha_Pedido = ordenCompra.Fecha_Pedido;
-        ordenExistente.Fecha_Recibo = ordenCompra.Fecha_Recibo;
-
-        /* var lotesActualizados = new List<Lote>();
-        foreach (var lote in ordenCompra.LotesInvolucrados ?? Enumerable.Empty<Lote>())
-        {
-            await _loteService.ActualizarLoteAsync(new LoteToNewCompraDTO(lote), lote.CantidadProductos);
-            var trackedLote = await _loteService.ObtenerLotePorIdAsync(lote.Id);
-            if (trackedLote != null)
-                lotesActualizados.Add(trackedLote);
-        }
-        ordenExistente.LotesInvolucrados = lotesActualizados; */
 
         return await _ordenCompraRepository.UpdateAsync(ordenExistente);
     }

@@ -16,8 +16,8 @@ public class ProductoRepository : IProductoRepository
     {
         return await _context.Productos
             .Include(p => p.Categoria)
+            .Include(p => p.Lotes)
             .Include(p => p.ProductosIndividuales)
-                .ThenInclude(pi => pi.Inventario)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -35,7 +35,6 @@ public class ProductoRepository : IProductoRepository
             .Include(p => p.Categoria)
             .Include(p => p.Lotes)
             .Include(p => p.ProductosIndividuales)
-                .ThenInclude(pi => pi.Inventario)
             .Where(p => p.Id.ToString().Contains(filtro)
                 || (p.Nombre != null && p.Nombre.Contains(filtro))
                 || (p.Nombre_Clinico != null && p.Nombre_Clinico.Contains(filtro))
@@ -48,11 +47,10 @@ public class ProductoRepository : IProductoRepository
     public async Task<Producto> GetByIdAsync(int id)
     {
         return await _context.Productos
-            .Include(p => p.Categoria)       // ← Categorías del producto
+            .Include(p => p.Categoria)
             .Include(p => p.Lotes)
-            .Include(p => p.ProductosIndividuales) // ← Unidades físicas
-                .ThenInclude(pi => pi.Inventario)  // ← En qué inventario están
-            .Include(p => p.BitacoraProductos)    // ← Historial de cambios
+            .Include(p => p.ProductosIndividuales)
+            .Include(p => p.BitacoraProductos)
             .FirstOrDefaultAsync(p => p.Id == id)
             ?? throw new KeyNotFoundException($"Producto con id {id} no encontrado.");
     }

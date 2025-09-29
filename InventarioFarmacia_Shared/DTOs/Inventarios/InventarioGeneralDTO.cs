@@ -8,7 +8,6 @@ namespace InventarioFarmacia_Shared.DTOs.Inventarios
         public string? Nombre { get; set; }
         public DateTime Ultima_Actualizacion { get; set; }
         public int CantidadProductos { get; set; }
-        public int CantidadTiposProducto { get; set; }
         public int CantidadProductosDisponibles { get; set; }
         public int CantidadProductosPorVencer { get; set; }
         public int CantidadProductosVencidos { get; set; }
@@ -18,7 +17,6 @@ namespace InventarioFarmacia_Shared.DTOs.Inventarios
             Nombre = inventario.Nombre;
             Ultima_Actualizacion = inventario.Ultima_Actualizacion;
             CantidadProductos = inventario.CantidadProductos;
-            CantidadTiposProducto = inventario.CantidadTiposProducto;
             CantidadProductosDisponibles = inventario.CantidadProductosDisponibles;
             CantidadProductosPorVencer = inventario.CantidadProductosPorVencer;
             CantidadProductosVencidos = inventario.CantidadProductosVencidos;

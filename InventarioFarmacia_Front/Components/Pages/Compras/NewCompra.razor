@@ -109,13 +109,11 @@
     {
         await CargarProductos();
     }
-
     private async Task CargarProductos()
     {
         var productos = await ProductServices.GetProductosForOrdenAsync();
         lstProductosDisponibles = productos.ToList();
     }
-
     private void AgregarProducto()
     {
         if (!AllSelected)
@@ -127,7 +125,6 @@
             StateHasChanged();
         }
     }
-
     private void OnRemoveProductFromList(int Id_Producto)
     {
         lstIdProductosSeleccionados.Add(Id_Producto);
@@ -153,18 +150,25 @@
                 {
 
                     decimal nuevoPrecio = Math.Round((item.SelectedProduct.Precio_Unitario + item.NuevoPrecio) / 2, 2);
-                    await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
                     foreach (var lote in item.SelectedProduct!.Lotes!)
                     {
-                        if (item.CantidadesPorLote.ContainsKey(lote.Id))
+                        if (item.CantidadesPorLote[lote.Id] > 0)
                         {
                             lote.Cantidad_Productos += item.CantidadesPorLote[lote.Id];
-                            compraNueva.LotesInvolucrados.Add(lote);
+                            compraNueva.LotesInvolucrados.Add(new LoteToCompraRegistroDTO()
+                            {
+                                Id = lote.Id,
+                                Nro_Lote = lote.Nro_Lote,
+                                CantidadProductosPedidos = item.CantidadesPorLote[lote.Id]
+                            });
                         }
                     }
+                    await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
+                    await Task.Delay(50);
                 }
             }
-            var resultado = await CompraServices.CreateOrdenCompra(compraNueva);
+            bool resultado = await CompraServices.CreateOrdenCompra(compraNueva);
+            //bool resultado = await Task.Delay(100).ContinueWith(t => true);
 
             if (resultado)
             {

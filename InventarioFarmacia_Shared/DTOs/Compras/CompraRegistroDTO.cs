@@ -26,7 +26,7 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
             Fecha_Recibo = ordenCompra.Fecha_Recibo;
             Cantidad_Productos = ordenCompra.Cantidad_Productos;
             Costo_Total = ordenCompra.Costo_Total;
-            LotesInvolucrados = ordenCompra.LotesInvolucrados!.Select(lote => new LoteToCompraRegistroDTO(lote)).ToList();
+            LotesInvolucrados = ordenCompra.LotesInvolucrados!.Select(lote => new LoteToCompraRegistroDTO(lote, Id)).ToList();
         }
         public CompraRegistroDTO()
         {

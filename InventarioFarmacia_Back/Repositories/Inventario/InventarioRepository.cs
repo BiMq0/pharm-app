@@ -14,9 +14,9 @@ public class InventarioRepository : IInventarioRepository
     public async Task<IEnumerable<Inventario>> GetAllInventariosAsync()
     {
         return await _context.Inventarios
-            .Include(i => i.ProductosIndividuales)  // ← Todas las unidades en el inventario
-                .ThenInclude(pi => pi.Producto)     // ← Qué productos son
-            .Include(i => i.BitacoraInventarios)   // ← Historial de movimientos
+            .Include(i => i.LotesDeProducto)
+                .ThenInclude(lp => lp.Producto)
+            .Include(i => i.BitacoraInventarios)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -24,9 +24,9 @@ public class InventarioRepository : IInventarioRepository
     public async Task<Inventario> GetInventarioByIdAsync(int id)
     {
         return await _context.Inventarios
-            .Include(i => i.ProductosIndividuales)  // ← Unidades del inventario
-                .ThenInclude(pi => pi.Producto)     // ← Información del producto
-            .Include(i => i.BitacoraInventarios)   // ← Movimientos del inventario
+            .Include(i => i.LotesDeProducto)
+                .ThenInclude(lp => lp.Producto)
+            .Include(i => i.BitacoraInventarios)
             .FirstOrDefaultAsync(i => i.Id == id)
             ?? throw new KeyNotFoundException($"Inventario con id {id} no encontrado.");
     }

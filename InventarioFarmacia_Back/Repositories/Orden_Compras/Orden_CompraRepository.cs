@@ -14,24 +14,30 @@ public class Orden_CompraRepository : IOrden_CompraRepository
 
     public async Task<IEnumerable<Orden_Compra>> GetAllAsync(string filtro = "")
     {
-        if (string.IsNullOrEmpty(filtro))
+        var query = _dbContext.Orden_Compras
+        .Include(o => o.LotesInvolucrados!)
+            .ThenInclude(l => l.Producto)
+        .Include(o => o.LotesInvolucrados!)
+            .ThenInclude(l => l.ProductosIndividuales)
+        .AsQueryable();
+
+        if (!string.IsNullOrEmpty(filtro))
         {
-            return await _dbContext.Orden_Compras
-                                .Include(o => o.LotesInvolucrados!)
-                                .ThenInclude(l => l.ProductosIndividuales)
-                                .ToListAsync();
+            query = query.Where(o =>
+                o.Id.ToString().Contains(filtro) ||
+                o.Estado.ToString().Contains(filtro));
         }
-        return await _dbContext.Orden_Compras
-                                .Include(o => o.LotesInvolucrados!)
-                                .ThenInclude(l => l.ProductosIndividuales)
-                                .ToListAsync();
+
+        return await query.ToListAsync();
+
     }
 
     public async Task<Orden_Compra> GetByIdAsync(int id)
     {
         return await _dbContext.Orden_Compras.Include(o => o.LotesInvolucrados!)
-                                            .ThenInclude(l => l.Producto)
-                                            .ThenInclude(l => l.ProductosIndividuales)
+                                                .ThenInclude(l => l.Producto)
+                                            .Include(o => o.LotesInvolucrados!)
+                                                .ThenInclude(l => l.ProductosIndividuales)
                                             .FirstOrDefaultAsync(o => o.Id == id) ?? throw new KeyNotFoundException("Orden de compra no encontrada");
     }
 

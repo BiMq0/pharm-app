@@ -1,7 +1,6 @@
 ﻿using InventarioFarmacia_Domain.Constants;
 using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Lotes;
-using InventarioFarmacia_Shared.DTOs.Products.Individual;
 
 namespace InventarioFarmacia_Back;
 
@@ -40,7 +39,7 @@ public class LoteService : ILoteService
         return await _loteRepository.GetLoteByIdAsync(id);
     }
 
-    public async Task<LoteToNewCompraDTO> CrearLoteAsync(LoteNuevoDTO lote, int idInventario = 2)
+    public async Task<LoteToNewCompraDTO> CrearLoteAsync(LoteNuevoDTO lote)
     {
 
         if (lote.Fecha_Vencimiento <= DateOnly.FromDateTime(DateTime.Now)) throw new ArgumentException("La fecha de vencimiento debe ser futura");
@@ -58,34 +57,12 @@ public class LoteService : ILoteService
     }
 
 
-    public async Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote, int cantidadProductos, int idLastOrdenCompra)
+    public async Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote)
     {
         var loteExistente = await _loteRepository.GetLoteByIdAsync(lote.Id);
         if (loteExistente == null) return false;
 
-        int diferenciaToCreate = cantidadProductos - loteExistente.CantidadProductos;
-        var resultado = await CrearProductosIndividuales(loteExistente.Id_Producto, loteExistente.Id, diferenciaToCreate, 2, idLastOrdenCompra);
-
-        if (!resultado) return false;
-        else return await _loteRepository.UpdateLoteAsync(loteExistente);
-    }
-    private Task<bool> CrearProductosIndividuales(int idProducto, int idLote, int cantidad, int idInventario, int idLastOrdenCompra)
-    {
-        var productos = new List<ProductoIndividualToNewCompraDTO>();
-
-        for (int i = 0; i < cantidad; i++)
-        {
-            productos.Add(new ProductoIndividualToNewCompraDTO
-            {
-                Id_Producto = idProducto,
-                Id_Lote = idLote,
-                Id_Inventario = idInventario,
-                Id_OrdenCompra = idLastOrdenCompra
-            });
-        }
-        var resultado = _productoService.CrearProductoIndividualAsync(productos);
-
-        return resultado;
+        return await _loteRepository.UpdateLoteAsync(loteExistente);
     }
 
     public async Task<bool> EliminarLoteAsync(int id)

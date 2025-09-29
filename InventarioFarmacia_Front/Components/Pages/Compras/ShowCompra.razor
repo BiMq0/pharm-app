@@ -13,7 +13,8 @@
 {
     <Cargador />
 }
-else if (compra != null)
+// else if (compra != null)
+else if (true)
 {
     <div class="container-fluid mt-3">
         <div class="row mb-4">
@@ -23,15 +24,15 @@ else if (compra != null)
                         <div>
                             <h1 class="fw-bold mb-2">
                                 <i class="bi bi-receipt"></i>
-                                Orden de Compra #@compra.Id
+                                @* Orden de Compra #@compra.Id *@
                             </h1>
                             <p class="opacity-75 mb-0">Detalles completos de la orden de compra</p>
                         </div>
                         <div class="text-end">
-                            <span class="badge @GetEstadoBadgeClass(compra.Estado) fs-6 px-3 py-2"
+                            @* <span class="badge @GetEstadoBadgeClass(compra.Estado) fs-6 px-3 py-2"
                                 style="@GetEstadoBadgeStyle(compra.Estado)">
                                 @compra.Estado.ToString()
-                            </span>
+                            </span> *@
                         </div>
                     </div>
                 </div>
@@ -45,7 +46,7 @@ else if (compra != null)
                     <div class="card-body text-center">
                         <i class="bi bi-calendar-event text-primary fs-1"></i>
                         <h6 class="text-muted mb-1">Fecha de Pedido</h6>
-                        <h5 class="fw-bold">@compra.Fecha_Pedido.ToShortDateString()</h5>
+                        @* <h5 class="fw-bold">@compra.Fecha_Pedido.ToShortDateString()</h5> *@
                     </div>
                 </div>
             </div>
@@ -54,7 +55,7 @@ else if (compra != null)
                     <div class="card-body text-center">
                         <i class="bi bi-calendar-check text-success fs-1"></i>
                         <h6 class="text-muted mb-1">Fecha de Recibo</h6>
-                        <h5 class="fw-bold">@compra.Fecha_Recibo.ToShortDateString()</h5>
+                        @* <h5 class="fw-bold">@compra.Fecha_Recibo.ToShortDateString()</h5> *@
                     </div>
                 </div>
             </div>
@@ -63,7 +64,7 @@ else if (compra != null)
                     <div class="card-body text-center">
                         <i class="bi bi-box-seam text-info fs-1"></i>
                         <h6 class="text-muted mb-1">Cantidad Total de Productos</h6>
-                        <h5 class="fw-bold">@compra.Cantidad_Productos</h5>
+                        @* <h5 class="fw-bold">@compra.Cantidad_Productos</h5> *@
                     </div>
                 </div>
             </div>
@@ -72,7 +73,7 @@ else if (compra != null)
                     <div class="card-body text-center">
                         <i class="bi bi-currency-dollar text-warning fs-1"></i>
                         <h6 class="text-muted mb-1">Costo Total</h6>
-                        <h5 class="fw-bold">Bs. @compra.Costo_Total.ToString("N2")</h5>
+                        @* <h5 class="fw-bold">Bs. @compra.Costo_Total.ToString("N2")</h5> *@
                     </div>
                 </div>
             </div>
@@ -89,7 +90,7 @@ else if (compra != null)
                         </h5>
                     </div>
                     <div class="card-body">
-                        @if (compra.LotesInvolucrados != null && compra.LotesInvolucrados.Any())
+                        @* @if (compra.LotesInvolucrados != null && compra.LotesInvolucrados.Any())
                         {
                             @foreach (var grupo in productosAgrupados)
                             {
@@ -158,7 +159,7 @@ else if (compra != null)
                                 <i class="bi bi-inbox text-muted fs-1"></i>
                                 <p class="text-muted mt-2">No hay productos en esta orden de compra</p>
                             </div>
-                        }
+                        } *@
                     </div>
                 </div>
             </div>
@@ -190,7 +191,7 @@ else
 @code {
     [Parameter] public int Id { get; set; }
 
-    private CompraDetalladaDTO? compra;
+    //private CompraDetalladaDTO? compra;
     private bool isLoading = true;
     private Dictionary<int, ProductoAgrupado> productosAgrupados = new();
 
@@ -204,12 +205,13 @@ else
         isLoading = true;
         try
         {
-            compra = await CompraService.GetCompraById(Id);
+            await Task.Delay(500);
+            //compra = await CompraService.GetCompraById(Id);
 
-            if (compra != null)
+            @* if (compra != null)
             {
                 AgruparProductosPorTipo();
-            }
+            } *@
         }
         catch (Exception ex)
         {
@@ -224,27 +226,7 @@ else
 
     private void AgruparProductosPorTipo()
     {
-        if (compra?.LotesInvolucrados == null) return;
-
-        // Simular agrupación por productos
-        // En este ejemplo creamos datos ficticios ya que no tenemos la estructura completa
-        productosAgrupados = new Dictionary<int, ProductoAgrupado>
-{
-{1, new ProductoAgrupado
-{
-IdProducto = 1,
-NombreProducto = "Ejemplo Producto 1",
-NombreClinico = "Ejemplo Clínico 1",
-CantidadTotal = 50,
-Lotes = new List<LoteDetalle>
-{
-new LoteDetalle { Nro_Lote = "LOT001", Fecha_Vencimiento = DateOnly.FromDateTime(DateTime.Now.AddMonths(6)),
-CantidadSolicitada = 25 },
-new LoteDetalle { Nro_Lote = "LOT002", Fecha_Vencimiento = DateOnly.FromDateTime(DateTime.Now.AddMonths(8)),
-CantidadSolicitada = 25 }
-}
-}}
-};
+        //if (compra?.LotesInvolucrados == null) return;
     }
 
     private string GetEstadoBadgeClass(Estados_OrdenDeCompra estado)

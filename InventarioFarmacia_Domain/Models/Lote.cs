@@ -6,7 +6,6 @@ public class Lote
 {
     public int Id { get; set; }
     public int Id_Producto { get; set; }
-    public int? Id_LastOrdenCompra { get; set; }
     public DateOnly Fecha_Vencimiento { get; set; }
     public string Nro_Lote { get; set; } = null!;
     public ICollection<Producto_Individual>? ProductosIndividuales { get; set; }
