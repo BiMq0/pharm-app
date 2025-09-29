@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using InventarioFarmacia_Domain.Constants;
 using InventarioFarmacia_Domain.Models;
@@ -30,11 +31,11 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
             CantidadTotalProductos = ordenCompra.Cantidad_Productos;
             CostoTotal = ordenCompra.Costo_Total;
             Lotes = ordenCompra.LotesInvolucrados!.Select(lote => new LoteToCompraDetalladaDTO(lote, Id)).ToList();
-            Productos = Lotes.GroupBy(lote => lote.Producto).Select(g => g.First().Producto!).ToList();
+            Productos = Lotes.GroupBy(l => l.Id_Producto).Select(g => g.First().Producto).ToList()!;
         }
+
         public CompraDetalladaDTO()
         {
-
         }
     }
 }

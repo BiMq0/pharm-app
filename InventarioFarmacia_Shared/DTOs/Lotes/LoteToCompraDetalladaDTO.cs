@@ -12,6 +12,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
     public class LoteToCompraDetalladaDTO
     {
         public int Id { get; set; }
+        public int Id_Producto { get; set; }
         public string? Nro_Lote { get; set; }
         public int CantidadProductosPedidos { get; set; }
         [JsonIgnore]
@@ -25,6 +26,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
         public LoteToCompraDetalladaDTO(Lote lote, int compraId)
         {
             Id = lote.Id;
+            Id_Producto = lote.Id_Producto;
             Nro_Lote = lote.Nro_Lote;
             CantidadProductosPedidos = lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == compraId).Count();
             Producto = new ProductoInfoToCompraDetalladaDTO(lote.Producto!);

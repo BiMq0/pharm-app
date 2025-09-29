@@ -63,7 +63,7 @@ else if (compra != null)
                     <div class="card-body text-center">
                         <i class="bi bi-box-seam text-info fs-1"></i>
                         <h6 class="text-muted mb-1">Cantidad Total de Productos</h6>
-                        <h5 class="fw-bold">@compra.Lotes</h5>
+                        <h5 class="fw-bold">@compra.CantidadTotalProductos</h5>
                     </div>
                 </div>
             </div>
@@ -89,15 +89,41 @@ else if (compra != null)
                         </h5>
                     </div>
                     <div class="card-body">
-                        @if (compra.Lotes != null && compra.Lotes.Any())
+                        @foreach (var producto in compra.Productos)
                         {
+                            <div class="card mb-3 p-3">
+                                <div class="card-body">
+                                    <div class="dropdown w-100">
+                                        <button class="btn btn-outline-primary dropdown-toggle w-100 d-flex align-items-center"
+                                            type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            <img src="@producto.Ruta_Imagen" alt="@producto.Nombre" class="img-fluid rounded"
+                                                style="max-height: 50px; max-width: 50px; object-fit: cover; margin-right: 10px;" />
+                                            <h6 class="fw-bold mb-0">@producto.Nombre</h6>
+                                        </button>
 
-                        }
-                        else
-                        {
-                            <div class="text-center py-4">
-                                <i class="bi bi-inbox text-muted fs-1"></i>
-                                <p class="text-muted mt-2">No hay productos en esta orden de compra</p>
+                                        <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
+                                            @foreach (var lote in compra.Lotes.Where(l => l.Id_Producto == producto.Id))
+                                            {
+                                                <li>
+                                                    <div class="dropdown-item d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <strong>Lote #@lote.Nro_Lote</strong> - Cantidad:
+                                                            @lote.CantidadProductosPedidos
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            }
+
+                                            @if (!compra.Lotes.Any(l => l.Id_Producto == producto.Id))
+                                            {
+                                                <li>
+                                                    <div class="dropdown-item text-muted">Sin lotes disponibles</div>
+                                                </li>
+                                            }
+                                        </ul>
+                                    </div>
+                                </div>
                             </div>
                         }
                     </div>
