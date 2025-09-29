@@ -30,19 +30,19 @@ namespace InventarioFarmacia_Front.Services.Compras
             }
         }
 
-        // public async Task<CompraDetalladaDTO?> GetCompraById(int id)
-        // {
-        //     var url = Config.ApiBaseUrl + ComprasEndpoints.BASE + ComprasEndpoints.GET_BY_ID;
-        //     url = url.Replace("{id}", id.ToString());
+        public async Task<CompraDetalladaDTO?> GetCompraById(int id)
+        {
+            var url = Config.ApiBaseUrl + ComprasEndpoints.BASE + ComprasEndpoints.GET_BY_ID;
+            url = url.Replace("{id}", id.ToString());
 
-        //     var response = await _httpClient.GetAsync(url);
-        //     if (response.IsSuccessStatusCode)
-        //     {
-        //         var compra = await response.Content.ReadFromJsonAsync<CompraDetalladaDTO>();
-        //         return compra;
-        //     }
-        //     return null;
-        // }
+            var response = await _httpClient.GetAsync(url);
+            if (response.IsSuccessStatusCode)
+            {
+                var compra = await response.Content.ReadFromJsonAsync<CompraDetalladaDTO>();
+                return compra;
+            }
+            return null;
+        }
 
         public async Task<bool> CreateOrdenCompra(ComprasNuevaDTO ordenCompra)
         {

@@ -13,8 +13,7 @@
 {
     <Cargador />
 }
-// else if (compra != null)
-else if (true)
+else if (compra != null)
 {
     <div class="container-fluid mt-3">
         <div class="row mb-4">
@@ -24,15 +23,15 @@ else if (true)
                         <div>
                             <h1 class="fw-bold mb-2">
                                 <i class="bi bi-receipt"></i>
-                                @* Orden de Compra #@compra.Id *@
+                                Orden de Compra #@compra.Id
                             </h1>
                             <p class="opacity-75 mb-0">Detalles completos de la orden de compra</p>
                         </div>
                         <div class="text-end">
-                            @* <span class="badge @GetEstadoBadgeClass(compra.Estado) fs-6 px-3 py-2"
+                            <span class="badge @GetEstadoBadgeClass(compra.Estado) fs-6 px-3 py-2"
                                 style="@GetEstadoBadgeStyle(compra.Estado)">
                                 @compra.Estado.ToString()
-                            </span> *@
+                            </span>
                         </div>
                     </div>
                 </div>
@@ -46,7 +45,7 @@ else if (true)
                     <div class="card-body text-center">
                         <i class="bi bi-calendar-event text-primary fs-1"></i>
                         <h6 class="text-muted mb-1">Fecha de Pedido</h6>
-                        @* <h5 class="fw-bold">@compra.Fecha_Pedido.ToShortDateString()</h5> *@
+                        <h5 class="fw-bold">@compra.Fecha_Pedido.ToShortDateString()</h5>
                     </div>
                 </div>
             </div>
@@ -55,7 +54,7 @@ else if (true)
                     <div class="card-body text-center">
                         <i class="bi bi-calendar-check text-success fs-1"></i>
                         <h6 class="text-muted mb-1">Fecha de Recibo</h6>
-                        @* <h5 class="fw-bold">@compra.Fecha_Recibo.ToShortDateString()</h5> *@
+                        <h5 class="fw-bold">@compra.Fecha_Recibo.ToShortDateString()</h5>
                     </div>
                 </div>
             </div>
@@ -64,7 +63,7 @@ else if (true)
                     <div class="card-body text-center">
                         <i class="bi bi-box-seam text-info fs-1"></i>
                         <h6 class="text-muted mb-1">Cantidad Total de Productos</h6>
-                        @* <h5 class="fw-bold">@compra.Cantidad_Productos</h5> *@
+                        <h5 class="fw-bold">@compra.Lotes</h5>
                     </div>
                 </div>
             </div>
@@ -73,7 +72,7 @@ else if (true)
                     <div class="card-body text-center">
                         <i class="bi bi-currency-dollar text-warning fs-1"></i>
                         <h6 class="text-muted mb-1">Costo Total</h6>
-                        @* <h5 class="fw-bold">Bs. @compra.Costo_Total.ToString("N2")</h5> *@
+                        <h5 class="fw-bold">Bs. @compra.CostoTotal.ToString("N2")</h5>
                     </div>
                 </div>
             </div>
@@ -90,68 +89,9 @@ else if (true)
                         </h5>
                     </div>
                     <div class="card-body">
-                        @* @if (compra.LotesInvolucrados != null && compra.LotesInvolucrados.Any())
+                        @if (compra.Lotes != null && compra.Lotes.Any())
                         {
-                            @foreach (var grupo in productosAgrupados)
-                            {
-                                <div class="accordion mb-3" id="accordion-@grupo.Key">
-                                    <div class="accordion-item border rounded shadow-sm">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed bg-light" type="button"
-                                                data-bs-toggle="collapse" data-bs-target="#collapse-@grupo.Key"
-                                                aria-expanded="false" aria-controls="collapse-@grupo.Key">
-                                                <div class="d-flex w-100 justify-content-between align-items-center me-3">
-                                                    <div>
-                                                        <h6 class="mb-1 fw-bold text-primary">@grupo.Value.NombreProducto</h6>
-                                                        <small class="text-muted">@grupo.Value.NombreClinico</small>
-                                                    </div>
-                                                    <div class="text-end">
-                                                        <span class="badge bg-primary fs-6">
-                                                            @grupo.Value.CantidadTotal unidades
-                                                        </span>
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        </h2>
-                                        <div id="collapse-@grupo.Key" class="accordion-collapse collapse"
-                                            data-bs-parent="#accordion-@grupo.Key">
-                                            <div class="accordion-body">
-                                                <div class="table-responsive">
-                                                    <table class="table table-sm table-hover">
-                                                        <thead class="table-light">
-                                                            <tr>
-                                                                <th>Número de Lote</th>
-                                                                <th>Fecha de Vencimiento</th>
-                                                                <th class="text-center">Cantidad Solicitada</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            @foreach (var lote in grupo.Value.Lotes)
-                                                            {
-                                                                <tr>
-                                                                    <td>
-                                                                        <span class="fw-semibold">@lote.Nro_Lote</span>
-                                                                    </td>
-                                                                    <td>
-                                                                        <span class="badge bg-secondary">
-                                                                            @lote.Fecha_Vencimiento.ToShortDateString()
-                                                                        </span>
-                                                                    </td>
-                                                                    <td class="text-center">
-                                                                        <span class="badge bg-success">
-                                                                            @lote.CantidadSolicitada unidades
-                                                                        </span>
-                                                                    </td>
-                                                                </tr>
-                                                            }
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            }
+
                         }
                         else
                         {
@@ -159,7 +99,7 @@ else if (true)
                                 <i class="bi bi-inbox text-muted fs-1"></i>
                                 <p class="text-muted mt-2">No hay productos en esta orden de compra</p>
                             </div>
-                        } *@
+                        }
                     </div>
                 </div>
             </div>
@@ -191,9 +131,8 @@ else
 @code {
     [Parameter] public int Id { get; set; }
 
-    //private CompraDetalladaDTO? compra;
+    private CompraDetalladaDTO? compra;
     private bool isLoading = true;
-    private Dictionary<int, ProductoAgrupado> productosAgrupados = new();
 
     protected override async Task OnInitializedAsync()
     {
@@ -205,13 +144,7 @@ else
         isLoading = true;
         try
         {
-            await Task.Delay(500);
-            //compra = await CompraService.GetCompraById(Id);
-
-            @* if (compra != null)
-            {
-                AgruparProductosPorTipo();
-            } *@
+            compra = await CompraService.GetCompraById(Id);
         }
         catch (Exception ex)
         {
@@ -222,11 +155,6 @@ else
             isLoading = false;
             StateHasChanged();
         }
-    }
-
-    private void AgruparProductosPorTipo()
-    {
-        //if (compra?.LotesInvolucrados == null) return;
     }
 
     private string GetEstadoBadgeClass(Estados_OrdenDeCompra estado)
@@ -258,21 +186,5 @@ else
     private void VolverACompras()
     {
         Navigation.NavigateTo("/compras");
-    }
-
-    private class ProductoAgrupado
-    {
-        public int IdProducto { get; set; }
-        public string NombreProducto { get; set; } = string.Empty;
-        public string NombreClinico { get; set; } = string.Empty;
-        public int CantidadTotal { get; set; }
-        public List<LoteDetalle> Lotes { get; set; } = new();
-    }
-
-    private class LoteDetalle
-    {
-        public string Nro_Lote { get; set; } = string.Empty;
-        public DateOnly Fecha_Vencimiento { get; set; }
-        public int CantidadSolicitada { get; set; }
     }
 }

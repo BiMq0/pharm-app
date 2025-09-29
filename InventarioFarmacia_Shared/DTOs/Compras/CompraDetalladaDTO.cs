@@ -32,5 +32,9 @@ namespace InventarioFarmacia_Shared.DTOs.Compras
             Lotes = ordenCompra.LotesInvolucrados!.Select(lote => new LoteToCompraDetalladaDTO(lote, Id)).ToList();
             Productos = Lotes.GroupBy(lote => lote.Producto).Select(g => g.First().Producto!).ToList();
         }
+        public CompraDetalladaDTO()
+        {
+
+        }
     }
 }
