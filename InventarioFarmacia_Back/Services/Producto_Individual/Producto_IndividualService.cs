@@ -46,20 +46,17 @@ public class Producto_IndividualService : IProducto_IndividualService
         return await _productoIndividualRepository.AddAsync(productosIndividuales);
     }
 
-    public async Task<bool> ActualizarProductoIndividualAsync(Producto_Individual productoIndividual)
+    public async Task<bool> ActualizarEstadoProductosPorLoteAsync(IEnumerable<Producto_Individual> productos, Estados_ProductosIndividuales nuevoEstado)
     {
-        return await _productoIndividualRepository.UpdateAsync(productoIndividual);
-    }
-    public async Task<bool> MarcarComoVendidoAsync(int productId)
-    {
-        return await _productoIndividualRepository.MarkAsSold(productId);
-    }
-    public async Task<bool> MarcarComoVencidoAsync(int productId)
-    {
-        return await _productoIndividualRepository.MarkAsExpired(productId);
-    }
-    public async Task<bool> MarcarComoProximoAVencerAsync(int productId)
-    {
-        return await _productoIndividualRepository.MarkAsAboutToExpire(productId);
+        var contador = 0;
+        foreach (var producto in productos)
+        {
+            producto.Estado = nuevoEstado;
+            if (await _productoIndividualRepository.UpdateAsync(producto))
+            {
+                contador++;
+            }
+        }
+        return contador == productos.Count();
     }
 }

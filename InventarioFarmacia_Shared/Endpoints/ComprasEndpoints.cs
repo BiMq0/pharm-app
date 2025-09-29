@@ -6,7 +6,8 @@ namespace InventarioFarmacia_Shared.Endpoints
         public const string GET_ALL = "";
         public const string GET_BY_ID = $"/{{id}}";
         public const string CREATE = "";
-        public const string UPDATE = $"/{{id}}";
+        public const string CONFIRM = $"/{{id}}/confirm";
+        public const string CANCEL = $"/{{id}}/cancel";
         public const string DELETE = $"/{{id}}";
     }
 }

@@ -39,6 +39,18 @@ namespace InventarioFarmacia_Back.Mappers
             .WithName("CreateCompra")
             .WithSummary("Crear nueva orden de compra")
             .WithDescription("Crea una nueva orden de compra con los lotes especificados y actualiza el inventario");
+
+            compras.MapPut(ComprasEndpoints.CONFIRM, async (int id, IOrden_CompraService service) =>
+            {
+                var result = await service.ProcesarOrdenCompraRecibidaAsync(id);
+                return result ? Results.Ok(result) : Results.BadRequest("No se pudo confirmar la orden de compra.");
+            });
+
+            compras.MapPut(ComprasEndpoints.CANCEL, async (int id, IOrden_CompraService service) =>
+            {
+                var result = await service.ProcesarOrdenCompraCanceladaAsync(id);
+                return result ? Results.Ok(result) : Results.BadRequest("No se pudo cancelar la orden de compra.");
+            });
         }
     }
 }

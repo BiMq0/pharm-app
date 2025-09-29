@@ -1,4 +1,5 @@
 ﻿using System.Numerics;
+using InventarioFarmacia_Domain.Constants;
 using InventarioFarmacia_Shared.DTOs.Compras;
 using InventarioFarmacia_Shared.Endpoints;
 
@@ -49,6 +50,28 @@ namespace InventarioFarmacia_Front.Services.Compras
             var url = Config.ApiBaseUrl + ComprasEndpoints.BASE + ComprasEndpoints.CREATE;
 
             var response = await _httpClient.PostAsJsonAsync(url, ordenCompra);
+            if (response.IsSuccessStatusCode)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<bool> ActualizarOrdenCompra(int idOrdenCompra, int codigoOperacion)
+        {
+            var url = Config.ApiBaseUrl + ComprasEndpoints.BASE;
+            if (codigoOperacion == (int)Estados_OrdenDeCompra.RECIBIDO)
+            {
+                url += ComprasEndpoints.CONFIRM;
+            }
+            else if (codigoOperacion == (int)Estados_OrdenDeCompra.CANCELADO)
+            {
+                url += ComprasEndpoints.CANCEL;
+            }
+
+            url = url.Replace("{id}", idOrdenCompra.ToString());
+
+            var response = await _httpClient.PutAsJsonAsync(url, idOrdenCompra);
             if (response.IsSuccessStatusCode)
             {
                 return true;

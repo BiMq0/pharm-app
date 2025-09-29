@@ -9,5 +9,5 @@ public interface IOrden_CompraService
     Task<bool> CrearOrdenCompraAsync(ComprasNuevaDTO ordenCompra);
     Task<bool> ActualizarOrdenCompraAsync(Orden_Compra ordenCompra);
     Task<bool> ProcesarOrdenCompraRecibidaAsync(int ordenId);
-    Task<bool> ProcesarOrdenCompraCanceladaAsync(int id);
+    Task<bool> ProcesarOrdenCompraCanceladaAsync(int ordenId);
 }

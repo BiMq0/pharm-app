@@ -8,6 +8,7 @@ namespace InventarioFarmacia_Front.Services.Compras
         Task<IEnumerable<CompraRegistroDTO>> GetAllCompras();
         Task<CompraDetalladaDTO?> GetCompraById(int id);
         Task<bool> CreateOrdenCompra(ComprasNuevaDTO ordenCompra);
+        Task<bool> ActualizarOrdenCompra(int idOrdenCompra, int codigoOperacion);
     }
 
 }

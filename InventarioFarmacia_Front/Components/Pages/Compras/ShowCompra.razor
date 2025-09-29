@@ -21,17 +21,31 @@ else if (compra != null)
                 <div class="bg-primary text-white p-4 rounded-3 shadow">
                     <div class="d-flex justify-content-between align-items-center flex-wrap">
                         <div>
-                            <h1 class="fw-bold mb-2">
+                            <h1 class="fw-bold mb-2 d-flex align-items-center gap-4">
                                 <i class="bi bi-receipt"></i>
                                 Orden de Compra #@compra.Id
+
+                                <span class="badge @GetEstadoBadgeClass(compra.Estado) fs-6 px-3 py-2"
+                                    style="@GetEstadoBadgeStyle(compra.Estado)">
+                                    @compra.Estado.ToString()
+                                </span>
                             </h1>
                             <p class="opacity-75 mb-0">Detalles completos de la orden de compra</p>
                         </div>
-                        <div class="text-end">
-                            <span class="badge @GetEstadoBadgeClass(compra.Estado) fs-6 px-3 py-2"
-                                style="@GetEstadoBadgeStyle(compra.Estado)">
-                                @compra.Estado.ToString()
-                            </span>
+                        <div class="text-end d-flex gap-4">
+
+                            <div class="input-group shadow">
+                                <i class="bi bi-check fs-3 input-group-text"></i>
+                                <button class="btn btn-success form-control" @onclick="MarcarCompraRecibida">
+                                    Compra Recibida
+                                </button>
+                            </div>
+                            <div class="input-group shadow">
+                                <i class="bi bi-trash fs-3 input-group-text"></i>
+                                <button class="btn btn-danger form-control" @onclick="MarcarCompraCancelada">
+                                    Cancelar Compra
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -99,7 +113,7 @@ else if (compra != null)
                                             aria-expanded="false">
                                             <img src="@producto.Ruta_Imagen" alt="@producto.Nombre" class="img-fluid rounded"
                                                 style="max-height: 50px; max-width: 50px; object-fit: cover; margin-right: 10px;" />
-                                            <h6 class="fw-bold mb-0">@producto.Nombre</h6>
+                                            <span class="fw-bold mb-0">@producto.Nombre</span>
                                         </button>
 
                                         <ul class="dropdown-menu w-100" aria-labelledby="dropdownMenuButton">
@@ -114,13 +128,6 @@ else if (compra != null)
                                                     </div>
                                                 </li>
                                             }
-
-                                            @if (!compra.Lotes.Any(l => l.Id_Producto == producto.Id))
-                                            {
-                                                <li>
-                                                    <div class="dropdown-item text-muted">Sin lotes disponibles</div>
-                                                </li>
-                                            }
                                         </ul>
                                     </div>
                                 </div>
@@ -131,7 +138,6 @@ else if (compra != null)
             </div>
         </div>
 
-        <!-- Botón de regreso -->
         <div class="row mt-4">
             <div class="col-12 text-center">
                 <button class="btn btn-outline-primary" @onclick="VolverACompras">
@@ -212,5 +218,14 @@ else
     private void VolverACompras()
     {
         Navigation.NavigateTo("/compras");
+    }
+
+    private async Task<bool> MarcarCompraRecibida()
+    {
+        return await CompraService.ActualizarOrdenCompra(compra!.Id, (int)Estados_OrdenDeCompra.RECIBIDO);
+    }
+    private async Task<bool> MarcarCompraCancelada()
+    {
+        return await CompraService.ActualizarOrdenCompra(compra!.Id, (int)Estados_OrdenDeCompra.CANCELADO);
     }
 }

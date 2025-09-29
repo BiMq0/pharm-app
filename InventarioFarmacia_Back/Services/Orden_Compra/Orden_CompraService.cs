@@ -1,4 +1,5 @@
-﻿using InventarioFarmacia_Domain.Models;
+﻿using InventarioFarmacia_Domain.Constants;
+using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Compras;
 using InventarioFarmacia_Shared.DTOs.Lotes;
 
@@ -67,20 +68,25 @@ public class Orden_CompraService : IOrden_CompraService
     }
     public async Task<bool> ProcesarOrdenCompraRecibidaAsync(int ordenId)
     {
-        // TODO: Implementar lógica de procesamiento
-        // TODO: Actualizar inventario con los productos recibidos
-        // TODO: Cambiar estado de la orden
-        var orden = await _ordenCompraRepository.GetByIdAsync(ordenId);
-        if (orden == null) return false;
-
-        // Lógica de procesamiento aquí
-        return true;
+        var ordenExistente = await _ordenCompraRepository.GetByIdAsync(ordenId);
+        bool estadoProdsAcualizados = false;
+        foreach (var lote in ordenExistente!.LotesInvolucrados!)
+        {
+            estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes, Estados_ProductosIndividuales.DISPONIBLE);
+        }
+        ordenExistente.Estado = Estados_OrdenDeCompra.RECIBIDO;
+        return await _ordenCompraRepository.UpdateAsync(ordenExistente) && estadoProdsAcualizados;
     }
 
-    public async Task<bool> ProcesarOrdenCompraCanceladaAsync(int id)
+    public async Task<bool> ProcesarOrdenCompraCanceladaAsync(int ordenId)
     {
-        // TODO: Verificar que la orden existe
-        // TODO: Verificar que no esté procesada
-        return await _ordenCompraRepository.DeleteAsync(id);
+        var ordenExistente = await _ordenCompraRepository.GetByIdAsync(ordenId);
+        bool estadoProdsAcualizados = false;
+        foreach (var lote in ordenExistente!.LotesInvolucrados!)
+        {
+            estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes, Estados_ProductosIndividuales.ORDEN_CANCELADA);
+        }
+        ordenExistente.Estado = Estados_OrdenDeCompra.CANCELADO;
+        return await _ordenCompraRepository.UpdateAsync(ordenExistente) && estadoProdsAcualizados;
     }
 }

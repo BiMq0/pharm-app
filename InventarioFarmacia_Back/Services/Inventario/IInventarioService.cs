@@ -10,7 +10,4 @@ public interface IInventarioService
     Task<bool> ActualizarInventarioAsync(Inventario inventario);
     Task<bool> EliminarInventarioAsync(int id);
     Task<bool> ActualizarStockAsync(int inventarioId, int cantidad);
-    // TODO: Agregar métodos con DTOs cuando estén creados
-    // Task<IEnumerable<InventarioDTO>> ObtenerInventariosDTOAsync();
-    // Task<InventarioDTO> ObtenerInventarioDTOPorIdAsync(int id);
 }
