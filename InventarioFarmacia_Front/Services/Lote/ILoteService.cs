@@ -7,6 +7,7 @@ public interface ILoteService
     Task<IEnumerable<LoteToNewCompraDTO>> GetLotesAsync(string filtro = "");
     Task<LoteToNewCompraDTO?> GetLotePorIdAsync(int id);
     Task<IEnumerable<LoteToNewCompraDTO>> GetLotesPorProductoAsync(int productoId);
+    Task<IEnumerable<LoteToNewCompraDTO>> GetLotesPorProductoParaCompraAsync(int productoId);
     Task<LoteToNewCompraDTO> CrearLoteAsync(LoteNuevoDTO lote);
     Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote);
     Task<bool> EliminarLoteAsync(int id);

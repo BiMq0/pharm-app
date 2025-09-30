@@ -3,6 +3,7 @@ using System;
 using InventarioFarmacia_Back;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace InventarioFarmacia_Back.Migrations
 {
     [DbContext(typeof(PharmDBContext))]
-    partial class PharmDBContextModelSnapshot : ModelSnapshot
+    [Migration("20250930003046_LoteToInventoryRelationship")]
+    partial class LoteToInventoryRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
@@ -315,13 +318,13 @@ namespace InventarioFarmacia_Back.Migrations
 
             modelBuilder.Entity("InventarioLote", b =>
                 {
-                    b.Property<int>("InventariosId")
+                    b.Property<int>("InventarioId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("LotesDeProductoId")
                         .HasColumnType("INTEGER");
 
-                    b.HasKey("InventariosId", "LotesDeProductoId");
+                    b.HasKey("InventarioId", "LotesDeProductoId");
 
                     b.HasIndex("LotesDeProductoId");
 
@@ -457,7 +460,7 @@ namespace InventarioFarmacia_Back.Migrations
                 {
                     b.HasOne("InventarioFarmacia_Domain.Models.Inventario", null)
                         .WithMany()
-                        .HasForeignKey("InventariosId")
+                        .HasForeignKey("InventarioId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

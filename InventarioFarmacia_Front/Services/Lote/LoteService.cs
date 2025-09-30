@@ -68,6 +68,26 @@ public class LoteService : ILoteService
         }
     }
 
+    public async Task<IEnumerable<LoteToNewCompraDTO>> GetLotesPorProductoParaCompraAsync(int productoId)
+    {
+        string url = Config.ApiBaseUrl + LotesEndpoints.BASE + LotesEndpoints.GET_FOR_PRODUCT_TO_SHOP;
+        url = url.Replace("{productId}", productoId.ToString());
+
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<IEnumerable<LoteToNewCompraDTO>>()
+                   ?? Enumerable.Empty<LoteToNewCompraDTO>();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener lotes del producto {productoId}: {ex.Message}");
+            return new List<LoteToNewCompraDTO>();
+        }
+    }
+
     public async Task<LoteToNewCompraDTO> CrearLoteAsync(LoteNuevoDTO lote)
     {
         string url = Config.ApiBaseUrl + LotesEndpoints.BASE + LotesEndpoints.CREATE;

@@ -158,8 +158,8 @@ else
         CantidadesPorLote = new Dictionary<int, int>();
         await base.OnInitializedAsync();
     }
-    
-    private void SeleccionarProducto(int Id_Producto)
+
+    private async Task SeleccionarProducto(int Id_Producto)
     {
         var selectedValue = Id_Producto;
         var productoSeleccionado = lstProductosDisponibles.FirstOrDefault(p => p.Id == selectedValue);
@@ -167,17 +167,17 @@ else
         {
             SelectedProduct = productoSeleccionado;
             ProductSelected = true;
-            
-            SincronizarLotesAuxiliares();
+
+            await SincronizarLotesAuxiliares();
         }
         StateHasChanged();
     }
 
-    private void SincronizarLotesAuxiliares()
+    private async Task SincronizarLotesAuxiliares()
     {
         if (SelectedProduct.Lotes != null)
         {
-            LotesToAddProducts = SelectedProduct.Lotes.OrderBy(l => l.Nro_Lote).ToList();
+            LotesToAddProducts = (await LoteService.GetLotesPorProductoParaCompraAsync(SelectedProduct.Id)).ToList();
             
             CantidadesPorLote.Clear();
             foreach (var lote in LotesToAddProducts)

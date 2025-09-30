@@ -21,7 +21,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
         {
             Id = lote.Id;
             Nro_Lote = lote.Nro_Lote;
-            CantidadProductosPedidos = lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == compraId).Count();
+            CantidadProductosPedidos = lote.ProductosIndividuales!.Where(pi => pi.Id_OrdenCompra == compraId).Count();
         }
     }
 }

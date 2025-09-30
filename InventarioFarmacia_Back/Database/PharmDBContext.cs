@@ -64,6 +64,12 @@ public class PharmDBContext : DbContext
             .HasForeignKey(v => v.Id_Usuario)
             .OnDelete(DeleteBehavior.SetNull);
 
+        // Lotes -> Inventarios (M:N)
+        modelBuilder.Entity<Inventario>()
+            .HasMany(i => i.LotesDeProducto)
+            .WithMany(l => l.Inventarios)
+            .UsingEntity(j => j.ToTable("InventarioLote"));
+
         // Venta -> DetalleVentas (1:N)
         modelBuilder.Entity<Detalle_Venta>()
             .HasOne(dv => dv.Venta)

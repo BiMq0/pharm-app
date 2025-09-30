@@ -1,5 +1,6 @@
 ﻿using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Inventarios;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 
 namespace InventarioFarmacia_Back;
 
@@ -18,10 +19,12 @@ public class InventarioService : IInventarioService
         return inventarios.Select(i => new InventarioToListDTO(i));
     }
 
-    public async Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id)
+    //public async Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id)
+    public async Task<Inventario> ObtenerInventarioPorIdAsync(int id)
     {
         var inventario = await _inventarioRepository.GetInventarioByIdAsync(id);
-        return inventario is not null ? new InventarioGeneralDTO(inventario) : null;
+        //return new InventarioGeneralDTO(inventario);
+        return inventario;
     }
 
     public async Task<bool> CrearInventarioAsync(InventarioNuevoDTO inventario)
@@ -47,13 +50,14 @@ public class InventarioService : IInventarioService
         return await _inventarioRepository.DeleteInventarioAsync(id);
     }
 
-    public async Task<bool> ActualizarStockAsync(int inventarioId, int cantidad)
+    public async Task<bool> ActualizarStockAsync(List<Lote> lotes, int idInventario = 2)
     {
-        var inventario = await _inventarioRepository.GetInventarioByIdAsync(inventarioId);
+        var inventario = await _inventarioRepository.GetInventarioByIdAsync(idInventario);
         if (inventario == null) return false;
-
-        // TODO: Implementar lógica de actualización de stock
-        // inventario.Stock += cantidad;
+        foreach (var lote in lotes)
+        {
+            inventario.LotesDeProducto?.Add(lote);
+        }
         return await _inventarioRepository.UpdateInventarioAsync(inventario);
     }
 }

@@ -11,6 +11,7 @@ public class Lote
     public ICollection<Producto_Individual>? ProductosIndividuales { get; set; }
     public Producto Producto { get; set; } = null!;
     public ICollection<Orden_Compra>? OrdenesCompra { get; set; }
+    public ICollection<Inventario>? Inventarios { get; set; }
 
     [NotMapped]
     public int CantidadProductos => ProductosIndividuales?.Count ?? 0;

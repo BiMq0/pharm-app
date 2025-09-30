@@ -14,7 +14,7 @@ public class InventarioRepository : IInventarioRepository
     public async Task<IEnumerable<Inventario>> GetAllInventariosAsync()
     {
         return await _context.Inventarios
-            .Include(i => i.LotesDeProducto)
+            .Include(i => i.LotesDeProducto!)
                 .ThenInclude(lp => lp.Producto)
             .Include(i => i.BitacoraInventarios)
             .AsNoTracking()
@@ -24,8 +24,10 @@ public class InventarioRepository : IInventarioRepository
     public async Task<Inventario> GetInventarioByIdAsync(int id)
     {
         return await _context.Inventarios
-            .Include(i => i.LotesDeProducto)
+            .Include(i => i.LotesDeProducto!)
                 .ThenInclude(lp => lp.Producto)
+            .Include(i => i.LotesDeProducto!)
+                .ThenInclude(lp => lp.ProductosIndividuales)
             .Include(i => i.BitacoraInventarios)
             .FirstOrDefaultAsync(i => i.Id == id)
             ?? throw new KeyNotFoundException($"Inventario con id {id} no encontrado.");

@@ -10,11 +10,14 @@ public class Orden_CompraService : IOrden_CompraService
     private readonly IOrden_CompraRepository _ordenCompraRepository;
     private readonly ILoteService _loteService;
     private readonly IProducto_IndividualService _productoIndividualService;
+    private readonly IInventarioService _inventarioService;
 
-    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, ILoteService loteService, IProducto_IndividualService productoIndividualService)
+    public Orden_CompraService(IOrden_CompraRepository ordenCompraRepository, ILoteService loteService, IProducto_IndividualService productoIndividualService, IInventarioService inventarioService)
     {
         _ordenCompraRepository = ordenCompraRepository;
         _loteService = loteService;
+        _productoIndividualService = productoIndividualService;
+        _inventarioService = inventarioService;
         _productoIndividualService = productoIndividualService;
     }
 
@@ -49,6 +52,10 @@ public class Orden_CompraService : IOrden_CompraService
             Fecha_Recibo = ordenCompra.Fecha_Recibo,
             LotesInvolucrados = lotesToAdd
         };
+        foreach (var lote in lotesToAdd)
+        {
+            await _inventarioService.ActualizarStockAsync(lote, 2);
+        }
 
         var nuevaCompraCreada = await _ordenCompraRepository.AddAsync(nuevaCompra);
 
@@ -72,7 +79,7 @@ public class Orden_CompraService : IOrden_CompraService
         bool estadoProdsAcualizados = false;
         foreach (var lote in ordenExistente!.LotesInvolucrados!)
         {
-            estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes, Estados_ProductosIndividuales.DISPONIBLE);
+            estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == ordenId), Estados_ProductosIndividuales.DISPONIBLE);
         }
         ordenExistente.Estado = Estados_OrdenDeCompra.RECIBIDO;
         return await _ordenCompraRepository.UpdateAsync(ordenExistente) && estadoProdsAcualizados;
@@ -84,7 +91,7 @@ public class Orden_CompraService : IOrden_CompraService
         bool estadoProdsAcualizados = false;
         foreach (var lote in ordenExistente!.LotesInvolucrados!)
         {
-            estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes, Estados_ProductosIndividuales.ORDEN_CANCELADA);
+            estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == ordenId), Estados_ProductosIndividuales.ORDEN_CANCELADA);
         }
         ordenExistente.Estado = Estados_OrdenDeCompra.CANCELADO;
         return await _ordenCompraRepository.UpdateAsync(ordenExistente) && estadoProdsAcualizados;

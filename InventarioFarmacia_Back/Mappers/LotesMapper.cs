@@ -22,18 +22,18 @@ namespace InventarioFarmacia_Back.Mappers
             .WithSummary("Obtener todos los lotes")
             .WithDescription("Obtiene la lista completa de lotes registrados en el sistema con información de vencimiento");
 
-            lotes.MapGet(LotesEndpoints.GET_FOR_PRODUCT, async (ILoteService loteService, int idProducto) =>
+            lotes.MapGet(LotesEndpoints.GET_FOR_PRODUCT, async (int productId, ILoteService loteService) =>
             {
-                var lotes = await loteService.ObtenerLotesPorIdProductoParaCompraAsync(idProducto);
+                var lotes = await loteService.ObtenerLotesPorIdProductoParaCompraAsync(productId);
                 return Results.Ok(lotes);
             })
             .WithName("GetLotesForProduct")
             .WithSummary("Obtener lotes por producto")
             .WithDescription("Obtiene todos los lotes disponibles para un producto específico, ideal para compras");
 
-            lotes.MapGet(LotesEndpoints.GET_FOR_PRODUCT_TO_SHOP, async (ILoteService loteService, int idProducto) =>
+            lotes.MapGet(LotesEndpoints.GET_FOR_PRODUCT_TO_SHOP, async (int productId, ILoteService loteService) =>
             {
-                var lotes = await loteService.ObtenerLotesPorIdProductoParaCompraAsync(idProducto);
+                var lotes = await loteService.ObtenerLotesPorIdProductoParaCompraAsync(productId);
                 return Results.Ok(lotes);
             })
             .WithName("GetLotesForProductToShop")

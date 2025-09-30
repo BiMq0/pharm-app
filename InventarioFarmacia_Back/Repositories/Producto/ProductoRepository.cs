@@ -17,7 +17,7 @@ public class ProductoRepository : IProductoRepository
         return await _context.Productos
             .Include(p => p.Categoria)
             .Include(p => p.Lotes)
-            .Include(p => p.ProductosIndividuales)
+                .ThenInclude(p => p.ProductosIndividuales)
             .AsNoTracking()
             .ToListAsync();
     }
@@ -34,7 +34,7 @@ public class ProductoRepository : IProductoRepository
         return await _context.Productos
             .Include(p => p.Categoria)
             .Include(p => p.Lotes)
-            .Include(p => p.ProductosIndividuales)
+                .ThenInclude(p => p.ProductosIndividuales)
             .Where(p => p.Id.ToString().Contains(filtro)
                 || (p.Nombre != null && p.Nombre.Contains(filtro))
                 || (p.Nombre_Clinico != null && p.Nombre_Clinico.Contains(filtro))
@@ -49,7 +49,7 @@ public class ProductoRepository : IProductoRepository
         return await _context.Productos
             .Include(p => p.Categoria)
             .Include(p => p.Lotes)
-            .Include(p => p.ProductosIndividuales)
+                .ThenInclude(p => p.ProductosIndividuales)
             .Include(p => p.BitacoraProductos)
             .FirstOrDefaultAsync(p => p.Id == id)
             ?? throw new KeyNotFoundException($"Producto con id {id} no encontrado.");

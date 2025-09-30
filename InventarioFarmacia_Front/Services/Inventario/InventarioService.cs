@@ -12,7 +12,7 @@ public class InventarioService : IInventarioService
         _httpClient = httpClient;
     }
 
-    public async Task<IEnumerable<InventarioToListDTO>> GetInventarioGeneralAsync()
+    public async Task<IEnumerable<InventarioToListDTO>> ObtenerTodosLosInventarios()
     {
         string url = Config.ApiBaseUrl + InventoryEndpoints.BASE + InventoryEndpoints.GET_ALL;
 
@@ -28,6 +28,23 @@ public class InventarioService : IInventarioService
         {
             Console.WriteLine($"Error al obtener inventario general: {ex.Message}");
             return new List<InventarioToListDTO>();
+        }
+    }
+    public async Task<InventarioGeneralDTO> ObtenerInventarioGeneralAsync(int id)
+    {
+        string url = Config.ApiBaseUrl + InventoryEndpoints.BASE + InventoryEndpoints.GET_BY_ID.Replace("{id}", id.ToString());
+
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<InventarioGeneralDTO>() ?? new InventarioGeneralDTO();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener inventario general: {ex.Message}");
+            return new InventarioGeneralDTO();
         }
     }
 }

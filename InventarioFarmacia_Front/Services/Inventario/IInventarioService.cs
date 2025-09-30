@@ -5,5 +5,6 @@ namespace InventarioFarmacia_Front.Services.Inventarios;
 
 public interface IInventarioService
 {
-    Task<IEnumerable<InventarioToListDTO>> GetInventarioGeneralAsync();
+    Task<IEnumerable<InventarioToListDTO>> ObtenerTodosLosInventarios();
+    Task<InventarioGeneralDTO> ObtenerInventarioGeneralAsync(int id);
 }

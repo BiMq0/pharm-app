@@ -18,7 +18,7 @@ public class VentaRepository : IVentaRepository
             .Include(v => v.Usuario)              // ← Quién hizo la venta
             .Include(v => v.DetalleVentas)        // ← Qué se vendió
                 .ThenInclude(dv => dv.Producto) // ← Unidades específicas vendidas
-                    .ThenInclude(pi => pi.ProductosIndividuales)       // ← Información del producto
+                    .ThenInclude(pi => pi.Lotes)       // ← Información del producto
             .AsNoTracking()
             .ToListAsync();
     }
@@ -29,7 +29,7 @@ public class VentaRepository : IVentaRepository
             .Include(v => v.Usuario)
             .Include(v => v.DetalleVentas)
                 .ThenInclude(dv => dv.Producto)
-                    .ThenInclude(pi => pi.ProductosIndividuales)
+                    .ThenInclude(pi => pi.Lotes)
             .Where(v => v.Id_Usuario == userId)
             .AsNoTracking()
             .ToListAsync();
@@ -41,7 +41,7 @@ public class VentaRepository : IVentaRepository
             .Include(v => v.Usuario)
             .Include(v => v.DetalleVentas)
                 .ThenInclude(dv => dv.Producto)
-                    .ThenInclude(pi => pi.ProductosIndividuales)
+                    .ThenInclude(pi => pi.Lotes)
             .Where(v => v.Fecha_Venta >= startDate && v.Fecha_Venta <= endDate)
             .AsNoTracking()
             .ToListAsync();
