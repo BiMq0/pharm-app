@@ -52,10 +52,6 @@ public class Orden_CompraService : IOrden_CompraService
             Fecha_Recibo = ordenCompra.Fecha_Recibo,
             LotesInvolucrados = lotesToAdd
         };
-        foreach (var lote in lotesToAdd)
-        {
-            await _inventarioService.ActualizarStockAsync(lote, 2);
-        }
 
         var nuevaCompraCreada = await _ordenCompraRepository.AddAsync(nuevaCompra);
 
@@ -79,6 +75,7 @@ public class Orden_CompraService : IOrden_CompraService
         bool estadoProdsAcualizados = false;
         foreach (var lote in ordenExistente!.LotesInvolucrados!)
         {
+            await _inventarioService.ActualizarStockAsync(ordenExistente.LotesInvolucrados.ToList(), 2);
             estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == ordenId), Estados_ProductosIndividuales.DISPONIBLE);
         }
         ordenExistente.Estado = Estados_OrdenDeCompra.RECIBIDO;

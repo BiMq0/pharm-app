@@ -19,12 +19,10 @@ public class InventarioService : IInventarioService
         return inventarios.Select(i => new InventarioToListDTO(i));
     }
 
-    //public async Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id)
-    public async Task<Inventario> ObtenerInventarioPorIdAsync(int id)
+    public async Task<InventarioGeneralDTO> ObtenerInventarioPorIdAsync(int id)
     {
         var inventario = await _inventarioRepository.GetInventarioByIdAsync(id);
-        //return new InventarioGeneralDTO(inventario);
-        return inventario;
+        return new InventarioGeneralDTO(inventario);
     }
 
     public async Task<bool> CrearInventarioAsync(InventarioNuevoDTO inventario)
@@ -56,7 +54,10 @@ public class InventarioService : IInventarioService
         if (inventario == null) return false;
         foreach (var lote in lotes)
         {
-            inventario.LotesDeProducto?.Add(lote);
+            if (inventario.LotesDeProducto?.FirstOrDefault(l => l.Id == lote.Id) == null)
+            {
+                inventario.LotesDeProducto?.Add(lote);
+            }
         }
         return await _inventarioRepository.UpdateInventarioAsync(inventario);
     }
