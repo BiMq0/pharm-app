@@ -6,14 +6,14 @@ using InventarioFarmacia_Domain.Models;
 
 namespace InventarioFarmacia_Shared.DTOs.Products
 {
-    public class ProductoInfoToInventory
+    public class ProductoInfoToInventoryDTO
     {
         public int Id { get; set; }
         public string? Nombre { get; set; }
         public string? Ruta_Imagen { get; set; }
         public decimal Precio_Unitario { get; set; }
         public decimal Precio_Caja { get; set; }
-        public ProductoInfoToInventory(Producto producto)
+        public ProductoInfoToInventoryDTO(Producto producto)
         {
             Id = producto.Id;
             Nombre = producto.Nombre!;
@@ -21,7 +21,7 @@ namespace InventarioFarmacia_Shared.DTOs.Products
             Precio_Unitario = producto.Precio_Unitario;
             Precio_Caja = producto.Precio_Caja;
         }
-        public ProductoInfoToInventory()
+        public ProductoInfoToInventoryDTO()
         {
 
         }

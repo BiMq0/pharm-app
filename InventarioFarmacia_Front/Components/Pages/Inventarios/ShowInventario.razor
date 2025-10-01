@@ -14,7 +14,6 @@
 else if (inventario != null)
 {
     <div class="container-fluid mt-3">
-        <!-- Header con información básica del inventario -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="bg-primary text-white p-4 rounded-3 shadow">
@@ -22,14 +21,14 @@ else if (inventario != null)
                         <div>
                             <h1 class="fw-bold mb-2">
                                 <i class="bi bi-archive"></i>
-                                Inventario General
+                                Inventario - @inventario.Nombre
                             </h1>
                             <p class="opacity-75 mb-0">Estado completo del inventario de productos</p>
                         </div>
                         <div class="col-md-2 col-sm-6">
                             <div class="card border-0 bg-light">
                                 <div class="card-body text-center">
-                                    <h3 class="text-primary fw-bold">0</h3>
+                                    <h3 class="text-primary fw-bold">@inventario.CantidadProductosDisponibles</h3>
                                     <p class="text-muted mb-0">Total de Productos</p>
                                 </div>
                             </div>
@@ -39,47 +38,36 @@ else if (inventario != null)
             </div>
         </div>
 
-        <!-- Información estadística -->
         <div class="row mb-4">
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center">
                         <i class="bi bi-check-circle text-success fs-1"></i>
                         <h6 class="text-muted mb-1">Disponibles</h6>
-                        <h5 class="fw-bold text-success">0</h5>
+                        <h5 class="fw-bold text-success">@inventario.CantidadProductosDisponibles</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center">
                         <i class="bi bi-exclamation-triangle text-warning fs-1"></i>
                         <h6 class="text-muted mb-1">Por Vencer</h6>
-                        <h5 class="fw-bold text-warning">0</h5>
+                        <h5 class="fw-bold text-warning">@inventario.CantidadProductosPorVencer</h5>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-4">
                 <div class="card border-0 shadow-sm">
                     <div class="card-body text-center">
                         <i class="bi bi-x-circle text-danger fs-1"></i>
                         <h6 class="text-muted mb-1">Vencidos</h6>
-                        <h5 class="fw-bold text-danger">0</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="bi bi-box-seam text-info fs-1"></i>
-                        <h6 class="text-muted mb-1">Tipos de Producto</h6>
-                        <h5 class="fw-bold text-info">0</h5>
+                        <h5 class="fw-bold text-danger">@inventario.CantidadProductosVencidos</h5>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Barra de búsqueda -->
         <div class="row mb-4">
             <div class="col-md-8">
                 <div class="input-group">
@@ -101,7 +89,6 @@ else if (inventario != null)
             </div>
         </div>
 
-        <!-- Lista de productos con lotes -->
         <div class="row">
             <div class="col-12">
                 <div class="card border-0 shadow-sm">
@@ -111,85 +98,71 @@ else if (inventario != null)
                             Productos en Inventario
                         </h5>
                     </div>
-                    <div class="card-body">
-                        <!-- Aquí irán los productos del inventario cuando se implemente -->
-                        <div class="accordion mb-3" id="accordion-ejemplo">
-                            <div class="accordion-item border rounded shadow-sm">
-                                <h2 class="accordion-header">
-                                    <button class="accordion-button collapsed bg-light" type="button"
-                                        data-bs-toggle="collapse" data-bs-target="#collapse-ejemplo"
-                                        aria-expanded="false" aria-controls="collapse-ejemplo">
-                                        <div class="d-flex w-100 justify-content-between align-items-center me-3">
-                                            <div class="d-flex align-items-center">
-                                                <div class="me-3">
-                                                    <h6 class="mb-1 fw-bold text-primary">[Nombre del Producto]</h6>
-                                                    <small class="text-muted">[Nombre Clínico]</small>
+                    @foreach (var producto in inventario.Productos!)
+                    {
+                        <div class="card-body">
+                            <div class="accordion" id="accordion-ejemplo">
+                                <div class="accordion-item border rounded shadow-sm">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed bg-light" type="button"
+                                            data-bs-toggle="collapse" data-bs-target='@($"#collapse-{producto.Id}")' aria-expanded="false"
+                                            aria-controls="@($"collapse-{producto.Id}")">
+                                            <div class="d-flex w-100 justify-content-between align-items-center me-3">
+                                                <div class="d-flex align-items-center">
+                                                    <div class="me-3">
+                                                        <img src="@producto.Ruta_Imagen" alt="@producto.Nombre" class="img-fluid rounded"
+                                                            style="max-height: 50px; max-width: 50px; object-fit: cover;" />
+                                                        <span class="fw-bold text-primary">@producto.Nombre</span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="d-flex gap-2">
-                                                <span class="badge bg-success">
-                                                    Disponibles: 0
-                                                </span>
-                                                <span class="badge bg-warning text-dark">
-                                                    Por vencer: 0
-                                                </span>
-                                                <span class="badge bg-danger">
-                                                    Vencidos: 0
-                                                </span>
-                                                <span class="badge bg-primary">
-                                                    Total: 0
-                                                </span>
+                                        </button>
+                                    </h2>
+                                    <div id="@($"collapse-{producto.Id}")" class="accordion-collapse collapse"
+                                        data-bs-parent="#accordion-ejemplo">
+                                        <div class="accordion-body">
+                                            <div class="table-responsive">
+                                                <table class="table table-sm table-hover">
+                                                    <thead class="table-light">
+                                                        <tr>
+                                                            <th>Número de Lote</th>
+                                                            <th>Fecha de Vencimiento</th>
+                                                            <th class="text-center text-success">Disponibles</th>
+                                                            <th class="text-center text-warning">Por Vencer</th>
+                                                            <th class="text-center text-danger">Vencidos</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach (var lote in inventario.Lotes!.Where(l => l.Id_Producto == producto.Id))
+                                                        {
+                                                            <tr>
+                                                            <td>
+                                                                <span class="fw-semibold">@lote.Nro_Lote</span>
+                                                            </td>
+                                                            <td>
+                                                                @lote.Fecha_Vencimiento.ToString("dd/MM/yyyy")
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="fw-bold">@lote.CantidadProductosDisponibles</span>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="fw-bold">@lote.CantidadProductosPorVencer</span>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                <span class="fw-bold">@lote.CantidadProductosVencidos</span>
+                                                            </td>
+                                                        </tr>
+                                                        }
+                                                    </tbody>
+                                                </table>
                                             </div>
-                                        </div>
-                                    </button>
-                                </h2>
-                                <div id="collapse-ejemplo" class="accordion-collapse collapse"
-                                    data-bs-parent="#accordion-ejemplo">
-                                    <div class="accordion-body">
-                                        <div class="table-responsive">
-                                            <table class="table table-sm table-hover">
-                                                <thead class="table-light">
-                                                    <tr>
-                                                        <th>Número de Lote</th>
-                                                        <th>Fecha de Vencimiento</th>
-                                                        <th class="text-center">Cantidad</th>
-                                                        <th class="text-center">Estado</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <!-- Aquí irán los lotes del producto -->
-                                                    <tr>
-                                                        <td>
-                                                            <span class="fw-semibold">[Número de Lote]</span>
-                                                        </td>
-                                                        <td>
-                                                            [Fecha de Vencimiento]
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <span class="fw-bold">[Cantidad]</span>
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <span class="badge bg-success">
-                                                                [Estado]
-                                                            </span>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        
-                        <!-- Mensaje cuando no hay productos -->
-                        <!-- 
-                        <div class="text-center py-4">
-                            <i class="bi bi-inbox text-muted fs-1"></i>
-                            <p class="text-muted mt-2">No hay productos en este inventario</p>
-                        </div>
-                        -->
-                    </div>
+                    }
+
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 ﻿using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Lotes;
+using InventarioFarmacia_Shared.DTOs.Products;
 
 namespace InventarioFarmacia_Shared.DTOs.Inventarios
 {
@@ -13,6 +14,7 @@ namespace InventarioFarmacia_Shared.DTOs.Inventarios
         public int CantidadProductosDisponibles { get; set; }
         public int CantidadProductosPorVencer { get; set; }
         public int CantidadProductosVencidos { get; set; }
+        public List<ProductoInfoToInventoryDTO>? Productos { get; set; }
 
         public InventarioGeneralDTO(Inventario inventario)
         {
@@ -24,6 +26,7 @@ namespace InventarioFarmacia_Shared.DTOs.Inventarios
             CantidadProductosDisponibles = inventario.CantidadProductosDisponibles;
             CantidadProductosPorVencer = inventario.CantidadProductosPorVencer;
             CantidadProductosVencidos = inventario.CantidadProductosVencidos;
+            Productos = Lotes!.GroupBy(l => l.Id_Producto).Select(l => l.First().Producto!).ToList();
         }
         public InventarioGeneralDTO()
         {
