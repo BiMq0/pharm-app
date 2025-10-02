@@ -25,7 +25,8 @@
         <div class="col-lg-12 col-xl-12">
             <div class="card shadow border-0">
                 <div class="card-header bg-primary bg-gradient text-white">
-                    <h5 class="card-title mb-0 fw-bold"><i class="bi bi-pencil-fill"></i> Información de la Categoría</h5>
+                    <h5 class="card-title mb-0 fw-bold"><i class="bi bi-pencil-fill"></i> Información de la Categoría
+                    </h5>
                 </div>
                 <div class="card-body p-4">
                     <EditForm Model="@CategoriaNueva" OnValidSubmit="AgregarCategoria" FormName="AgregarCategoriaForm">
@@ -35,10 +36,8 @@
                             <label for="nombre" class="form-label fw-semibold">
                                 Nombre de la Categoría <span class="text-danger">*</span>
                             </label>
-                            <InputText id="nombre" 
-                                       class="form-control form-control-lg" 
-                                       @bind-Value="CategoriaNueva.Nombre" 
-                                       placeholder="Ej: Analgésicos, Vitaminas, etc." />
+                            <InputText id="nombre" class="form-control form-control-lg"
+                                @bind-Value="CategoriaNueva.Nombre" placeholder="Ej: Analgésicos, Vitaminas, etc." />
                             <ValidationMessage For="@(() => CategoriaNueva.Nombre)" class="text-danger small" />
                         </div>
 
@@ -46,12 +45,11 @@
                             <label for="descripcion" class="form-label fw-semibold">
                                 Descripción <span class="text-danger">*</span>
                             </label>
-                            <InputText id="descripcion" 
-                                           class="form-control" 
-                                           @bind-Value="CategoriaNueva.Descripcion" 
-                                           placeholder="Describe brevemente el tipo de productos que incluye esta categoría..." />
+                            <InputText id="descripcion" class="form-control" @bind-Value="CategoriaNueva.Descripcion"
+                                placeholder="Describe brevemente el tipo de productos que incluye esta categoría..." />
                             <ValidationMessage For="@(() => CategoriaNueva.Descripcion)" class="text-danger small" />
-                            <div class="form-text">Opcional: Ayuda a identificar mejor el propósito de la categoría</div>
+                            <div class="form-text">Opcional: Ayuda a identificar mejor el propósito de la categoría
+                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -60,10 +58,8 @@
                             </label>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <InputText id="icono" 
-                                               class="form-control" 
-                                               @bind-Value="CategoriaNueva.Icono" 
-                                               placeholder="Ej: 💊, 🧴, 🩹, etc." />
+                                    <InputText id="icono" class="form-control" @bind-Value="CategoriaNueva.Icono"
+                                        placeholder="Ej: 💊, 🧴, 🩹, etc." />
                                     <ValidationMessage For="@(() => CategoriaNueva.Icono)" class="text-danger small" />
                                     <div class="form-text">Usa un emoji que represente la categoría</div>
                                 </div>
@@ -93,10 +89,8 @@
                             <div class="d-flex flex-wrap gap-2">
                                 @foreach (var sugerencia in iconesSugeridos)
                                 {
-                                    <button type="button" 
-                                            class="btn btn-outline-secondary btn-sm" 
-                                            @onclick="() => SeleccionarIcono(sugerencia.Icono)"
-                                            title="@sugerencia.Nombre">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        @onclick="() => SeleccionarIcono(sugerencia.Icono)" title="@sugerencia.Nombre">
                                         @sugerencia.Icono @sugerencia.Nombre
                                     </button>
                                 }
@@ -108,15 +102,13 @@
                                 ← Regresar
                             </button>
                             <div>
-                                <button type="button" 
-                                    class="btn btn-outline-danger px-4" 
+                                <button type="button" class="btn btn-outline-danger px-4"
                                     @onclick="CerrarModalYRegresar">
-                                Cancelar
-                            </button>
-                            <button type="submit" 
-                                    class="btn btn-outline-primary px-4 fw-semibold">
-                                Crear Categoría
-                            </button>
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-outline-primary px-4 fw-semibold">
+                                    Crear Categoría
+                                </button>
                             </div>
                         </div>
                     </EditForm>
@@ -126,19 +118,22 @@
     </div>
 </div>
 
-@if(MostrarModal)
+@if (MostrarModal)
 {
     @if (RegistroExitoso)
     {
-        <ModalMensaje Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true/>
+        <ModalMensaje Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true />
     }
     else
     {
-        <ModalMensaje Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false/>
+        <ModalMensaje Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false />
     }
 }
 
-@if(isLoading){ <Cargador /> }
+@if (EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
 
 @code {
     [SupplyParameterFromForm]
@@ -146,19 +141,18 @@
     private bool RegistroExitoso { get; set; } = false;
     private bool MostrarModal { get; set; } = false;
     private readonly List<IconoSugerencia> iconesSugeridos = new()
-    {
-        new("💊", "Medicamentos"),
-        new("🧴", "Líquidos"),
-        new("🩹", "Primeros Auxilios"),
-        new("🌟", "Vitaminas"),
-        new("🧪", "Laboratorio"),
-        new("🏥", "Hospital"),
-        new("🦷", "Dental"),
-        new("👁️", "Oftalmología"),
-        new("🤱", "Bebés"),
-        new("🧼", "Higiene")
-    };
-    private bool isLoading = false;
+{
+new("💊", "Medicamentos"),
+new("🧴", "Líquidos"),
+new("🩹", "Primeros Auxilios"),
+new("🌟", "Vitaminas"),
+new("🧪", "Laboratorio"),
+new("🏥", "Hospital"),
+new("🦷", "Dental"),
+new("👁️", "Oftalmología"),
+new("🤱", "Bebés"),
+new("🧼", "Higiene")
+};
 
     private void SeleccionarIcono(string icono)
     {
@@ -168,13 +162,12 @@
 
     private async Task AgregarCategoria()
     {
+        bool resultado = false;
         try
         {
-            isLoading = true;
-            var resultado = await CategoriaServices.CreateCategoriaAsync(CategoriaNueva);
-            isLoading = false;
-            RegistroExitoso = resultado;
-            MostrarModal = resultado;
+            EstadoCargador.Activar();
+            resultado = await CategoriaServices.CreateCategoriaAsync(CategoriaNueva);
+
         }
         catch (Exception ex)
         {
@@ -182,7 +175,13 @@
             RegistroExitoso = false;
             MostrarModal = true;
         }
-        
+        finally
+        {
+            EstadoCargador.Desactivar();
+            RegistroExitoso = resultado;
+            MostrarModal = resultado;
+        }
+
         StateHasChanged();
     }
 

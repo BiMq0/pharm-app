@@ -7,7 +7,7 @@
 
 <PageTitle>Detalles de Inventario</PageTitle>
 
-@if (isLoading)
+@if (EstadoCargador.IsLoading)
 {
     <Cargador />
 }
@@ -185,14 +185,13 @@ else
     [Parameter] public int Id { get; set; }
 
     private InventarioGeneralDTO? inventario;
-    private bool isLoading = true;
     private string filtroNombre = string.Empty;
 
     protected override async Task OnInitializedAsync()
     {
-        isLoading = true;
         try
         {
+            EstadoCargador.Activar();
             inventario = await IInventarioService.ObtenerInventarioGeneralAsync(Id);
         }
         catch (Exception ex)
@@ -201,13 +200,13 @@ else
         }
         finally
         {
-            isLoading = false;
+            EstadoCargador.Desactivar();
         }
     }
 
     private void FiltrarProductos()
     {
-        // Implementar filtrado cuando se conozca la estructura del DTO
+        // Implementar filtrado 
     }
 
     private void VolverAInventarios()

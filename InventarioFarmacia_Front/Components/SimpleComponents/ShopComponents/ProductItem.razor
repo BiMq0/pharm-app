@@ -93,16 +93,25 @@
             <div class="col-2">
                 <div class="card shadow-sm border-primary">
                     <div class="card-body p-3">
-                        <h6 class="card-title text-center text-primary mb-3">Nuevo Precio (Bs)</h6>
-                        <div class="input-group mb-3">
+                        <h6 class="card-title text-center text-primary">Nuevo Precio (Bs)</h6>
+                        <div class="input-group">
                             <span class="input-group-text bg-primary text-white"><i
                                     class="bi bi-currency-dollar"></i></span>
-                            <input type="number" class="form-control" min="0" step="0.1" placeholder="Ej: 12.50" @bind="@NuevoPrecio" />
+                            <input type="number" class="form-control" min="0" step="0.1" placeholder="Ej: 12.50" @bind="@NuevoPrecio"/>
                         </div>
-                        <h6 class="card-title text-center text-secondary mt-4 mb-2">Inventario destino</h6>
+                        <h6 class="card-title text-center text-success mt-2">Precio final ponderado</h6>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text bg-success text-white"><i
+                                    class="bi bi-currency-dollar"></i></span>
+                            <input type="number" class="form-control" min="0" step="0.1" disabled value="@((NuevoPrecio + SelectedProduct.Precio_Unitario )/2)"/>
+                        </div>
+                        <h6 class="card-title text-center text-secondary mt-2">Inventario de destino</h6>
                         <div class="input-group">
                             <span class="input-group-text bg-secondary text-white"><i class="bi bi-box-seam"></i></span>
-                            <input type="number" class="form-control" min="1" max="2" @bind="InventarioDestino"/>
+                            <select class="form-select" @bind="InventarioDestino">
+                                <option value="1">Inventario Local</option>
+                                <option value="2">Almacén</option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -166,6 +175,7 @@ else
         if (productoSeleccionado != null)
         {
             SelectedProduct = productoSeleccionado;
+            NuevoPrecio = SelectedProduct.Precio_Unitario;
             ProductSelected = true;
 
             await SincronizarLotesAuxiliares();

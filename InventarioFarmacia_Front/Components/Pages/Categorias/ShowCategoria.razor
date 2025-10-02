@@ -1,10 +1,14 @@
 ﻿@page "/categorias/{id:int}"                   
+@using InventarioFarmacia_Front.Components.SimpleComponents.Loader
 @using InventarioFarmacia_Shared.DTOs.Categorias;
 @inject NavigationManager Navigation
 @inject Services.Categories.ICategoriaService CategoriaService
 @rendermode InteractiveServer
 
-
+@if(EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
 <div class="container-fluid mt-3">
     <div class="row">
          <div class="card shadow-lg border-0 p-0">
@@ -125,7 +129,20 @@
     private CategoriaAllInfoDTO? categoriaAllInfoDTO = new();
     protected override async Task OnInitializedAsync()
     {
+        try{
+        EstadoCargador.Activar();
         categoriaAllInfoDTO = await CategoriaService.GetCategoriaByIdAsync(Id);
+        }catch(Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+            Navigation.NavigateTo("/categorias");
+        }
+        finally
+        {
+            EstadoCargador.Desactivar();
+            StateHasChanged();
+        }
+    
     }
 
     private void EditarCategoria(int id)

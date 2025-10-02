@@ -1,4 +1,5 @@
 ﻿@page "/compras"
+@using InventarioFarmacia_Front.Components.SimpleComponents.Loader
 @using InventarioFarmacia_Shared.DTOs.Compras
 @inject NavigationManager Navigation
 @inject Services.Compras.ICompraService CompraService
@@ -6,6 +7,10 @@
 @rendermode InteractiveServer
 
 <PageTitle>Compras</PageTitle>
+@if (EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
 <div class="container-fluid mt-3">
     <div class="row mb-4">
         <div class="col-12">
@@ -85,8 +90,20 @@
     private IEnumerable<CompraRegistroDTO> lstRegistroCompras = new List<CompraRegistroDTO>();
     protected override async Task OnInitializedAsync()
     {
-        lstRegistroCompras = await CompraService.GetAllCompras();
-        StateHasChanged();
+        try
+        {
+            EstadoCargador.Activar();
+            lstRegistroCompras = await CompraService.GetAllCompras();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar las compras: {ex.Message}");
+        }
+        finally
+        {
+            EstadoCargador.Desactivar();
+            StateHasChanged();
+        }
     }
     private void NavegarToDetalle(int idCompra)
     {

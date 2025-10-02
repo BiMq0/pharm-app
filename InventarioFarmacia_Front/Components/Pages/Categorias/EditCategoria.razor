@@ -14,8 +14,8 @@
     <div class="row mb-4 ">
         <div class="col-12">
             <div class="text-white card bg-primary p-4 rounded-3 shadow">
-                    <h1 class="fw-bold mb-1"><i class="bi bi-pencil-fill"></i> Edicion de Categoría</h1>
-                    <p class="mb-0">Edita la categoría para organizar tus productos</p>
+                <h1 class="fw-bold mb-1"><i class="bi bi-pencil-fill"></i> Edicion de Categoría</h1>
+                <p class="mb-0">Edita la categoría para organizar tus productos</p>
             </div>
         </div>
     </div>
@@ -32,9 +32,9 @@
                         }
 
                         .btn-eliminar::before {
-                            content: "Eliminar categoría";  
-                            position:absolute;
-                            right: 100%; 
+                            content: "Eliminar categoría";
+                            position: absolute;
+                            right: 100%;
                             top: 50%;
                             color: white;
                             padding: 8px 12px;
@@ -42,11 +42,11 @@
                             font-size: 14px;
                             font-weight: 500;
                             white-space: nowrap;
-                   
+
                             opacity: 0;
                             display: visible;
-                            transform: translateY(-50%) translateX(10px); 
-                            
+                            transform: translateY(-50%) translateX(10px);
+
                             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                             z-index: 100;
                         }
@@ -57,7 +57,8 @@
                             transform: translateY(-50%) translateX(-10px);
                         }
                     </style>
-                    <button class="btn btn-light btn-eliminar" @onclick="MostrarModalConfirmar"><i class="bi bi-trash3-fill"></i></button>
+                    <button class="btn btn-light btn-eliminar" @onclick="MostrarModalConfirmar"><i
+                            class="bi bi-trash3-fill"></i></button>
                 </div>
                 <div class="card-body p-4">
                     <EditForm Model="@CategoriaEditada" OnValidSubmit="EditarCategoria" FormName="AgregarCategoriaForm">
@@ -67,10 +68,8 @@
                             <label for="nombre" class="form-label fw-semibold">
                                 Nombre de la Categoría <span class="text-danger">*</span>
                             </label>
-                            <InputText id="nombre" 
-                                       class="form-control form-control-lg" 
-                                       @bind-Value="CategoriaEditada.Nombre" 
-                                       placeholder="Ej: Analgésicos, Vitaminas, etc." />
+                            <InputText id="nombre" class="form-control form-control-lg"
+                                @bind-Value="CategoriaEditada.Nombre" placeholder="Ej: Analgésicos, Vitaminas, etc." />
                             <ValidationMessage For="@(() => CategoriaEditada.Nombre)" class="text-danger small" />
                         </div>
 
@@ -78,12 +77,11 @@
                             <label for="descripcion" class="form-label fw-semibold">
                                 Descripción <span class="text-danger">*</span>
                             </label>
-                            <InputText id="descripcion" 
-                                           class="form-control" 
-                                           @bind-Value="CategoriaEditada.Descripcion" 
-                                           placeholder="Describe brevemente el tipo de productos que incluye esta categoría..." />
+                            <InputText id="descripcion" class="form-control" @bind-Value="CategoriaEditada.Descripcion"
+                                placeholder="Describe brevemente el tipo de productos que incluye esta categoría..." />
                             <ValidationMessage For="@(() => CategoriaEditada.Descripcion)" class="text-danger small" />
-                            <div class="form-text">Opcional: Ayuda a identificar mejor el propósito de la categoría</div>
+                            <div class="form-text">Opcional: Ayuda a identificar mejor el propósito de la categoría
+                            </div>
                         </div>
 
                         <div class="mb-4">
@@ -92,11 +90,10 @@
                             </label>
                             <div class="row">
                                 <div class="col-md-8">
-                                    <InputText id="icono" 
-                                               class="form-control" 
-                                               @bind-Value="CategoriaEditada.Icono" 
-                                               placeholder="Ej: 💊, 🧴, 🩹, etc." />
-                                    <ValidationMessage For="@(() => CategoriaEditada.Icono)" class="text-danger small" />
+                                    <InputText id="icono" class="form-control" @bind-Value="CategoriaEditada.Icono"
+                                        placeholder="Ej: 💊, 🧴, 🩹, etc." />
+                                    <ValidationMessage For="@(() => CategoriaEditada.Icono)"
+                                        class="text-danger small" />
                                     <div class="form-text">Usa un emoji que represente la categoría</div>
                                 </div>
                                 <div class="col-md-4 text-center">
@@ -125,10 +122,8 @@
                             <div class="d-flex flex-wrap gap-2">
                                 @foreach (var sugerencia in iconesSugeridos)
                                 {
-                                    <button type="button" 
-                                            class="btn btn-outline-secondary btn-sm" 
-                                            @onclick="() => SeleccionarIcono(sugerencia.Icono)"
-                                            title="@sugerencia.Nombre">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm"
+                                        @onclick="() => SeleccionarIcono(sugerencia.Icono)" title="@sugerencia.Nombre">
                                         @sugerencia.Icono @sugerencia.Nombre
                                     </button>
                                 }
@@ -140,15 +135,13 @@
                                 ← Regresar
                             </button>
                             <div>
-                                <button type="button" 
-                                    class="btn btn-outline-danger px-4" 
+                                <button type="button" class="btn btn-outline-danger px-4"
                                     @onclick="CerrarModalYRegresar">
-                                Cancelar
-                            </button>
-                            <button type="submit" 
-                                    class="btn btn-outline-primary px-4 fw-semibold">
-                                Guardar cambios
-                            </button>
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-outline-primary px-4 fw-semibold">
+                                    Guardar cambios
+                                </button>
                             </div>
                         </div>
                     </EditForm>
@@ -158,24 +151,27 @@
     </div>
 </div>
 
-@if(MostrarModalMensaje)
+@if (MostrarModalMensaje)
 {
     @if (OperacionExitosa || EliminacionExitosa)
     {
-        <ModalMensaje Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true/>
+        <ModalMensaje Titulo="¡Éxito!" OnAceptar="CerrarModalYRegresar" Exito=true />
     }
     else
     {
-        <ModalMensaje Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false/>
+        <ModalMensaje Titulo="Error" OnAceptar="CerrarModalYRegresar" Exito=false />
     }
 }
 
-@if(MostrarModalConfirmacion)
+@if (MostrarModalConfirmacion)
 {
     <ModalConfirmacion OnAceptar="@(() => EliminarCategoria(id))" OnCancelar="CerrarModalConfirmacion" />
 }
 
-@if(isLoading){ <Cargador /> }
+@if (EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
 
 @code {
     [SupplyParameterFromForm]
@@ -186,34 +182,47 @@
     private bool MostrarModalMensaje { get; set; } = false;
 
     [Parameter]
-    public int id { get; set; } 
+    public int id { get; set; }
     private readonly List<IconoSugerencia> iconesSugeridos = new()
-    {
-        new("💊", "Medicamentos"),
-        new("🧴", "Líquidos"),
-        new("🩹", "Primeros Auxilios"),
-        new("🌟", "Vitaminas"),
-        new("🧪", "Laboratorio"),
-        new("🏥", "Hospital"),
-        new("🦷", "Dental"),
-        new("👁️", "Oftalmología"),
-        new("🤱", "Bebés"),
-        new("🧼", "Higiene")
-    };
-    private bool isLoading = false;
+{
+new("💊", "Medicamentos"),
+new("🧴", "Líquidos"),
+new("🩹", "Primeros Auxilios"),
+new("🌟", "Vitaminas"),
+new("🧪", "Laboratorio"),
+new("🏥", "Hospital"),
+new("🦷", "Dental"),
+new("👁️", "Oftalmología"),
+new("🤱", "Bebés"),
+new("🧼", "Higiene")
+};
     private bool hasRendered = false;
     protected override async Task OnInitializedAsync()
     {
-        CategoriaEditada = await CategoriaServices.GetCategoriaByIdForEditAsync(id);
+        try
+        {
+            EstadoCargador.Activar();
+            CategoriaEditada = await CategoriaServices.GetCategoriaByIdForEditAsync(id);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar la categoría: {ex.Message}");
+            Navigation.NavigateTo("/categorias");
+        }
+        finally
+        {
+            EstadoCargador.Desactivar();
+            StateHasChanged();
+        }
     }
 
     private async Task EditarCategoria()
     {
         try
         {
-            isLoading = true;
+            EstadoCargador.Activar();
             var resultado = await CategoriaServices.UpdateCategoriaAsync(CategoriaEditada);
-            isLoading = false;
+            EstadoCargador.Desactivar();
             OperacionExitosa = resultado;
             MostrarModalMensaje = true;
         }
@@ -223,7 +232,7 @@
             OperacionExitosa = false;
             MostrarModalMensaje = true;
         }
-        
+
         StateHasChanged();
     }
 
@@ -237,9 +246,9 @@
     {
         try
         {
-            isLoading = true;
+            EstadoCargador.Activar();
             var resultado = await CategoriaServices.DeleteCategoriaAsync(id);
-            isLoading = false;
+            EstadoCargador.Desactivar();
             CerrarModalConfirmacion();
             EliminacionExitosa = resultado;
             MostrarModalMensaje = true;

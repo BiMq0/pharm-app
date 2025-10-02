@@ -9,7 +9,7 @@
 
 <PageTitle>Detalles de Compra</PageTitle>
 
-@if (isLoading)
+@if (EstadoCargador.IsLoading)
 {
     <Cargador />
 }
@@ -163,7 +163,6 @@ else
     [Parameter] public int Id { get; set; }
 
     private CompraDetalladaDTO? compra;
-    private bool isLoading = true;
 
     protected override async Task OnInitializedAsync()
     {
@@ -172,7 +171,7 @@ else
 
     private async Task CargarCompra()
     {
-        isLoading = true;
+        EstadoCargador.Activar();
         try
         {
             compra = await CompraService.GetCompraById(Id);
@@ -183,7 +182,7 @@ else
         }
         finally
         {
-            isLoading = false;
+            EstadoCargador.Desactivar();
             StateHasChanged();
         }
     }

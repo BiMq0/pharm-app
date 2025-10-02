@@ -1,0 +1,210 @@
+﻿@page "/inventarioTransferencia"
+@using InventarioFarmacia_Front.Components.SimpleComponents.Loader
+@using InventarioFarmacia_Front.Components.SimpleComponents.TransferComponents
+@using InventarioFarmacia_Shared.DTOs.Inventarios
+@using InventarioFarmacia_Shared.DTOs.Products
+@using InventarioFarmacia_Shared.DTOs.Lotes
+@inject Services.Inventarios.IInventarioService InventarioService
+@inject Services.Products.IProductoService ProductServices
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+<PageTitle>Transferencia de Inventario</PageTitle>
+
+@if (EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
+
+<div class="container-fluid">
+    <div class="card shadow mt-3">
+        <div class="card-header bg-primary text-white fs-4">
+            <i class="bi bi-arrow-left-right"></i>
+            Transferencia de Inventario
+        </div>
+        <div class="card-body">
+            <EditForm OnValidSubmit="RealizarTransferencia" FormName="TransferenciaForm" Model="transferenciaData">
+                <div
+                    class="row d-flex justify-content-between border rounded p-1 border-3 border-start-0 border-top-0 border-end-0 pb-3">
+                    <div class="col-12 d-flex gap-3 p-0">
+                        <div
+                            class="bg-secondary-subtle rounded col-6 p-3 d-flex flex-column align-items-center justify-content-center gap-2">
+                            <span class="text-muted text-center fw-bold fs-5">Inventario de Origen</span>
+                            <select class="form-select" @bind="inventarioOrigenId">
+                                <option value="0" disabled selected>Seleccione inventario de origen</option>
+                                @foreach (var inventario in inventariosDisponibles)
+                                {
+                                    <option value="@inventario.Id">@inventario.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                        <div
+                            class="bg-secondary-subtle rounded col-6 p-3 d-flex flex-column align-items-center justify-content-center gap-2">
+                            <span class="text-muted text-center fw-bold fs-5">Inventario de Destino</span>
+                            <select class="form-select" @bind="inventarioDestinoId">
+                                <option value="0" disabled selected>Seleccione inventario de destino</option>
+                                @foreach (var inventario in inventariosDisponibles)
+                                {
+                                    <option value="@inventario.Id">@inventario.Nombre</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-center mt-2 flex-column">
+                    <CascadingValue Value="lstProductosDisponibles" Name="ProductosDisponibles">
+                        <CascadingValue Value="lstIdProductosSeleccionados" Name="ProductosSeleccionados">
+                            @for (int i = 0; i < itemsTransferencia.Count(); i++)
+                            {
+                                var index = i;
+                                <TransferItem OnRemoveProduct="OnRemoveProductFromList"
+                                    OnTotalChanged="@(total => OnTotalProductosChanged(index, total))"
+                                    @ref="itemsTransferencia[index]" />
+                            }
+                        </CascadingValue>
+                    </CascadingValue>
+
+                    <button
+                        class="btn @(AllSelected ? "btn-secondary" : "btn-outline-secondary") fw-bold w-100 d-flex align-items-center justify-content-center gap-2 px-3 mt-3"
+                        @onclick="AgregarProducto" type="button">
+                        @if (AllSelected)
+                        {
+                            <i class="bi bi-box fs-4"></i>
+                            <span>No se tienen más productos disponibles</span>
+                        }
+                        else
+                        {
+                            <i class="bi bi-plus fs-4"></i>
+                            <span>Agregar producto para transferir</span>
+                        }
+                    </button>
+                </div>
+
+                <button class="btn btn-primary position-fixed fw-bold px-2 py-0"
+                    style="bottom: 20px; right: 20px; display: flex; align-items: center; justify-content: center;"
+                    type="submit">
+                    <i class="bi bi-arrow-right fs-3"></i>
+                    Realizar transferencia
+                </button>
+            </EditForm>
+        </div>
+    </div>
+</div>
+
+@code {
+    private List<InventarioGeneralDTO> inventariosDisponibles = new();
+    private int inventarioOrigenId = 0;
+    private int inventarioDestinoId = 0;
+    private object transferenciaData = new();
+
+    public List<ProductoToNewCompraDTO> lstProductosDisponibles { get; set; } = new();
+    public List<int> lstIdProductosSeleccionados { get; set; } = new();
+    public int cantidadProductosAgregados = 0;
+    protected List<TransferItem> itemsTransferencia { get; set; } = new();
+
+    private bool AllSelected => lstProductosDisponibles.Count == cantidadProductosAgregados;
+    private Dictionary<int, int> TotalesPorProducto { get; set; } = new();
+    public int TotalProductosATransferir => TotalesPorProducto.Values.Sum();
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            EstadoCargador.Activar();
+            await CargarInventarios();
+            await CargarProductos();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al recuperar datos: {ex.Message}");
+        }
+        finally
+        {
+            EstadoCargador.Desactivar();
+        }
+    }
+
+    private async Task CargarInventarios()
+    {
+        for (int i = 1; i <= 2; i++)
+        {
+            inventariosDisponibles.Add(await InventarioService.ObtenerInventarioGeneralAsync(i));
+        }
+    }
+
+    private async Task CargarProductos()
+    {
+        var productos = await ProductServices.GetProductosForOrdenAsync();
+        lstProductosDisponibles = productos.ToList();
+    }
+
+    private void AgregarProducto()
+    {
+        if (!AllSelected)
+        {
+            var nuevoIndice = itemsTransferencia.Count;
+            itemsTransferencia.Add(new TransferItem());
+            TotalesPorProducto[nuevoIndice] = 0;
+            cantidadProductosAgregados++;
+            StateHasChanged();
+        }
+    }
+
+    protected void OnRemoveProductFromList(int index)
+    {
+        if (itemsTransferencia.Count > index)
+        {
+            itemsTransferencia.RemoveAt(index);
+            cantidadProductosAgregados--;
+            
+            // Reajustar totales
+            var nuevosTotales = new Dictionary<int, int>();
+            for (int i = 0; i < itemsTransferencia.Count; i++)
+            {
+                if (TotalesPorProducto.ContainsKey(i))
+                    nuevosTotales[i] = TotalesPorProducto[i];
+            }
+            TotalesPorProducto = nuevosTotales;
+            
+            StateHasChanged();
+        }
+    }
+
+    protected void OnTotalProductosChanged()
+    {
+        CalcularTotales();
+        StateHasChanged();
+    }
+
+    protected void OnTotalProductosChanged(int index, int total)
+    {
+        TotalesPorProducto[index] = total;
+        StateHasChanged();
+    }
+
+    private void CalcularTotales()
+    {
+        // Los totales serán calculados por los componentes TransferItem
+        // Este método se mantiene para compatibilidad
+        StateHasChanged();
+    }
+
+    private async Task RealizarTransferencia()
+    {
+        if (TotalProductosATransferir > 0 && inventarioOrigenId > 0 && inventarioDestinoId > 0)
+        {
+            Console.WriteLine($"Transferir {TotalProductosATransferir} productos del inventario {inventarioOrigenId} al {inventarioDestinoId}");
+            
+            // Con componentes TransferItem, necesitaríamos acceder a sus propiedades internas
+            // Por ahora simplemente mostramos el total
+            Console.WriteLine($"Total de productos a transferir: {TotalProductosATransferir}");
+            
+            // Por ahora solo se muestra mensaje
+            // Navigation.NavigateTo("/inventarios");
+        }
+        await Task.CompletedTask;
+    }
+
+
+}

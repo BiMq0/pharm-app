@@ -1,10 +1,12 @@
 ﻿@page "/inventarios"
 @inject IJSRuntime JS;
 @inject Services.Inventarios.IInventarioService InventarioService
+@using InventarioFarmacia_Front.Components.SimpleComponents.Loader
 @using InventarioFarmacia_Shared.DTOs.Inventarios
 @rendermode InteractiveServer
 
 <div class="container-fluid p-0" style="height: 85vh !important;">
+
     <div class="row g-3 h-100 px-4">
         @foreach (var inventario in inventarioToListDTOs)
         {
@@ -29,6 +31,10 @@
             </div>
         }
     </div>
+    <NavLink href="/inventarioTransferencia" class="btn btn-primary position-absolute"
+        style="bottom: 20px; right: 20px;">Nuevo traslado de
+        productos
+    </NavLink>
 </div>
 
 @if (mostrarKratos)
@@ -38,12 +44,29 @@
     </div>
 }
 
+@if (EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
+
 @code {
     private List<InventarioToListDTO> inventarioToListDTOs = new();
     private bool mostrarKratos = false;
     protected override async Task OnInitializedAsync()
     {
-        inventarioToListDTOs = (await InventarioService.ObtenerTodosLosInventarios()).ToList();
+        try
+        {
+            EstadoCargador.Activar();
+            inventarioToListDTOs = (await InventarioService.ObtenerTodosLosInventarios()).ToList();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error cargando inventarios: {ex.Message}");
+        }
+        finally
+        {
+            EstadoCargador.Desactivar();
+        }
         await base.OnInitializedAsync();
     }
     protected override async Task OnAfterRenderAsync(bool firstRender)

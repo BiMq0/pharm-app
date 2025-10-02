@@ -7,7 +7,7 @@
 
 <PageTitle>Categorías</PageTitle>
 
-@if(isLoading)
+@if(EstadoCargador.IsLoading)
 {
     <Cargador/>
 }
@@ -85,13 +85,11 @@
     private IEnumerable<CategoriaInfoCardDTO> categorias = Enumerable.Empty<CategoriaInfoCardDTO>();
     private IEnumerable<CategoriaInfoCardDTO> categoriasFiltradas = Enumerable.Empty<CategoriaInfoCardDTO>();
     private string filtroNombre = string.Empty;
-    private bool isLoading = true;
-    private bool hasRendered = false;
     protected override async Task OnInitializedAsync()
     {
-        isLoading = true;
         try
         {
+            EstadoCargador.Activar();
             await CargarCategorias();
         }
         catch(Exception ex){
@@ -99,19 +97,27 @@
         }
         finally
         {
-            isLoading = false;
+            EstadoCargador.Desactivar();
+            StateHasChanged();
         }
-        }
+    }
+
     private async Task CargarCategorias()
     {
         try
         {
+            EstadoCargador.Activar();
             categorias = await CategoriaServices.GetCategoriasAsync();   
             categoriasFiltradas = categorias;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error al cargar categorías: {ex.Message}");
+        }
+        finally
+        {
+            EstadoCargador.Desactivar();
+            StateHasChanged();
         }
     }
 
@@ -126,7 +132,7 @@
         else
         {
             categoriasFiltradas = categorias
-                .Where(c => c.Nombre.Contains(filtroNombre, StringComparison.OrdinalIgnoreCase) ||
+                .Where(c => c.Nombre!.Contains(filtroNombre, StringComparison.OrdinalIgnoreCase) ||
                            (c.Descripcion?.Contains(filtroNombre, StringComparison.OrdinalIgnoreCase) ?? false))
                 .ToList();
         }
