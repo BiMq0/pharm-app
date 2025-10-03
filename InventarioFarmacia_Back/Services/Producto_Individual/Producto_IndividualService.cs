@@ -59,4 +59,8 @@ public class Producto_IndividualService : IProducto_IndividualService
         }
         return contador == productos.Count();
     }
+    public async Task<bool> ActualizarInventarioAsync(Producto_Individual producto)
+    {
+        return await _productoIndividualRepository.UpdateAsync(producto);
+    }
 }

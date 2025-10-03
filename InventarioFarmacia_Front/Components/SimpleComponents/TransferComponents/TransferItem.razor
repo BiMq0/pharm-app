@@ -24,13 +24,13 @@
                             <div class="col-6">
                                 <div class="border rounded p-2 text-center bg-white">
                                     <div class="fw-bold text-info">Bs. @SelectedProduct.Precio_Unitario</div>
-                                    <small class="text-muted">Precio actual</small>
+                                    <small class="text-muted">Precio por Unidad:</small>
                                 </div>
                             </div>
                             <div class="col-6">
                                 <div class="border rounded p-2 text-center bg-white">
-                                    <div class="fw-bold text-success">@cantidadTotalProductosIndividuales</div>
-                                    <small class="text-muted">A transferir</small>
+                                    <div class="fw-bold text-success">@SelectedProduct.Precio_Caja</div>
+                                    <small class="text-muted">Precio por Caja:</small>
                                 </div>
                             </div>
                         </div>
@@ -61,10 +61,10 @@
                                         <div class="p-2 border rounded mx-2 d-flex justify-content-between gap-2"
                                             style="max-width: 60%;">
                                             <div class="d-flex align-items-center">
-                                                <span class="fw-semibold">Lote: @lote.Nro_Lote</span>
+                                                <span class="fw-semibold fs-6">Lote: @lote.Nro_Lote</span>
                                             </div>
                                             <div class="d-flex align-items-center gap-2">
-                                                <span class="fw-semibold" style="font-size: small;">Vence en:</span>
+                                                <span class="fw-semibold" style="font-size: small;">Vence:</span>
                                                 <span
                                                     class="badge bg-primary">@lote.Fecha_Vencimiento.ToShortDateString()</span>
                                             </div>
@@ -93,7 +93,7 @@
 else
 {
     <div class="my-3">
-        <select class="form-select" @bind="Id_Selected_Product">
+        <select class="form-select" @bind="@Id_Selected_Product">
             <option value="-1">Seleccione un producto</option>
             @foreach (var item in lstProductosDisponibles.Where(p => !lstIdProductosSeleccionados.Contains(p.Id)))
             {
@@ -117,9 +117,10 @@ else
         get => _idSelectedProduct;
         set
         {
+            var previousId = _idSelectedProduct;
             _idSelectedProduct = value;
-            SeleccionarProducto(value);
-            OnRemoveProduct.InvokeAsync(value);
+            SeleccionarProducto(value, previousId);
+            StateHasChanged();
         }
     }
 
@@ -133,8 +134,13 @@ else
         await base.OnInitializedAsync();
     }
 
-    private async Task SeleccionarProducto(int Id_Producto)
+    private async Task SeleccionarProducto(int Id_Producto, int previousId = -1)
     {
+        if (previousId > 0)
+        {
+            await OnProductoRemovido.InvokeAsync(previousId);
+        }
+
         var selectedValue = Id_Producto;
         var productoSeleccionado = lstProductosDisponibles.FirstOrDefault(p => p.Id == selectedValue);
         if (productoSeleccionado != null)
@@ -142,7 +148,14 @@ else
             SelectedProduct = productoSeleccionado;
             ProductSelected = true;
 
+            await OnProductoSeleccionado.InvokeAsync(selectedValue);
+
             await SincronizarLotesDisponibles();
+        }
+        else
+        {
+            ProductSelected = false;
+            SelectedProduct = new();
         }
         StateHasChanged();
     }
@@ -186,13 +199,18 @@ else
     [Parameter]
     public EventCallback<int> OnRemoveProduct { get; set; }
 
+    [Parameter]
+    public EventCallback<int> OnProductoSeleccionado { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnProductoRemovido { get; set; }
+
     private int cantidadTotalProductosIndividuales = 0;
 
     private void ActualizarCantidadLote(ChangeEventArgs e, int loteId)
     {
         if (int.TryParse(e.Value?.ToString(), out var cantidad))
         {
-            // Validar que no exceda la cantidad disponible
             var lote = LotesToTransfer.FirstOrDefault(l => l.Id == loteId);
             if (lote != null && cantidad > lote.Cantidad_Productos)
             {
@@ -202,24 +220,26 @@ else
             CantidadesPorLote[loteId] = cantidad;
 
             cantidadTotalProductosIndividuales = CantidadesPorLote.Values.Sum();
-
-            OnTotalChanged.InvokeAsync(cantidadTotalProductosIndividuales);
         }
         StateHasChanged();
     }
 
-    [Parameter]
-    public EventCallback<int> OnTotalChanged { get; set; }
 
-    private void RemoverProducto()
+
+    private async Task RemoverProducto()
     {
+        // Notificar que se removió el producto de los seleccionados
+        if (_idSelectedProduct > 0)
+        {
+            await OnProductoRemovido.InvokeAsync(_idSelectedProduct);
+        }
+
         ProductSelected = false;
-        Id_Selected_Product = -1;
+        _idSelectedProduct = -1;
         SelectedProduct = new();
         LotesToTransfer.Clear();
         CantidadesPorLote.Clear();
         cantidadTotalProductosIndividuales = 0;
-        OnTotalChanged.InvokeAsync(0);
         StateHasChanged();
     }
 }

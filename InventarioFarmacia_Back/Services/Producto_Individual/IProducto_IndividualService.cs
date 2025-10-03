@@ -10,4 +10,5 @@ public interface IProducto_IndividualService
     Task<Producto_Individual> ObtenerProductoIndividualPorIdAsync(int id);
     Task<bool> CrearProductoIndividualAsync(int cantidad, int idLote, int idOrdenCompra, int idInventario = 2);
     Task<bool> ActualizarEstadoProductosPorLoteAsync(IEnumerable<Producto_Individual> productos, Estados_ProductosIndividuales nuevoEstado);
+    Task<bool> ActualizarInventarioAsync(Producto_Individual producto);
 }

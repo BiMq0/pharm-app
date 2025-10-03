@@ -13,4 +13,6 @@ public interface ILoteService
     Task<bool> EliminarLoteAsync(int id);
     Task<bool> ActualizarStockLoteAsync(int loteId, int nuevaCantidad);
     Task<bool> VerificarDisponibilidadAsync(int loteId, int cantidadRequerida);
+
+    Task<bool> TransferirItems(List<LoteToTransferProductsDTO> lstLotesToTransfer, int idInventarioDestino);
 }

@@ -176,4 +176,22 @@ public class LoteService : ILoteService
             return false;
         }
     }
+
+    public async Task<bool> TransferirItems(List<LoteToTransferProductsDTO> lstLotesToTransfer, int idInventarioDestino)
+    {
+        string url = Config.ApiBaseUrl + LotesEndpoints.BASE + LotesEndpoints.UPDATE_INVENTORY.Replace("{id}", idInventarioDestino.ToString());
+
+        try
+        {
+            var response = await _httpClient.PutAsJsonAsync(url, lstLotesToTransfer);
+            response.EnsureSuccessStatusCode();
+
+            return response.IsSuccessStatusCode;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al transferir items: {ex.Message}");
+            return false;
+        }
+    }
 }

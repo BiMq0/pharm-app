@@ -14,6 +14,7 @@ namespace InventarioFarmacia_Shared.Endpoints
         public const string GET_BY_ID = $"/{{id}}";
         public const string CREATE = "";
         public const string UPDATE = $"/{{id}}";
+        public const string UPDATE_INVENTORY = $"/update-inventory/{{id}}";
         public const string DELETE = $"/{{id}}";
     }
 }

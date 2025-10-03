@@ -13,4 +13,5 @@ public interface ILoteService
     Task<bool> ActualizarLoteAsync(LoteToNewCompraDTO lote);
     Task<bool> EliminarLoteAsync(int id);
     Task<IEnumerable<Lote>> ObtenerLotesProximosAVencerAsync(int dias = 30);
+    Task<bool> RealizarTransferenciaDeInventario(List<LoteToTransferProductsDTO> lotesToTransfer, int idInventarioDestino);
 }

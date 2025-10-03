@@ -8,13 +8,15 @@ public class LoteService : ILoteService
 {
     private readonly ILoteRepository _loteRepository;
     private readonly IProducto_IndividualService _productoService;
+    private readonly IInventarioService _inventarioService;
 
     private const int DIAS_ALERTA_VENCIMIENTO = 30;
 
-    public LoteService(ILoteRepository loteRepository, IProducto_IndividualService productoService)
+    public LoteService(ILoteRepository loteRepository, IProducto_IndividualService productoService, IInventarioService inventarioService)
     {
         _loteRepository = loteRepository;
         _productoService = productoService;
+        _inventarioService = inventarioService;
     }
 
     public async Task<IEnumerable<Lote>> ObtenerLotesAsync()
@@ -84,5 +86,33 @@ public class LoteService : ILoteService
         var fechaLimite = DateOnly.FromDateTime(DateTime.Now.AddDays(dias));
 
         return lotes.Where(l => l.Fecha_Vencimiento <= fechaLimite && l.Fecha_Vencimiento >= DateOnly.FromDateTime(DateTime.Now));
+    }
+
+    public async Task<bool> RealizarTransferenciaDeInventario(List<LoteToTransferProductsDTO> lotesToTransfer, int idInventarioDestino)
+    {
+        var lstLotes = new List<Lote>();
+        foreach (var loteTransfer in lotesToTransfer)
+        {
+            var lote = await _loteRepository.GetLoteByIdAsync(loteTransfer.Id);
+            if (lote == null)
+            {
+                continue;
+            }
+            lstLotes.Add(lote);
+
+            foreach (var loteToTransfer in lotesToTransfer)
+            {
+                for (int i = 0; i < loteToTransfer.CantidadATransferir; i++)
+                {
+                    var productoIndividual = lote.ProductosIndividuales?.ToList()[i];
+                    if (productoIndividual != null)
+                    {
+                        productoIndividual.Id_Inventario = idInventarioDestino;
+                        await _productoService.ActualizarInventarioAsync(productoIndividual);
+                    }
+                }
+            }
+        }
+        return await _inventarioService.ActualizarStockAsync(lstLotes, idInventarioDestino);
     }
 }

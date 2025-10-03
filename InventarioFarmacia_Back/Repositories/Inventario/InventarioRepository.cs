@@ -17,7 +17,6 @@ public class InventarioRepository : IInventarioRepository
             .Include(i => i.LotesDeProducto!)
                 .ThenInclude(lp => lp.Producto)
             .Include(i => i.BitacoraInventarios)
-            .AsNoTracking()
             .ToListAsync();
     }
 

@@ -65,7 +65,13 @@ namespace InventarioFarmacia_Back.Mappers
             })
             .WithName("UpdateLote")
             .WithSummary("Actualizar lote")
-            .WithDescription("Actualiza la información de un lote existente (EN DESARROLLO)");
+            .WithDescription("Actualiza la información de un lote existente");
+
+            lotes.MapPut(LotesEndpoints.UPDATE_INVENTORY, async (int id, List<LoteToTransferProductsDTO> lotesToTransfer, ILoteService loteService) =>
+            {
+                var resultado = await loteService.RealizarTransferenciaDeInventario(lotesToTransfer, id);
+                return resultado ? Results.Ok("Lotes transferidos exitosamente") : Results.BadRequest("Error al transferir los lotes");
+            });
 
             lotes.MapDelete(LotesEndpoints.DELETE, async (int id) =>
             {
@@ -75,7 +81,7 @@ namespace InventarioFarmacia_Back.Mappers
             })
             .WithName("DeleteLote")
             .WithSummary("Eliminar lote")
-            .WithDescription("Elimina un lote del sistema (EN DESARROLLO)");
+            .WithDescription("Elimina un lote del sistema");
         }
     }
 }

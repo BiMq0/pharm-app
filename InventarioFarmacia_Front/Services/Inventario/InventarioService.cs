@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using InventarioFarmacia_Shared.Endpoints;
 using InventarioFarmacia_Shared.DTOs.Inventarios;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 namespace InventarioFarmacia_Front.Services.Inventarios;
 
 public class InventarioService : IInventarioService

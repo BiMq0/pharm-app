@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using InventarioFarmacia_Shared.Endpoints;
 using InventarioFarmacia_Shared.DTOs.Inventarios;
+using InventarioFarmacia_Shared.DTOs.Lotes;
 
 namespace InventarioFarmacia_Back.Mappers
 {

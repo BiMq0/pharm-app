@@ -36,15 +36,13 @@ public class InventarioService : IInventarioService
 
     public async Task<bool> ActualizarInventarioAsync(Inventario inventario)
     {
-        // TODO: Agregar validaciones de negocio
-        // TODO: Verificar que el inventario existe
+
         return await _inventarioRepository.UpdateInventarioAsync(inventario);
     }
 
     public async Task<bool> EliminarInventarioAsync(int id)
     {
-        // TODO: Verificar que el inventario existe
-        // TODO: Verificar que no tenga movimientos pendientes
+
         return await _inventarioRepository.DeleteInventarioAsync(id);
     }
 

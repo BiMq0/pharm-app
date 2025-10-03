@@ -13,7 +13,7 @@ public class Inventario
     public ICollection<Bitacora_Inventario>? BitacoraInventarios { get; set; }
 
     [NotMapped]
-    public int CantidadProductos => LotesDeProducto?.Sum(l => l.CantidadProductos) ?? 0;
+    public int CantidadProductos => LotesDeProducto?.Sum(l => l.ProductosIndividuales?.Where(pi => pi.Id_Inventario == Id).Count()) ?? 0;
 
     [NotMapped]
     public int CantidadProductosDisponibles => LotesDeProducto
