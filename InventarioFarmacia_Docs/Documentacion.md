@@ -373,16 +373,16 @@ El proyecto sigue una metodología ágil con las siguientes características:
 
 ### RF-01. Gestión de Inventarios (Fase 1)
 
-> **Estado General:** En Progreso - Estructura base implementada
+> **Estado General:** Completado - Estructura base implementada
 
-| ID          | Requerimiento                    | Estado      |  Fase  | Notas                  | Detalles                                                                        |
-| :---------- | :------------------------------- | :---------- | :----: | :--------------------- | :------------------------------------------------------------------------------ |
-| **RF-01.1** | Inventario Local                 | Completado  | Fase 1 | Funcional              | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.1.md) |
-| **RF-01.2** | Inventario Externo               | Completado  | Fase 1 | Funcional              | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.2.md) |
-| **RF-01.3** | Transferencias entre Inventarios | En Progreso | Fase 1 | En planeación          | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.3.md) |
-| **RF-01.4** | Sincronización Automática        | Bloqueado   | Fase 1 | Dependiente de RF-01.3 | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.4.md) |
+| ID          | Requerimiento                    | Estado     |  Fase  | Notas     | Detalles                                                                        |
+| :---------- | :------------------------------- | :--------- | :----: | :-------- | :------------------------------------------------------------------------------ |
+| **RF-01.1** | Inventario Local                 | Completado | Fase 1 | Funcional | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.1.md) |
+| **RF-01.2** | Inventario Externo               | Completado | Fase 1 | Funcional | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.2.md) |
+| **RF-01.3** | Transferencias entre Inventarios | Completado | Fase 1 | Funcional | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.3.md) |
+| **RF-01.4** | Sincronización Automática        | Completado | Fase 1 | Funcional | [Ver Detalles](/Implementaciones/RF-01%20Gestion%20de%20Inventarios/RF-01.4.md) |
 
-**Progreso RF-01:** 2 de 4 completados (50%) | 1 en progreso | 1 bloqueado
+**Progreso RF-01:** 4 de 4 completados (100%) | 0 en progreso | 0 bloqueado
 
 ---
 
@@ -397,13 +397,13 @@ El proyecto sigue una metodología ágil con las siguientes características:
 | **RF-02.3** | Eliminar Productos          | Completado | Fase 1 | Funcional                                        | [Ver Detalles](/Implementaciones/RF-02%20Gestion%20de%20Productos/RF-02.3.md) |
 | **RF-02.4** | Categorización de Productos | Completado | Fase 1 | Analizar eliminación en restringida o en cascada | [Ver Detalles](/Implementaciones/RF-02%20Gestion%20de%20Productos/RF-02.4.md) |
 
-**Progreso RF-02:** 4 de 4 completados (100%) | ✅ **COMPLETADO**
+**Progreso RF-02:** 4 de 4 completados (100%) | **COMPLETADO**
 
 ---
 
 ### RF-03. Actualización Automática de Precios (Fase 2)
 
-> **Estado General:** En Progreso - Dependiente de RF-07.1
+> **Estado General:** En Progreso - 50% completado
 
 | ID          | Requerimiento             | Estado     |  Fase  | Notas | Detalles                                                                                       |
 | :---------- | :------------------------ | :--------- | :----: | :---- | :--------------------------------------------------------------------------------------------- |
@@ -416,14 +416,14 @@ El proyecto sigue una metodología ágil con las siguientes características:
 
 ### RF-04. Gestión de Productos Individuales (Fase 1)
 
-> **Estado General:** Completado - Dependiente de RF-07.1
+> **Estado General:** Completado - Control individual implementado
 
 | ID          | Requerimiento                | Estado     |  Fase  | Notas | Detalles                                                                                     |
 | :---------- | :--------------------------- | :--------- | :----: | :---- | :------------------------------------------------------------------------------------------- |
 | **RF-04.1** | Control por Lote y Caducidad | Completado | Fase 1 | -     | [Ver Detalles](/Implementaciones/RF-04%20Gestion%20de%20Productos%20Individuales/RF-04.1.md) |
 | **RF-04.2** | Control de Ubicación         | Completado | Fase 1 | -     | [Ver Detalles](/Implementaciones/RF-04%20Gestion%20de%20Productos%20Individuales/RF-04.2.md) |
 
-**Progreso RF-04:** 2 de 2 completados (100%) | ✅ **COMPLETADO**
+**Progreso RF-04:** 2 de 2 completados (100%) | **COMPLETADO**
 
 ---
 
@@ -436,7 +436,7 @@ El proyecto sigue una metodología ágil con las siguientes características:
 | **RF-05.1** | Monitoreo Continuo          | Pendiente | Fase 2 | -                                                   | [Ver Detalles](/Implementaciones/RF-05%20Control%20de%20Stock%20y%20Alertas/RF-05.1.md) |
 | **RF-05.2** | Alertas de Reabastecimiento | Pendiente | Fase 2 | Constantes a utilizar ya creadas en capa de dominio | [Ver Detalles](/Implementaciones/RF-05%20Control%20de%20Stock%20y%20Alertas/RF-05.2.md) |
 | **RF-05.3** | Alertas de Caducidad        | Pendiente | Fase 2 | Rango de fecha ya establecido en backend (1 mes)    | [Ver Detalles](/Implementaciones/RF-05%20Control%20de%20Stock%20y%20Alertas/RF-05.3.md) |
-| **RF-05.4** | Metodología FIFO en ventas  | Pendiente | Fase 2 | -                                                   | [Ver Detalles](/Implementaciones/RF-05%20Control%20de%20Stock%20y%20Alertas/RF-05.4.md) |
+| **RF-05.4** | Metodología FIFO en ventas  | Pendiente | Fase 1 | -                                                   | [Ver Detalles](/Implementaciones/RF-05%20Control%20de%20Stock%20y%20Alertas/RF-05.4.md) |
 
 **Progreso RF-05:** 0 de 4 completados (0%) | 4 pendientes
 
@@ -444,15 +444,15 @@ El proyecto sigue una metodología ágil con las siguientes características:
 
 ### RF-06. Sistema de Búsqueda y Filtrado (Fase 2-3)
 
-> **Estado General:** Pendiente - Baja prioridad
+> **Estado General:** En Progreso - 67% completado
 
-| ID          | Requerimiento              | Estado      |  Fase  | Notas                                                         | Detalles                                                                                    |
-| :---------- | :------------------------- | :---------- | :----: | :------------------------------------------------------------ | :------------------------------------------------------------------------------------------ |
-| **RF-06.1** | Filtros por Categoría      | Completado  | Fase 2 | -                                                             | [Ver Detalles](/Implementaciones/RF-06%20Sistema%20de%20Busqueda%20y%20Filtrado/RF-06.1.md) |
-| **RF-06.2** | Búsqueda por Nombre/Código | En Progreso | Fase 2 | Implementado en categorías y productos, pendiente inventarios | [Ver Detalles](/Implementaciones/RF-06%20Sistema%20de%20Busqueda%20y%20Filtrado/RF-06.2.md) |
-| **RF-06.3** | Filtros Avanzados          | Pendiente   | Fase 3 | -                                                             | [Ver Detalles](/Implementaciones/RF-06%20Sistema%20de%20Busqueda%20y%20Filtrado/RF-06.3.md) |
+| ID          | Requerimiento              | Estado     |  Fase  | Notas                                                         | Detalles                                                                                    |
+| :---------- | :------------------------- | :--------- | :----: | :------------------------------------------------------------ | :------------------------------------------------------------------------------------------ |
+| **RF-06.1** | Filtros por Categoría      | Completado | Fase 2 | -                                                             | [Ver Detalles](/Implementaciones/RF-06%20Sistema%20de%20Busqueda%20y%20Filtrado/RF-06.1.md) |
+| **RF-06.2** | Búsqueda por Nombre/Código | Completado | Fase 2 | Implementado en categorías y productos, pendiente inventarios | [Ver Detalles](/Implementaciones/RF-06%20Sistema%20de%20Busqueda%20y%20Filtrado/RF-06.2.md) |
+| **RF-06.3** | Filtros Avanzados          | Pendiente  | Fase 3 | -                                                             | [Ver Detalles](/Implementaciones/RF-06%20Sistema%20de%20Busqueda%20y%20Filtrado/RF-06.3.md) |
 
-**Progreso RF-06:** 1 de 3 completados (33%) | 1 en progreso | 1 pendiente
+**Progreso RF-06:** 2 de 3 completados (67%) | 0 en progreso | 1 pendiente
 
 ---
 
@@ -523,31 +523,31 @@ El proyecto sigue una metodología ágil con las siguientes características:
 
 ### Resumen por Grupos de Requerimientos
 
-| Grupo     | Requerimientos | Completados | En Progreso | Pendientes | Bloqueados | % Avance |
-| :-------- | :------------- | :---------: | :---------: | :--------: | :--------: | :------: |
-| **RF-01** | 4              |      2      |      1      |     0      |     1      | **50%**  |
-| **RF-02** | 4              |      4      |      0      |     0      |     0      | **100%** |
-| **RF-03** | 2              |      1      |      0      |     1      |     0      | **50%**  |
-| **RF-04** | 2              |      2      |      0      |     0      |     0      | **100%** |
-| **RF-05** | 4              |      0      |      0      |     4      |     0      |  **0%**  |
-| **RF-06** | 3              |      1      |      1      |     1      |     0      | **33%**  |
-| **RF-07** | 5              |      2      |      0      |     3      |     0      | **40%**  |
-| **RF-08** | 4              |      0      |      0      |     4      |     0      |  **0%**  |
-| **RF-09** | 3              |      0      |      0      |     3      |     0      |  **0%**  |
-| **RF-10** | 3              |      0      |      2      |     1      |     0      |  **0%**  |
-| **Total** | **34**         |   **12**    |    **4**    |   **17**   |   **1**    | **35%**  |
+|   Grupo   | Requerimientos | Completados | En Progreso | Pendientes | Bloqueados | % Avance |
+| :-------: | :------------: | :---------: | :---------: | :--------: | :--------: | :------: |
+| **RF-01** |       4        |      4      |      0      |     0      |     0      | **100%** |
+| **RF-02** |       4        |      4      |      0      |     0      |     0      | **100%** |
+| **RF-03** |       2        |      1      |      0      |     1      |     0      | **50%**  |
+| **RF-04** |       2        |      2      |      0      |     0      |     0      | **100%** |
+| **RF-05** |       4        |      0      |      0      |     4      |     0      |  **0%**  |
+| **RF-06** |       3        |      2      |      0      |     1      |     0      | **67%**  |
+| **RF-07** |       5        |      2      |      0      |     3      |     0      | **40%**  |
+| **RF-08** |       4        |      0      |      0      |     4      |     0      |  **0%**  |
+| **RF-09** |       3        |      0      |      0      |     3      |     0      |  **0%**  |
+| **RF-10** |       3        |      0      |      2      |     1      |     0      |  **0%**  |
+| **Total** |     **34**     |   **15**    |    **2**    |   **17**   |   **0**    | **44%**  |
 
 ### Resumen por Fases
 
 | Fase       | Requerimientos | Completados | En Progreso | Pendientes | Bloqueados | % Avance |
-| :--------- | :------------- | :---------: | :---------: | :--------: | :--------: | :------: |
-| **Fase 1** | 15             |     10      |      3      |     1      |     1      | **67%**  |
-| **Fase 2** | 9              |      2      |      1      |     6      |     0      | **22%**  |
-| **Fase 3** | 9              |      0      |      0      |     9      |     0      |  **0%**  |
-| **Futuro** | 1              |      0      |      0      |     1      |     0      |  **0%**  |
-| **Total**  | **34**         |   **12**    |    **4**    |   **17**   |   **1**    | **35%**  |
+| :--------- | :------------: | :---------: | :---------: | :--------: | :--------: | :------: |
+| **Fase 1** |       15       |     12      |      4      |     0      |     0      | **75%**  |
+| **Fase 2** |       8        |      3      |      0      |     5      |     0      | **40%**  |
+| **Fase 3** |       9        |      0      |      0      |     9      |     0      |  **0%**  |
+| **Futuro** |       1        |      0      |      0      |     1      |     0      |  **0%**  |
+| **Total**  |     **34**     |   **15**    |    **2**    |   **17**   |   **0**    | **44%**  |
 
-**Fecha de última actualización:** 30 de Septiembre de 2025  
+**Fecha de última actualización:** 6 de Octubre de 2025  
 **Versión del documento:** 1.5  
 **Estado del proyecto:** En desarrollo activo
 
