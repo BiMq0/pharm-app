@@ -17,12 +17,10 @@ public class CategoriaService : ICategoriaService
         var url = Config.ApiBaseUrl + CategoriesEndpoints.BASE + CategoriesEndpoints.GET_ALL;
         if (!string.IsNullOrEmpty(filtro))
         {
-            Console.WriteLine($"URL con filtro: {url}");
             url += $"?filtro={Uri.EscapeDataString(filtro)}";
         }
         try
         {
-            Console.WriteLine($"URL de solicitud: {url}");
             var response = await _httpClient.GetAsync(url);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadFromJsonAsync<List<CategoriaInfoCardDTO>>() ?? new List<CategoriaInfoCardDTO>();

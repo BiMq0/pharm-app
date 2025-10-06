@@ -197,10 +197,13 @@ El análisis de requerimientos se centra en identificar las necesidades del usua
 | **RNF-06.3** | RF-06.3    | Menús dropdown donde se seleccionen los filtros a aplicarse                                                           | Búsqueda          | Baja       |
 | **RNF-07**   | RF-07      | **_Gestión de Compras y Ventas_**                                                                                     | Transacciones     | Alta       |
 | **RNF-07.1** | RF-07.1    | Formulario de registro de compras y registro en base de datos                                                         | Operaciones       | Alta       |
-| **RNF-07.2** | RF-07.2    | Formulario de registro de ventas y registro en base de datos                                                          | Operaciones       | Alta       |
-| **RNF-07.3** | RF-07.3    | Inserción de nuevo precio en formulario de compras                                                                    | Sistema           | Alta       |
-| **RNF-07.4** | RF-07.4    | Tabla para ambos apartados con registros recuperador de bitacoras en base de datos para cada transacción              | Auditoría         | Media      |
-| **RNF-07.5** | RF-07.5    | Integración con aparato de cobros y generación de facturas digitales                                                  | Futuro            | Baja       |
+| **RNF-07.2** | RF-07.2    | Pagina principal con tabla de historial de ventas realizadas                                                          | Operaciones       | Alta       |
+| **RNF-07.3** | RF-07.2    | Formulario de registro de ventas con productos en cards                                                               | Operaciones       | Alta       |
+| **RNF-07.4** | RF-07.2    | Registro de ventas en base de datos                                                                                   | Operaciones       | Alta       |
+| **RNF-07.5** | RF-07.2    | Generación de PDF con detalle de ventas                                                                               | Operaciones       | Alta       |
+| **RNF-07.6** | RF-07.3    | Inserción de nuevo precio en formulario de compras                                                                    | Sistema           | Alta       |
+| **RNF-07.7** | RF-07.4    | Tabla para ambos apartados con registros recuperador de bitacoras en base de datos para cada transacción              | Auditoría         | Media      |
+| **RNF-07.8** | RF-07.5    | Integración con aparato de cobros y generación de facturas digitales                                                  | Futuro            | Baja       |
 | **RNF-08**   | RF-08      | **_Reportes y Estadísticas_**                                                                                         | Analítica         | Media      |
 | **RNF-08.1** | RF-08.1    | Creación de registro de bitácora al realizarse una operación                                                          | Auditoría         | Media      |
 | **RNF-08.2** | RF-08.2    | Creación de registro de bitácora al realizarse movimientos                                                            | Auditoría         | Media      |

@@ -28,14 +28,3 @@
     <a href="." class="reload">Reload</a>
     <span class="dismiss">🗙</span>
 </div>
-
-@code {
-    protected override void OnInitialized()
-    {
-        Navigation.LocationChanged += (_, __) =>
-        {
-            EstadoCargador.Activar();
-            StateHasChanged();
-        };
-    }
-}

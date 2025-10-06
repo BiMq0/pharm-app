@@ -1,4 +1,5 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using InventarioFarmacia_Front.Components.SimpleComponents.Loader
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">Farmacias Blanco</a>
     </div>
@@ -8,46 +9,38 @@
 
 <div class="nav-scrollable" onclick="document.querySelector('.navbar-toggler').click()">
     <nav class="nav flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link fs-5" href="" Match="NavLinkMatch.All">
-                <i class="bi bi-house-door-fill me-4 fs-6"></i> Inicio
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link fs-5" href="productos">
-                <i class="bi bi-box-seam-fill me-4 fs-6"></i> Productos
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link fs-5" href="categorias">
-                <i class="bi bi-folder-fill me-4 fs-6"></i> Categorías
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link fs-5" href="inventarios">
-                <i class="bi bi-clipboard-data-fill me-4 fs-6"></i> Inventarios
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link fs-5" href="compras">
-                <i class="bi bi-cart-plus-fill me-4 fs-6"></i> Compras
-            </NavLink>
-        </div>
-
-        <div class="nav-item px-3">
-            <NavLink class="nav-link fs-5" href="ventas">
-                <i class="bi bi-cash-coin me-4 fs-6"></i> Ventas
-            </NavLink>
-        </div>
-
-        @* <div class="nav-item px-3">
-            <NavLink class="nav-link fs-5" href="usuarios">
-                <i class="bi bi-people-fill me-4 fs-6"></i> Usuarios
-            </NavLink>
-        </div> *@
+        @foreach (var option in lstMenuOptions)
+        {
+            <div class="nav-item px-3">
+                <NavLink class="nav-link fs-5" href="@option.Href" Match="NavLinkMatch.All"
+                    @onclick="EstadoCargador.Activar">
+                    <i class="@option.Icon me-4 fs-6"></i> @option.Label
+                </NavLink>
+            </div>
+        }
     </nav>
 </div>
+
+@code {
+    private List<MenuOption> lstMenuOptions = new List<MenuOption>();
+    protected override async Task OnInitializedAsync()
+    {
+        lstMenuOptions = new List<MenuOption>
+{
+new MenuOption { Label = "Inicio", Icon = "bi bi-house-door-fill", Href = "/" },
+new MenuOption { Label = "Productos", Icon = "bi bi-box-seam", Href = "/productos" },
+new MenuOption { Label = "Categorías", Icon = "bi bi-tags", Href = "/categorias" },
+new MenuOption { Label = "Inventarios", Icon = "bi bi-box", Href = "/inventarios" },
+new MenuOption { Label = "Ventas", Icon = "bi bi-currency-dollar", Href = "/ventas" },
+new MenuOption { Label = "Compras", Icon = "bi bi-cart-fill", Href = "/compras" },
+};
+        await base.OnInitializedAsync();
+    }
+
+    private class MenuOption
+    {
+        public string Label { get; set; }
+        public string Icon { get; set; }
+        public string Href { get; set; }
+    }
+}
