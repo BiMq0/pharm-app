@@ -3,6 +3,7 @@
 @using InventarioFarmacia_Shared.DTOs.Lotes
 @using InventarioFarmacia_Domain.Constants
 @using InventarioFarmacia_Front.Components.SimpleComponents.Loader
+@using InventarioFarmacia_Front.Components.SimpleComponents.Modals;
 @inject Services.Compras.ICompraService CompraService
 @inject NavigationManager Navigation
 @rendermode InteractiveServer
@@ -36,11 +37,11 @@ else if (compra != null)
                         {
                             <div class="text-end d-flex gap-4">
 
-                                <button class="btn btn-success shadow" @onclick="MarcarCompraRecibida">
+                                <button class="btn btn-success shadow" @onclick='() => MostrarModalConfirmacion("Recibir")'>
                                     <i class="bi bi-check"></i>
                                     Compra Recibida
                                 </button>
-                                <button class="btn btn-danger shadow" @onclick="MarcarCompraCancelada">
+                                <button class="btn btn-danger shadow" @onclick='() => MostrarModalConfirmacion("Cancelar")'>
                                     <i class="bi bi-trash"></i>
                                     Cancelar Compra
                                 </button>
@@ -159,6 +160,39 @@ else
     </div>
 }
 
+@if (EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
+
+@if (MostrarModalConfirmacionCondition)
+{
+    switch (mensajeModal)
+    {
+        case "Recibir":
+            <ModalConfirmacion OnAceptar="MarcarCompraRecibida" OnCancelar="OcultarModalConfirmacion" />
+            break;
+        case "Cancelar":
+            <ModalConfirmacion OnAceptar="MarcarCompraCancelada" OnCancelar="OcultarModalConfirmacion" />
+            break;
+    }
+}
+
+@if (MostrarModalMensajeCondition)
+{
+    @if (ResultadoOperacion)
+    {
+        <ModalMensaje Exito="ResultadoOperacion" OnAceptar="VolverACompras"
+            Titulo='@( "Compra " + (mensajeModal == "Recibir" ? "recibida" : "cancelada") + " con éxito")' />
+    }
+    else
+    {
+        <ModalMensaje Exito="ResultadoOperacion" OnAceptar="OcultarModalMensaje"
+            Titulo='@( "Error al " + (mensajeModal == "Recibir" ? "recibir" : "cancelar") + " la compra")' />
+    }
+}
+
+
 @code {
     [Parameter] public int Id { get; set; }
 
@@ -218,12 +252,52 @@ else
         Navigation.NavigateTo("/compras");
     }
 
-    private async Task<bool> MarcarCompraRecibida()
+    private async Task MarcarCompraRecibida()
     {
-        return await CompraService.ActualizarOrdenCompra(compra!.Id, (int)Estados_OrdenDeCompra.RECIBIDO);
+        var resultado = await CompraService.ActualizarOrdenCompra(compra!.Id, (int)Estados_OrdenDeCompra.RECIBIDO);
+        ResultadoOperacion = resultado;
+        OcultarModalConfirmacion();
+        MostrarModalMensaje();
     }
-    private async Task<bool> MarcarCompraCancelada()
+    private async Task MarcarCompraCancelada()
     {
-        return await CompraService.ActualizarOrdenCompra(compra!.Id, (int)Estados_OrdenDeCompra.CANCELADO);
+        var resultado = await CompraService.ActualizarOrdenCompra(compra!.Id, (int)Estados_OrdenDeCompra.CANCELADO);
+        ResultadoOperacion = resultado;
+        OcultarModalConfirmacion();
+        MostrarModalMensaje();
     }
+
+    #region Gestion de Modals
+    private string mensajeModal = string.Empty;
+    private bool MostrarModalConfirmacionCondition = false;
+    private bool MostrarModalMensajeCondition = false;
+    private bool ResultadoOperacion = false;
+
+    #region Metodos de gestion de Modals
+    private void MostrarModalConfirmacion(string accion)
+    {
+        MostrarModalConfirmacionCondition = true;
+        mensajeModal = accion;
+        StateHasChanged();
+    }
+
+    private void OcultarModalConfirmacion()
+    {
+        MostrarModalConfirmacionCondition = false;
+        StateHasChanged();
+    }
+
+    private void MostrarModalMensaje()
+    {
+        MostrarModalMensajeCondition = true;
+        StateHasChanged();
+    }
+
+    private void OcultarModalMensaje()
+    {
+        MostrarModalMensajeCondition = false;
+        StateHasChanged();
+    }
+    #endregion
+    #endregion
 }

@@ -8,12 +8,12 @@
 
     <main>
         <div class="top-row px-4 ">
-            <NavLink href="/perfil">
+            @* <NavLink href="/perfil">
                 <button class="btn btn-primary">Mi Perfil</button>
-            </NavLink>
+            </NavLink> *@
         </div>
 
-        <article class="content px-4">
+        <article class="content px-4 py-2">
             @if (EstadoCargador.IsLoading)
             {
                 <Cargador />

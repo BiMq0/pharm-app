@@ -72,35 +72,6 @@ public class Producto_IndividualRepository : IProducto_IndividualRepository
         return await _context.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> MarkAsSold(int productId)
-    {
-        var producto = await GetByIdAsync(productId);
-        if (producto == null) return false;
-
-        producto.Estado = Estados_ProductosIndividuales.VENDIDO;
-        _context.Productos_Individuales.Update(producto);
-        return await _context.SaveChangesAsync() > 0;
-    }
-
-    public async Task<bool> MarkAsExpired(int productId)
-    {
-        var producto = await GetByIdAsync(productId);
-        if (producto == null) return false;
-
-        producto.Estado = Estados_ProductosIndividuales.VENCIDO;
-        _context.Productos_Individuales.Update(producto);
-        return await _context.SaveChangesAsync() > 0;
-    }
-
-    public async Task<bool> MarkAsAboutToExpire(int productId)
-    {
-        var producto = await GetByIdAsync(productId);
-        if (producto == null) return false;
-
-        producto.Estado = Estados_ProductosIndividuales.POR_VENCER;
-        _context.Productos_Individuales.Update(producto);
-        return await _context.SaveChangesAsync() > 0;
-    }
 
     public async Task<bool> DeleteAsync(int id)
     {

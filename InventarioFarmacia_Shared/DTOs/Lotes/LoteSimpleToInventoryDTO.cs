@@ -16,8 +16,6 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
         public string? Nro_Lote { get; set; }
         public DateOnly Fecha_Vencimiento { get; set; }
         public int CantidadProductosDisponibles { get; set; }
-        public int CantidadProductosVencidos { get; set; }
-        public int CantidadProductosPorVencer { get; set; }
         [JsonIgnore]
         public ProductoInfoToInventoryDTO? Producto { get; set; }
 
@@ -32,9 +30,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
             Id_Producto = lote.Id_Producto;
             Nro_Lote = lote.Nro_Lote;
             Fecha_Vencimiento = lote.Fecha_Vencimiento;
-            CantidadProductosDisponibles = lote.ProductosDisponibles.Where(pi => pi.Id_Inventario == inventarioId).Count();
-            CantidadProductosVencidos = lote.ProductosVencidos.Where(pi => pi.Id_Inventario == inventarioId).Count();
-            CantidadProductosPorVencer = lote.ProductosPorVencer.Where(pi => pi.Id_Inventario == inventarioId).Count();
+            CantidadProductosDisponibles = lote.CantidadProductosDisponiblesEnInventario(inventarioId);
             Producto = new ProductoInfoToInventoryDTO(lote.Producto!);
         }
     }

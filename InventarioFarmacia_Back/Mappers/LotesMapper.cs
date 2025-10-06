@@ -75,7 +75,6 @@ namespace InventarioFarmacia_Back.Mappers
 
             lotes.MapDelete(LotesEndpoints.DELETE, async (int id) =>
             {
-                // Placeholder for actual service call
                 await Task.Delay(1);
                 return Results.Ok($"Lote{id} eliminado");
             })

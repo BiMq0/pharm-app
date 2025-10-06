@@ -20,16 +20,19 @@ public class Producto
     public ICollection<Lote> Lotes { get; set; } = new List<Lote>();
 
     [NotMapped]
-    public int StockDisponible => Lotes.Sum(l => l.ProductosIndividuales!.Count(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE));
+    public int StockDisponible => Lotes.Where(l => l.Estado != Estados_LoteProductos.VENCIDO && l.Estado != Estados_LoteProductos.NO_DISPONIBLE)
+        .Sum(l => l.ProductosIndividuales?.Count(pi => pi.Estado != Estados_ProductosIndividuales.VENDIDO) ?? 0);
 
     [NotMapped]
-    public int StockVendido => Lotes.Sum(l => l.ProductosIndividuales!.Count(pi => pi.Estado == Estados_ProductosIndividuales.VENDIDO));
+    public int StockVendido => Lotes.Sum(l => l.CantidadProductosVendidos);
 
     [NotMapped]
-    public int StockVencido => Lotes.Sum(l => l.ProductosIndividuales!.Count(pi => pi.Estado == Estados_ProductosIndividuales.VENCIDO));
+    public int StockVencido => Lotes.Where(l => l.Estado == Estados_LoteProductos.VENCIDO)
+        .Sum(l => l.ProductosIndividuales?.Count(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE) ?? 0);
 
     [NotMapped]
-    public int StockPorVencer => Lotes.Sum(l => l.ProductosIndividuales!.Count(pi => pi.Estado == Estados_ProductosIndividuales.POR_VENCER));
+    public int StockPorVencer => Lotes.Where(l => l.Estado == Estados_LoteProductos.POR_VENCER)
+        .Sum(l => l.ProductosIndividuales?.Count(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE) ?? 0);
 
     [NotMapped]
     public bool TieneStockBajo => StockDisponible < 20;

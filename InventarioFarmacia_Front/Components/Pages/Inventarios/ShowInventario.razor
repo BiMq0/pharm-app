@@ -3,6 +3,7 @@
 @inject NavigationManager Navigation
 @using InventarioFarmacia_Shared.DTOs.Inventarios
 @using InventarioFarmacia_Front.Components.SimpleComponents.Loader
+@using InventarioFarmacia_Shared.DTOs.Products
 @rendermode InteractiveServer
 
 <PageTitle>Detalles de Inventario</PageTitle>
@@ -48,24 +49,6 @@ else if (inventario != null)
                     </div>
                 </div>
             </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="bi bi-exclamation-triangle text-warning fs-1"></i>
-                        <h6 class="text-muted mb-1">Por Vencer</h6>
-                        <h5 class="fw-bold text-warning">@inventario.CantidadProductosPorVencer</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body text-center">
-                        <i class="bi bi-x-circle text-danger fs-1"></i>
-                        <h6 class="text-muted mb-1">Vencidos</h6>
-                        <h5 class="fw-bold text-danger">@inventario.CantidadProductosVencidos</h5>
-                    </div>
-                </div>
-            </div>
         </div>
 
         <div class="row mb-4">
@@ -75,14 +58,10 @@ else if (inventario != null)
                         <i class="bi bi-search"></i>
                     </span>
                     <input type="text" class="form-control border-start-0" placeholder="Buscar productos en inventario..."
-                        @bind="filtroNombre" @oninput="FiltrarProductos" />
+                        @oninput="@(e => FiltrarProductos(e))" />
                 </div>
             </div>
             <div class="col-md-4 text-end">
-                <button class="btn btn-outline-secondary me-2"
-                    @onclick="() => { filtroNombre = string.Empty; FiltrarProductos(); }">
-                    <i class="bi bi-arrow-clockwise"></i> Limpiar
-                </button>
                 <button class="btn btn-outline-primary" @onclick="VolverAInventarios">
                     <i class="bi bi-arrow-left"></i> Volver
                 </button>
@@ -98,19 +77,20 @@ else if (inventario != null)
                             Productos en Inventario
                         </h5>
                     </div>
-                    @foreach (var producto in inventario.Productos!)
+                    @foreach (var producto in productosFiltrados)
                     {
                         <div class="card-body">
                             <div class="accordion" id="accordion-ejemplo">
                                 <div class="accordion-item border rounded shadow-sm">
                                     <h2 class="accordion-header">
                                         <button class="accordion-button collapsed bg-light" type="button"
-                                            data-bs-toggle="collapse" data-bs-target='@($"#collapse-{producto.Id}")' aria-expanded="false"
-                                            aria-controls="@($"collapse-{producto.Id}")">
+                                            data-bs-toggle="collapse" data-bs-target='@($"#collapse-{producto.Id}")'
+                                            aria-expanded="false" aria-controls="@($"collapse-{producto.Id}")">
                                             <div class="d-flex w-100 justify-content-between align-items-center me-3">
                                                 <div class="d-flex align-items-center">
                                                     <div class="me-3">
-                                                        <img src="@producto.Ruta_Imagen" alt="@producto.Nombre" class="img-fluid rounded"
+                                                        <img src="@producto.Ruta_Imagen" alt="@producto.Nombre"
+                                                            class="img-fluid rounded"
                                                             style="max-height: 50px; max-width: 50px; object-fit: cover;" />
                                                         <span class="fw-bold text-primary">@producto.Nombre</span>
                                                     </div>
@@ -128,30 +108,23 @@ else if (inventario != null)
                                                             <th>Número de Lote</th>
                                                             <th>Fecha de Vencimiento</th>
                                                             <th class="text-center text-success">Disponibles</th>
-                                                            <th class="text-center text-warning">Por Vencer</th>
-                                                            <th class="text-center text-danger">Vencidos</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @foreach (var lote in inventario.Lotes!.Where(l => l.Id_Producto == producto.Id))
+                                                        @foreach (var lote in inventario.Lotes!.Where(l => l.Id_Producto ==
+                                                                                                        producto.Id && l.CantidadProductosDisponibles > 0))
                                                         {
                                                             <tr>
-                                                            <td>
-                                                                <span class="fw-semibold">@lote.Nro_Lote</span>
-                                                            </td>
-                                                            <td>
-                                                                @lote.Fecha_Vencimiento.ToString("dd/MM/yyyy")
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="fw-bold">@lote.CantidadProductosDisponibles</span>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="fw-bold">@lote.CantidadProductosPorVencer</span>
-                                                            </td>
-                                                            <td class="text-center">
-                                                                <span class="fw-bold">@lote.CantidadProductosVencidos</span>
-                                                            </td>
-                                                        </tr>
+                                                                <td>
+                                                                    <span class="fw-semibold">@lote.Nro_Lote</span>
+                                                                </td>
+                                                                <td>
+                                                                    @lote.Fecha_Vencimiento.ToString("dd/MM/yyyy")
+                                                                </td>
+                                                                <td class="text-center">
+                                                                    <span class="fw-bold">@lote.CantidadProductosDisponibles</span>
+                                                                </td>
+                                                            </tr>
                                                         }
                                                     </tbody>
                                                 </table>
@@ -185,6 +158,7 @@ else
     [Parameter] public int Id { get; set; }
 
     private InventarioGeneralDTO? inventario;
+    private List<ProductoInfoToInventoryDTO> productosFiltrados = new();
     private string filtroNombre = string.Empty;
 
     protected override async Task OnInitializedAsync()
@@ -193,6 +167,7 @@ else
         {
             EstadoCargador.Activar();
             inventario = await IInventarioService.ObtenerInventarioGeneralAsync(Id);
+            productosFiltrados = inventario!.Productos!.ToList();
         }
         catch (Exception ex)
         {
@@ -204,9 +179,29 @@ else
         }
     }
 
-    private void FiltrarProductos()
+    private void FiltrarProductos(ChangeEventArgs e)
     {
-        // Implementar filtrado 
+        var nuevoFiltro = e.Value?.ToString() ?? string.Empty;
+        AplicarFiltro(nuevoFiltro);
+    }
+    private void AplicarFiltro(string nuevoFiltro)
+    {
+        filtroNombre = nuevoFiltro;
+        if (string.IsNullOrWhiteSpace(filtroNombre))
+        {
+            productosFiltrados = inventario!.Productos!.ToList();
+            Console.WriteLine($"Mostrando todos los productos");
+
+        }
+        else
+        {
+            productosFiltrados = inventario!.Productos!
+            .OrderByDescending(p => p.Nombre!.Contains(filtroNombre, StringComparison.OrdinalIgnoreCase))
+            .ToList();
+            Console.WriteLine($"Filtrando productos por: {filtroNombre}, encontrados: {productosFiltrados.Count}");
+
+        }
+        StateHasChanged();
     }
 
     private void VolverAInventarios()

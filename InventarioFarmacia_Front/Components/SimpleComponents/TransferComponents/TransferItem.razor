@@ -4,242 +4,129 @@
 @inject Services.Lotes.ILoteService LoteService
 @rendermode InteractiveServer
 
-@if (ProductSelected && Id_Selected_Product != -1)
-{
-    <div class="container-fluid card d-flex mb-3">
-        <div class="card-body row g-3">
-            <div class="col-5">
-                <div class="border rounded p-3 bg-light d-flex">
-                    <div class="me-3">
-                        <img src="@SelectedProduct.Ruta_Imagen" class="img-fluid rounded shadow-sm"
-                            style="height: 150px; width: 175px; object-fit: cover;" />
+<div class="container-fluid card d-flex mb-3">
+    <div class="card-body row g-3">
+        <div class="col-5">
+            <div class="border rounded p-3 bg-light d-flex">
+                <div class="me-3">
+                    <img src="@Product!.Ruta_Imagen" class="img-fluid rounded shadow-sm"
+                        style="height: 150px; width: 175px; object-fit: cover;" />
+                </div>
+                <div class="row">
+                    <div class="bg-primary text-white rounded p-2 text-center">
+                        <h6 class="fw-bold mb-1">@Product.Nombre</h6>
+                        <small class="opacity-75">@Product.Nombre_Clinico</small>
                     </div>
-                    <div class="row">
-                        <div class="bg-primary text-white rounded p-2 text-center">
-                            <h6 class="fw-bold mb-1">@SelectedProduct.Nombre</h6>
-                            <small class="opacity-75">@SelectedProduct.Nombre_Clinico</small>
-                        </div>
 
-                        <div class="row g-2 mt-2">
-                            <div class="col-6">
-                                <div class="border rounded p-2 text-center bg-white">
-                                    <div class="fw-bold text-info">Bs. @SelectedProduct.Precio_Unitario</div>
-                                    <small class="text-muted">Precio por Unidad:</small>
-                                </div>
+                    <div class="row g-2 mt-2">
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center bg-white">
+                                <div class="fw-bold text-info">Bs. @Product.Precio_Unitario</div>
+                                <small class="text-muted">Precio por Unidad:</small>
                             </div>
-                            <div class="col-6">
-                                <div class="border rounded p-2 text-center bg-white">
-                                    <div class="fw-bold text-success">@SelectedProduct.Precio_Caja</div>
-                                    <small class="text-muted">Precio por Caja:</small>
-                                </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="border rounded p-2 text-center bg-white">
+                                <div class="fw-bold text-success">@Product.Precio_Caja</div>
+                                <small class="text-muted">Precio por Caja:</small>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="col-5 d-flex justify-content-between">
-                <div class="row border rounded py-3 px-2 h-100 d-flex flex-column w-100">
-                    <div class="d-flex flex-column col-12">
-                        <div
-                            class="border rounded p-2 d-flex flex-column justify-content-between align-items-center bg-white">
-                            <div class="input-group">
-                                <span class="input-group-text bg-white border-end-0">
-                                    <i class="bi bi-search"></i>
-                                </span>
-                                <input type="text" class="form-control border-start-0"
-                                    placeholder="Buscar lotes por número de lote..." @oninput="(e) => FiltrarLotes(e)" />
-                            </div>
-                            <div class="container overflow-auto" style="max-height: 150px;">
-                                @foreach (var lote in LotesToTransfer ?? Enumerable.Empty<LoteToNewCompraDTO>())
-                                {
-                                    <div class="d-flex justify-content-around align-items-center my-2 border rounded p-2">
-                                        <input class="form-control text-center" style="max-width: 15%;" type="number" min="0"
-                                            max="@lote.Cantidad_Productos"
-                                            value="@(CantidadesPorLote.ContainsKey(lote.Id) ? CantidadesPorLote[lote.Id] : 0)"
-                                            @onchange="(e) => ActualizarCantidadLote(e, lote.Id)" />
-                                        <div class="p-2 border rounded mx-2 d-flex justify-content-between gap-2"
-                                            style="max-width: 60%;">
-                                            <div class="d-flex align-items-center">
-                                                <span class="fw-semibold fs-6">Lote: @lote.Nro_Lote</span>
-                                            </div>
-                                            <div class="d-flex align-items-center gap-2">
-                                                <span class="fw-semibold" style="font-size: small;">Vence:</span>
-                                                <span
-                                                    class="badge bg-primary">@lote.Fecha_Vencimiento.ToShortDateString()</span>
-                                            </div>
+        <div class="col-5 d-flex justify-content-between">
+            <div class="row border rounded py-3 px-2 h-100 d-flex flex-column w-100">
+                <div class="d-flex flex-column col-12">
+                    <div
+                        class="border rounded p-2 d-flex flex-column justify-content-between align-items-center bg-white">
+                        <div class="input-group">
+                            <span class="input-group-text bg-white border-end-0">
+                                <i class="bi bi-search"></i>
+                            </span>
+                            <input type="text" class="form-control border-start-0"
+                                placeholder="Buscar lotes por número de lote..." @oninput="(e) => FiltrarLotes(e)" />
+                        </div>
+                        <div class="container overflow-auto" style="max-height: 150px;">
+                            @foreach (var lote in Lotes ?? Enumerable.Empty<LoteSimpleToInventoryDTO>())
+                            {
+                                <div class="d-flex justify-content-around align-items-center my-2 border rounded p-2">
+                                    <input class="form-control text-center" style="max-width: 15%;" type="number" min="0"
+                                        max="@lote.CantidadProductosDisponibles"
+                                        value="@(CantidadesPorLote.ContainsKey(lote.Id) ? CantidadesPorLote[lote.Id] : 0)"
+                                        @onchange="(e) => ActualizarCantidadLote(e, lote.Id)" />
+                                    <div class="p-2 border rounded mx-2 d-flex justify-content-between gap-2"
+                                        style="max-width: 60%;">
+                                        <div class="d-flex align-items-center">
+                                            <span class="fw-semibold fs-6">Lote: @lote.Nro_Lote</span>
                                         </div>
-                                        <div
-                                            class="d-flex justify-content-between align-items-center bg-info-subtle py-1 px-2 rounded gap-2">
-                                            <span class="text-muted text-center" style="font-size: smaller;">Disponible: </span>
-                                            <span class="text-muted text-center fw-bold fs-3">@lote.Cantidad_Productos</span>
+                                        <div class="d-flex align-items-center gap-2">
+                                            <span class="fw-semibold" style="font-size: small;">Vence:</span>
+                                            <span
+                                                class="badge bg-primary">@lote.Fecha_Vencimiento.ToShortDateString()</span>
                                         </div>
                                     </div>
-                                }
-                            </div>
+                                    <div
+                                        class="d-flex justify-content-between align-items-center bg-info-subtle py-1 px-2 rounded gap-2">
+                                        <span class="text-muted text-center" style="font-size: smaller;">Disponible: </span>
+                                        <span
+                                            class="text-muted text-center fw-bold fs-3">@lote.CantidadProductosDisponibles</span>
+                                    </div>
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="col-2 d-flex align-items-center justify-content-center">
-                <button class="btn btn-outline-danger btn-lg" @onclick="RemoverProducto" title="Eliminar producto">
-                    <i class="bi bi-trash fs-4"></i>
-                </button>
             </div>
         </div>
     </div>
-}
-else
-{
-    <div class="my-3">
-        <select class="form-select" @bind="@Id_Selected_Product">
-            <option value="-1">Seleccione un producto</option>
-            @foreach (var item in lstProductosDisponibles.Where(p => !lstIdProductosSeleccionados.Contains(p.Id)))
-            {
-                <option value="@item.Id">@item.Nombre</option>
-            }
-        </select>
-    </div>
-}
+</div>
+
 
 @code {
-    [CascadingParameter(Name = "ProductosDisponibles")]
-    public List<ProductoToNewCompraDTO> lstProductosDisponibles { get; set; } = new();
-    [CascadingParameter(Name = "ProductosSeleccionados")]
-    public List<int> lstIdProductosSeleccionados { get; set; } = new();
+    [Parameter]
+    public ProductoInfoToInventoryDTO? Product { get; set; } = new();
+    [Parameter]
+    public List<LoteSimpleToInventoryDTO>? Lotes { get; set; } = new();
 
-    public bool ProductSelected { get; set; } = false;
-    public ProductoToNewCompraDTO SelectedProduct { get; set; } = new();
-    private int _idSelectedProduct = -1;
-    public int Id_Selected_Product
-    {
-        get => _idSelectedProduct;
-        set
-        {
-            var previousId = _idSelectedProduct;
-            _idSelectedProduct = value;
-            SeleccionarProducto(value, previousId);
-            StateHasChanged();
-        }
-    }
-
-    public List<LoteToNewCompraDTO> LotesToTransfer { get; set; } = new();
     public Dictionary<int, int> CantidadesPorLote { get; set; } = new();
-
-    protected override async Task OnInitializedAsync()
-    {
-        LotesToTransfer = new List<LoteToNewCompraDTO>();
-        CantidadesPorLote = new Dictionary<int, int>();
-        await base.OnInitializedAsync();
-    }
-
-    private async Task SeleccionarProducto(int Id_Producto, int previousId = -1)
-    {
-        if (previousId > 0)
-        {
-            await OnProductoRemovido.InvokeAsync(previousId);
-        }
-
-        var selectedValue = Id_Producto;
-        var productoSeleccionado = lstProductosDisponibles.FirstOrDefault(p => p.Id == selectedValue);
-        if (productoSeleccionado != null)
-        {
-            SelectedProduct = productoSeleccionado;
-            ProductSelected = true;
-
-            await OnProductoSeleccionado.InvokeAsync(selectedValue);
-
-            await SincronizarLotesDisponibles();
-        }
-        else
-        {
-            ProductSelected = false;
-            SelectedProduct = new();
-        }
-        StateHasChanged();
-    }
-
-    private async Task SincronizarLotesDisponibles()
-    {
-        if (SelectedProduct.Lotes != null)
-        {
-            LotesToTransfer = (await LoteService.GetLotesPorProductoParaCompraAsync(SelectedProduct.Id)).ToList();
-
-            CantidadesPorLote.Clear();
-            foreach (var lote in LotesToTransfer)
-            {
-                CantidadesPorLote[lote.Id] = 0;
-            }
-        }
-        else
-        {
-            LotesToTransfer = new List<LoteToNewCompraDTO>();
-            CantidadesPorLote = new Dictionary<int, int>();
-        }
-    }
 
     private void FiltrarLotes(ChangeEventArgs e)
     {
         var filtro = e.Value?.ToString()?.Trim().ToLower() ?? string.Empty;
         if (string.IsNullOrEmpty(filtro))
         {
-            LotesToTransfer = SelectedProduct.Lotes?.OrderBy(l => l.Nro_Lote).ToList() ?? new List<LoteToNewCompraDTO>();
+            Lotes = new List<LoteSimpleToInventoryDTO>(Lotes!);
         }
         else
         {
-            LotesToTransfer = SelectedProduct.Lotes?
-            .Where(l => l.Nro_Lote.ToLower().Contains(filtro))
-            .OrderBy(l => l.Nro_Lote)
-            .ToList() ?? new List<LoteToNewCompraDTO>();
+            Lotes = Lotes!
+            .Where(l => l.Nro_Lote!.ToLower().Contains(filtro))
+            .ToList();
         }
-        StateHasChanged();
     }
-
-    [Parameter]
-    public EventCallback<int> OnRemoveProduct { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnProductoSeleccionado { get; set; }
-
-    [Parameter]
-    public EventCallback<int> OnProductoRemovido { get; set; }
-
-    private int cantidadTotalProductosIndividuales = 0;
 
     private void ActualizarCantidadLote(ChangeEventArgs e, int loteId)
     {
-        if (int.TryParse(e.Value?.ToString(), out var cantidad))
+        if (int.TryParse(e.Value?.ToString(), out int cantidad))
         {
-            var lote = LotesToTransfer.FirstOrDefault(l => l.Id == loteId);
-            if (lote != null && cantidad > lote.Cantidad_Productos)
+            if (cantidad < 0)
             {
-                cantidad = lote.Cantidad_Productos;
+                cantidad = 0;
+            }
+
+            var lote = Lotes!.FirstOrDefault(l => l.Id == loteId);
+            if (lote != null && cantidad > lote.CantidadProductosDisponibles)
+            {
+                cantidad = lote.CantidadProductosDisponibles;
             }
 
             CantidadesPorLote[loteId] = cantidad;
-
-            cantidadTotalProductosIndividuales = CantidadesPorLote.Values.Sum();
         }
-        StateHasChanged();
-    }
-
-
-
-    private async Task RemoverProducto()
-    {
-        // Notificar que se removió el producto de los seleccionados
-        if (_idSelectedProduct > 0)
+        else
         {
-            await OnProductoRemovido.InvokeAsync(_idSelectedProduct);
+            CantidadesPorLote[loteId] = 0;
         }
-
-        ProductSelected = false;
-        _idSelectedProduct = -1;
-        SelectedProduct = new();
-        LotesToTransfer.Clear();
-        CantidadesPorLote.Clear();
-        cantidadTotalProductosIndividuales = 0;
-        StateHasChanged();
     }
 }

@@ -14,9 +14,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
         public string Nro_Lote { get; set; } = null!;
         public int CantidadProductos { get; set; }
         public int CantidadProductosDisponibles { get; set; }
-        public int CantidadProductosPorVencer { get; set; }
         public int CantidadProductosVendidos { get; set; }
-        public int CantidadProductosVencidos { get; set; }
         public int CantidadProductosPendientes { get; set; }
         public LoteToProductoDetalladoDTO(Lote lote)
         {
@@ -26,9 +24,7 @@ namespace InventarioFarmacia_Shared.DTOs.Lotes
             Nro_Lote = lote.Nro_Lote!;
             CantidadProductos = lote.CantidadProductos;
             CantidadProductosDisponibles = lote.CantidadProductosDisponibles;
-            CantidadProductosPorVencer = lote.CantidadProductosPorVencer;
             CantidadProductosVendidos = lote.CantidadProductosVendidos;
-            CantidadProductosVencidos = lote.CantidadProductosVencidos;
             CantidadProductosPendientes = lote.CantidadProductosPendientes;
         }
 

@@ -1,9 +1,11 @@
 ﻿@page "/inventarioTransferencia"
 @using InventarioFarmacia_Front.Components.SimpleComponents.Loader
 @using InventarioFarmacia_Front.Components.SimpleComponents.TransferComponents
+@using InventarioFarmacia_Front.Components.SimpleComponents.Modals
 @using InventarioFarmacia_Shared.DTOs.Inventarios
 @using InventarioFarmacia_Shared.DTOs.Products
 @using InventarioFarmacia_Shared.DTOs.Lotes
+@using System.Threading.Tasks
 @inject Services.Inventarios.IInventarioService InventarioService
 @inject Services.Products.IProductoService ProductServices
 @inject Services.Lotes.ILoteService LoteService
@@ -24,7 +26,7 @@
             Transferencia de Inventario
         </div>
         <div class="card-body">
-            <EditForm OnValidSubmit="RealizarTransferencia" FormName="TransferenciaForm" Model="transferenciaData">
+            <form class="mb-3 position-relative" @onsubmit="MostrarModalConfirmacion">
                 <div
                     class="row d-flex justify-content-between border rounded p-1 border-3 border-start-0 border-top-0 border-end-0 pb-3">
                     <div class="col-12 d-flex gap-3 p-0">
@@ -44,7 +46,8 @@
                             <span class="text-muted text-center fw-bold fs-5">Inventario de Destino</span>
                             <select class="form-select" @bind="inventarioDestinoId">
                                 <option value="0" disabled selected>Seleccione inventario de destino</option>
-                                @foreach (var inventario in inventariosDisponibles)
+                                @foreach (var inventario in inventariosDisponibles.Where(i => i.Id !=
+                                                                inventarioOrigenId))
                                 {
                                     <option value="@inventario.Id">@inventario.Nombre</option>
                                 }
@@ -54,32 +57,21 @@
                 </div>
 
                 <div class="d-flex justify-content-center mt-2 flex-column">
-                    <CascadingValue Value="lstProductosDisponibles" Name="ProductosDisponibles">
-                        <CascadingValue Value="lstIdProductosSeleccionados" Name="ProductosSeleccionados">
-                            @for (int i = 0; i < itemsTransferencia.Count(); i++)
-                            {
-                                var index = i;
-                                <TransferItem OnRemoveProduct="@(() => OnRemoveProductFromList(index))"
-                                    OnProductoSeleccionado="OnProductoSeleccionado"
-                                    OnProductoRemovido="OnProductoRemovidoFromComponent" @ref="itemsTransferencia[index]" />
-                            }
-                        </CascadingValue>
-                    </CascadingValue>
-
-                    <button
-                        class="btn @(AllSelected ? "btn-secondary" : "btn-outline-secondary") fw-bold w-100 d-flex align-items-center justify-content-center gap-2 px-3 mt-3"
-                        @onclick="AgregarProducto" type="button">
-                        @if (AllSelected)
+                    @if (inventarioOrigenSeleccionado != null && inventarioOrigenSeleccionado.Id > 0)
+                    {
+                        @for (int i = 0; i < itemsTransferencia.Count(); i++)
                         {
-                            <i class="bi bi-box fs-4"></i>
-                            <span>No se tienen más productos disponibles</span>
+                            var index = i;
+                            <TransferItem @ref="itemsTransferencia[index]"
+                                Product="@(inventarioOrigenSeleccionado.Productos![i])"
+                                Lotes="@(inventarioOrigenSeleccionado.Lotes?.Where(l => l.CantidadProductosDisponibles > 0 && l.Id_Producto == inventarioOrigenSeleccionado.Productos![i].Id).ToList() ?? new List<LoteSimpleToInventoryDTO>())" />
                         }
-                        else
-                        {
-                            <i class="bi bi-plus fs-4"></i>
-                            <span>Agregar producto para transferir</span>
-                        }
-                    </button>
+                    }
+                    else
+                    {
+                        <span class="text-muted fw-bold fs-5 text-center">Seleccione un inventario de origen para cargar los
+                            productos</span>
+                    }
                 </div>
 
                 <button class="btn btn-primary position-fixed fw-bold px-2 py-0"
@@ -87,23 +79,51 @@
                     type="submit">
                     Realizar transferencia <i class="bi bi-arrow-right fs-4"></i>
                 </button>
-            </EditForm>
+            </form>
         </div>
     </div>
 </div>
 
+@if (MostrarModalConfirmacionCondition)
+{
+    <ModalConfirmacion OnCancelar="OcultarModalConfirmacion" OnAceptar="RealizarTransferencia" />
+}
+
+@if (MostrarModalMensajeCondition)
+{
+    @if (ResultadoOperacion)
+    {
+        <ModalMensaje Exito="ResultadoOperacion" OnAceptar="VolverAInventarios" Titulo='Transferencia Exitosa' />
+    }
+    else
+    {
+        <ModalMensaje Exito="ResultadoOperacion" OnAceptar="OcultarModalMensaje" Titulo='Error en la Transferencia' />
+    }
+}
+
+
 @code {
     private List<InventarioGeneralDTO> inventariosDisponibles = new();
-    private int inventarioOrigenId = 0;
-    private int inventarioDestinoId = 0;
+    private List<TransferItem> itemsTransferencia = new();
+    private InventarioGeneralDTO inventarioOrigenSeleccionado = new();
+    private int _inventarioOrigenId = 0;
+    private int inventarioOrigenId
+    {
+        get
+        {
+            return _inventarioOrigenId;
+        }
+        set
+        {
+            _inventarioOrigenId = value;
+            inventarioOrigenSeleccionado = inventariosDisponibles.FirstOrDefault(i => i.Id == value) ?? new InventarioGeneralDTO();
+            CargarProductos();
+        }
+    }
+    private int inventarioDestinoId { get; set; } = 0;
     private object transferenciaData = new();
 
-    public List<ProductoToNewCompraDTO> lstProductosDisponibles { get; set; } = new();
-    public List<int> lstIdProductosSeleccionados { get; set; } = new();
-    public int cantidadProductosAgregados = 0;
-    protected List<TransferItem> itemsTransferencia { get; set; } = new();
 
-    private bool AllSelected => lstProductosDisponibles.Count == cantidadProductosAgregados;
     private List<LoteToTransferProductsDTO> lstLotesToTransfer { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -112,7 +132,6 @@
         {
             EstadoCargador.Activar();
             await CargarInventarios();
-            await CargarProductos();
         }
         catch (Exception ex)
         {
@@ -132,73 +151,41 @@
         }
     }
 
-    private async Task CargarProductos()
-    {
-        var productos = await ProductServices.GetProductosForOrdenAsync();
-        lstProductosDisponibles = productos.ToList();
-    }
 
-    private void AgregarProducto()
+    private void CargarProductos()
     {
-        if (!AllSelected)
+        var productos = inventarioOrigenSeleccionado?.Productos ?? new List<ProductoInfoToInventoryDTO>();
+        if (inventarioOrigenSeleccionado != null && inventarioOrigenSeleccionado.Id > 0)
         {
-            itemsTransferencia.Add(new TransferItem());
-            cantidadProductosAgregados++;
-            StateHasChanged();
-        }
-    }
-
-    protected void OnRemoveProductFromList(int index)
-    {
-        if (itemsTransferencia.Count > index)
-        {
-            itemsTransferencia.RemoveAt(index);
-            cantidadProductosAgregados--;
-            StateHasChanged();
-        }
-    }
-
-    protected void OnProductoSeleccionado(int productoId)
-    {
-        if (productoId > 0 && !lstIdProductosSeleccionados.Contains(productoId))
-        {
-            lstIdProductosSeleccionados.Add(productoId);
+            itemsTransferencia.Clear();
+            foreach (var producto in productos)
+            {
+                var transferItem = new TransferItem();
+                itemsTransferencia.Add(transferItem);
+            }
         }
         StateHasChanged();
     }
 
-    protected void OnProductoRemovidoFromComponent(int productoId)
-    {
-        if (lstIdProductosSeleccionados.Contains(productoId))
-        {
-            lstIdProductosSeleccionados.Remove(productoId);
-        }
-        StateHasChanged();
-    }
-
-    private async Task RealizarTransferencia()
+    private async void RealizarTransferencia()
     {
         if (inventarioOrigenId > 0 && inventarioDestinoId > 0 && itemsTransferencia.Any())
         {
             foreach (var item in itemsTransferencia)
             {
-                if (item.Id_Selected_Product > 0)
+                foreach (var lote in item.CantidadesPorLote)
                 {
-                    foreach (var lote in item.CantidadesPorLote)
+                    if (lote.Value > 0)
                     {
-                        if (lote.Value > 0)
+                        lstLotesToTransfer.Add(new LoteToTransferProductsDTO
                         {
-                            lstLotesToTransfer.Add(new LoteToTransferProductsDTO
-                            {
-                                Id = lote.Key,
-                                CantidadATransferir = lote.Value,
-                                InventarioATransferir = inventarioDestinoId
-                            });
-                        }
+                            Id = lote.Key,
+                            CantidadATransferir = lote.Value
+                        });
                     }
-                    await TransferirItems();
                 }
             }
+            await TransferirItems();
         }
     }
 
@@ -208,10 +195,9 @@
         {
             EstadoCargador.Activar();
             var resultado = await LoteService.TransferirItems(lstLotesToTransfer, inventarioDestinoId);
-            if (resultado)
-            {
-                Navigation.NavigateTo("/inventarios");
-            }
+            ResultadoOperacion = resultado;
+            OcultarModalConfirmacion();
+            MostrarModalMensaje();
         }
         catch (Exception ex)
         {
@@ -222,4 +208,42 @@
             EstadoCargador.Desactivar();
         }
     }
+    private void VolverAInventarios()
+    {
+        Navigation.NavigateTo("/inventarios");
+    }
+
+
+    #region Gestion de Modals
+    private string mensajeModal = string.Empty;
+    private bool MostrarModalConfirmacionCondition = false;
+    private bool MostrarModalMensajeCondition = false;
+    private bool ResultadoOperacion = false;
+
+    #region Metodos de gestion de Modals
+    private void MostrarModalConfirmacion()
+    {
+        MostrarModalConfirmacionCondition = true;
+        StateHasChanged();
+    }
+
+    private void OcultarModalConfirmacion()
+    {
+        MostrarModalConfirmacionCondition = false;
+        StateHasChanged();
+    }
+
+    private void MostrarModalMensaje()
+    {
+        MostrarModalMensajeCondition = true;
+        StateHasChanged();
+    }
+
+    private void OcultarModalMensaje()
+    {
+        MostrarModalMensajeCondition = false;
+        StateHasChanged();
+    }
+    #endregion
+    #endregion
 }

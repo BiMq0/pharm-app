@@ -19,38 +19,31 @@ public class Lote
     [NotMapped]
     public int CantidadProductosDisponibles => ProductosIndividuales
         ?.Count(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE) ?? 0;
-
-    [NotMapped]
-    public IEnumerable<Producto_Individual> ProductosDisponibles =>
-        ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE) ?? Enumerable.Empty<Producto_Individual>();
-
-    [NotMapped]
-    public int CantidadProductosPorVencer => ProductosIndividuales
-        ?.Count(pi => pi.Estado == Estados_ProductosIndividuales.POR_VENCER) ?? 0;
-
-    [NotMapped]
-    public IEnumerable<Producto_Individual> ProductosPorVencer =>
-        ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.POR_VENCER) ?? Enumerable.Empty<Producto_Individual>();
-
     [NotMapped]
     public int CantidadProductosVendidos => ProductosIndividuales
         ?.Count(pi => pi.Estado == Estados_ProductosIndividuales.VENDIDO) ?? 0;
-
-    [NotMapped]
-    public IEnumerable<Producto_Individual> ProductosVendidos =>
-        ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.VENDIDO) ?? Enumerable.Empty<Producto_Individual>();
-
-    [NotMapped]
-    public int CantidadProductosVencidos => ProductosIndividuales
-        ?.Count(pi => pi.Estado == Estados_ProductosIndividuales.VENCIDO) ?? 0;
-    [NotMapped]
-    public IEnumerable<Producto_Individual> ProductosVencidos =>
-        ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.VENCIDO) ?? Enumerable.Empty<Producto_Individual>();
-
     [NotMapped]
     public int CantidadProductosPendientes => ProductosIndividuales
         ?.Count(pi => pi.Estado == Estados_ProductosIndividuales.PENDIENTE) ?? 0;
+
+
     [NotMapped]
     public IEnumerable<Producto_Individual> ProductosPendientes =>
         ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.PENDIENTE) ?? Enumerable.Empty<Producto_Individual>();
+    [NotMapped]
+    public IEnumerable<Producto_Individual> ProductosDisponibles =>
+        ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE) ?? Enumerable.Empty<Producto_Individual>();
+    [NotMapped]
+    public IEnumerable<Producto_Individual> ProductosVendidos =>
+        ProductosIndividuales?.Where(pi => pi.Estado == Estados_ProductosIndividuales.VENDIDO) ?? Enumerable.Empty<Producto_Individual>();
+    [NotMapped]
+    public Estados_LoteProductos Estado => ProductosIndividuales == null || ProductosIndividuales.Count == 0 ? Estados_LoteProductos.NO_DISPONIBLE :
+        Fecha_Vencimiento < DateOnly.FromDateTime(DateTime.Now) ? Estados_LoteProductos.VENCIDO :
+        Fecha_Vencimiento <= DateOnly.FromDateTime(DateTime.Now.AddDays(30)) ? Estados_LoteProductos.POR_VENCER :
+        Estados_LoteProductos.DISPONIBLE;
+
+
+    // Propiedades como metodos
+    public int CantidadProductosDisponiblesEnInventario(int idInventario) => ProductosIndividuales
+        ?.Count(pi => pi.Estado == Estados_ProductosIndividuales.DISPONIBLE && pi.Id_Inventario == idInventario) ?? 0;
 }

@@ -13,8 +13,5 @@ public interface IProducto_IndividualRepository
     Task<Producto_Individual> GetByIdAsync(int id);
     Task<bool> AddAsync(List<Producto_Individual> productosIndividuales);
     Task<bool> UpdateAsync(Producto_Individual productoIndividual);
-    Task<bool> MarkAsSold(int productId);
-    Task<bool> MarkAsExpired(int productId);
-    Task<bool> MarkAsAboutToExpire(int productId);
     Task<bool> DeleteAsync(int id);
 }

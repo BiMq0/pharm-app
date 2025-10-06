@@ -1,8 +1,10 @@
 ﻿@page "/compras/nuevaCompra"
+@using InventarioFarmacia_Front.Components.SimpleComponents.Loader
 @using InventarioFarmacia_Shared.DTOs.Compras;
 @using InventarioFarmacia_Front.Components.SimpleComponents.ShopComponents;
 @using InventarioFarmacia_Shared.DTOs.Lotes
 @using InventarioFarmacia_Shared.DTOs.Products;
+@using InventarioFarmacia_Front.Components.SimpleComponents.Modals;
 @inject Services.Compras.ICompraService CompraServices
 @inject NavigationManager Navigation
 @inject Services.Products.IProductoService ProductServices
@@ -12,12 +14,20 @@
 <PageTitle>Ordenar Productos</PageTitle>
 <div class="container-fluid">
     <div class="card shadow mt-3">
-        <div class="card-header bg-primary text-white fs-4">
-            <i class="bi bi-pencil-fill"></i>
-            Nueva orden de productos
+        <div class="card-header bg-primary text-white fs-4 d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-pencil-fill"></i>
+                Nueva orden de productos
+            </div>
+            <div class="col-3 d-flex justify-content-end">
+                <button class="btn btn-light text-primary fw-bold" @onclick="RegresarAPaginaCompras">
+                    <i class="bi bi-arrow-left"></i>
+                    Regresar
+                </button>
+            </div>
         </div>
         <div class="card-body">
-            <EditForm OnValidSubmit="CrearOrdenDeCompra" FormName="OrdenDeCompraForm" Model="compraNueva">
+            <EditForm OnValidSubmit="MostrarModalConfirmacion" FormName="OrdenDeCompraForm" Model="compraNueva">
                 <div
                     class="row d-flex justify-content-between border rounded p-1 border-3 border-start-0 border-top-0 border-end-0 pb-3 ">
                     <div class="col-6 d-flex gap-3 p-0">
@@ -76,7 +86,7 @@
 
                 <button class="btn btn-primary position-fixed fw-bold px-2 py-0"
                     style="bottom: 20px; right: 20px; display: flex; align-items: center; justify-content: center;"
-                    type="submit" @onclick="BtnToCreateCompraClicked">
+                    type="submit" @onclick="MostrarModalConfirmacion">
                     <i class="bi bi-check fs-3"></i>
                     Confirmar pedido
                 </button>
@@ -84,6 +94,28 @@
         </div>
     </div>
 </div>
+
+@if (EstadoCargador.IsLoading)
+{
+    <Cargador />
+}
+
+@if (MostrarModalConfirmacionCondition)
+{
+    <ModalConfirmacion OnAceptar="CrearOrdenDeCompra" OnCancelar="OcultarModalConfirmacion" />
+}
+
+@if (MostrarModalMensajeCondition)
+{
+    @if (ResultadoOperacion)
+    {
+        <ModalMensaje Titulo="Orden creada" Exito="ResultadoOperacion" OnAceptar="RegresarAPaginaCompras" />
+    }
+    else
+    {
+        <ModalMensaje Titulo="Error al crear orden" Exito="ResultadoOperacion" OnAceptar="OcultarModalMensaje" />
+    }
+}
 
 @code {
     [SupplyParameterFromForm]
@@ -130,14 +162,42 @@
         TotalesPorProducto[indiceProducto] = nuevoTotal;
         StateHasChanged();
     }
-    private void BtnToCreateCompraClicked()
+
+    #region Gestion de Modals
+    private bool MostrarModalConfirmacionCondition = false;
+    private bool MostrarModalMensajeCondition = false;
+    private bool ResultadoOperacion = false;
+
+    #region Metodos de gestion de Modals
+    private void MostrarModalConfirmacion()
     {
-        SubmitBtnClicked = true;
+        MostrarModalConfirmacionCondition = true;
+        StateHasChanged();
     }
 
+    private void OcultarModalConfirmacion()
+    {
+        MostrarModalConfirmacionCondition = false;
+        StateHasChanged();
+    }
+
+    private void MostrarModalMensaje()
+    {
+        MostrarModalMensajeCondition = true;
+        StateHasChanged();
+    }
+
+    private void OcultarModalMensaje()
+    {
+        MostrarModalMensajeCondition = false;
+        StateHasChanged();
+    }
+    #endregion
+    #endregion
     private async Task CrearOrdenDeCompra()
     {
-        if (SubmitBtnClicked && TotalProductosIndividuales > 0)
+        EstadoCargador.Activar();
+        if (TotalProductosIndividuales > 0)
         {
             foreach (var item in itemsCompra)
             {
@@ -159,20 +219,18 @@
                         }
                     }
                     await ProductServices.EditarProductoToNewPrecio(item.Id_Selected_Product, nuevoPrecio);
-                    await Task.Delay(50);
                 }
             }
-            bool resultado = await CompraServices.CreateOrdenCompra(compraNueva);
-            //bool resultado = await Task.Delay(100).ContinueWith(t => true);
-
-            if (resultado)
-            {
-                Navigation.NavigateTo("/compras");
-            }
-            else
-            {
-                // Poner caso de error, mejor si es con el modal, porque de momento no dice nada, imbecil
-            }
+            ResultadoOperacion = await CompraServices.CreateOrdenCompra(compraNueva);
+            EstadoCargador.Desactivar();
+            OcultarModalConfirmacion();
+            MostrarModalMensaje();
         }
+        StateHasChanged();
+    }
+
+    private void RegresarAPaginaCompras()
+    {
+        Navigation.NavigateTo("/compras");
     }
 }

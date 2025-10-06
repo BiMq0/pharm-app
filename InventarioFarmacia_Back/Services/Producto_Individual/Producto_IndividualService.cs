@@ -59,8 +59,18 @@ public class Producto_IndividualService : IProducto_IndividualService
         }
         return contador == productos.Count();
     }
+    public async Task<bool> EliminarProductosPorOrdenCanceladaAsync(IEnumerable<Producto_Individual> productos)
+    {
+        var contador = 0;
+        foreach (var producto in productos)
+        {
+            await _productoIndividualRepository.DeleteAsync(producto.Id);
+        }
+        return contador == productos.Count();
+    }
     public async Task<bool> ActualizarInventarioAsync(Producto_Individual producto)
     {
-        return await _productoIndividualRepository.UpdateAsync(producto);
+        var resultado = await _productoIndividualRepository.UpdateAsync(producto);
+        return resultado;
     }
 }

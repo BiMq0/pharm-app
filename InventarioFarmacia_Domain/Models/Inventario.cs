@@ -8,26 +8,10 @@ public class Inventario
     public int Id { get; set; }
     public string? Nombre { get; set; }
     public DateTime Ultima_Actualizacion { get; set; }
-
     public ICollection<Lote>? LotesDeProducto { get; set; }
     public ICollection<Bitacora_Inventario>? BitacoraInventarios { get; set; }
 
     [NotMapped]
-    public int CantidadProductos => LotesDeProducto?.Sum(l => l.ProductosIndividuales?.Where(pi => pi.Id_Inventario == Id).Count()) ?? 0;
-
-    [NotMapped]
-    public int CantidadProductosDisponibles => LotesDeProducto
-        ?.Sum(l => l.ProductosIndividuales?.Count(p => p.Estado == Estados_ProductosIndividuales.DISPONIBLE)) ?? 0;
-
-    [NotMapped]
-    public int CantidadProductosVendidos => LotesDeProducto
-        ?.Sum(l => l.ProductosIndividuales?.Count(p => p.Estado == Estados_ProductosIndividuales.VENDIDO)) ?? 0;
-
-    [NotMapped]
-    public int CantidadProductosPorVencer => LotesDeProducto
-        ?.Sum(l => l.ProductosIndividuales?.Count(p => p.Estado == Estados_ProductosIndividuales.POR_VENCER)) ?? 0;
-
-    [NotMapped]
-    public int CantidadProductosVencidos => LotesDeProducto
-        ?.Sum(l => l.ProductosIndividuales?.Count(p => p.Estado == Estados_ProductosIndividuales.VENCIDO)) ?? 0;
+    public int CantidadProductosDisponibles => LotesDeProducto?.Where(l => l.Estado != Estados_LoteProductos.NO_DISPONIBLE)
+        .Sum(l => l.ProductosIndividuales?.Count(pi => pi.Estado != Estados_ProductosIndividuales.VENDIDO && pi.Estado != Estados_ProductosIndividuales.PENDIENTE && pi.Id_Inventario == Id) ?? 0) ?? 0;
 }

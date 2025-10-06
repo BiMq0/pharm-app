@@ -1,4 +1,5 @@
-﻿using InventarioFarmacia_Domain.Constants;
+﻿using System.Net.NetworkInformation;
+using InventarioFarmacia_Domain.Constants;
 using InventarioFarmacia_Domain.Models;
 using InventarioFarmacia_Shared.DTOs.Compras;
 using InventarioFarmacia_Shared.DTOs.Lotes;
@@ -72,14 +73,13 @@ public class Orden_CompraService : IOrden_CompraService
     public async Task<bool> ProcesarOrdenCompraRecibidaAsync(int ordenId)
     {
         var ordenExistente = await _ordenCompraRepository.GetByIdAsync(ordenId);
-        bool estadoProdsAcualizados = false;
         foreach (var lote in ordenExistente!.LotesInvolucrados!)
         {
             await _inventarioService.ActualizarStockAsync(ordenExistente.LotesInvolucrados.ToList(), 2);
-            estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == ordenId), Estados_ProductosIndividuales.DISPONIBLE);
+            await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == ordenId), Estados_ProductosIndividuales.DISPONIBLE);
         }
         ordenExistente.Estado = Estados_OrdenDeCompra.RECIBIDO;
-        return await _ordenCompraRepository.UpdateAsync(ordenExistente) && estadoProdsAcualizados;
+        return await _ordenCompraRepository.UpdateAsync(ordenExistente);
     }
 
     public async Task<bool> ProcesarOrdenCompraCanceladaAsync(int ordenId)
@@ -91,6 +91,6 @@ public class Orden_CompraService : IOrden_CompraService
             estadoProdsAcualizados = await _productoIndividualService.ActualizarEstadoProductosPorLoteAsync(lote.ProductosPendientes.Where(pi => pi.Id_OrdenCompra == ordenId), Estados_ProductosIndividuales.ORDEN_CANCELADA);
         }
         ordenExistente.Estado = Estados_OrdenDeCompra.CANCELADO;
-        return await _ordenCompraRepository.UpdateAsync(ordenExistente) && estadoProdsAcualizados;
+        return await _ordenCompraRepository.UpdateAsync(ordenExistente);
     }
 }

@@ -102,9 +102,10 @@ public class LoteService : ILoteService
 
             foreach (var loteToTransfer in lotesToTransfer)
             {
+                var productosIndividualesToUpdate = lote.ProductosIndividuales?.Where(p => p.Estado == Estados_ProductosIndividuales.DISPONIBLE && p.Id_Inventario != idInventarioDestino).ToList();
                 for (int i = 0; i < loteToTransfer.CantidadATransferir; i++)
                 {
-                    var productoIndividual = lote.ProductosIndividuales?.ToList()[i];
+                    var productoIndividual = productosIndividualesToUpdate?[i];
                     if (productoIndividual != null)
                     {
                         productoIndividual.Id_Inventario = idInventarioDestino;
