@@ -1,5 +1,60 @@
-﻿<h3>NewVenta</h3>
+﻿@using InventarioFarmacia_Shared.DTOs.Inventarios;
+@inject Services.Inventarios.IInventarioService InventarioService
+@page "/ventas/nuevaVenta"
+
+<PageTitle>Nueva Venta</PageTitle>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="bg-primary card">
+            <div class="card-body">
+                <h4 class="text-white"><i class="bi bi-cart-fill"></i> Nueva Venta</h4>
+                <p class="card-text text-white">Seleccione los productos para la venta desde el inventario.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-3">
+        <div class="col">
+            @if (inventario != null)
+            {
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad Disponible</th>
+                            <th>Precio Unitario</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var producto in inventario.Productos!)
+                        {
+                            <tr>
+                                <td>@producto.Nombre</td>
+                                <td>@producto.Stock_Disponible</td>
+                                <td>@producto.Precio_Unitario.ToString("C")</td>
+                                <td>
+                                    <button class="btn btn-success btn-sm">Agregar a la Venta</button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No hay productos disponibles en el inventario.</p>
+            }
+        </div>
+    </div>
+</div>
 
 @code {
-
+    // TODO: Implementar la lógica para obtener una lista de inventarios, de momento unicamente será el inventario local
+    private InventarioToVentaDTO inventario = new();
+    protected override async Task OnInitializedAsync()
+    {
+        inventario = await InventarioService.ObtenerInventarioParaVentaAsync(1);
+        StateHasChanged();
+    }
 }

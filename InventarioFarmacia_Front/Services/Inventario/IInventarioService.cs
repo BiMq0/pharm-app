@@ -7,4 +7,5 @@ public interface IInventarioService
 {
     Task<IEnumerable<InventarioToListDTO>> ObtenerTodosLosInventarios();
     Task<InventarioGeneralDTO> ObtenerInventarioGeneralAsync(int id);
+    Task<InventarioToVentaDTO> ObtenerInventarioParaVentaAsync(int id);
 }

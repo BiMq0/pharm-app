@@ -10,6 +10,8 @@ namespace InventarioFarmacia_Shared.Endpoints
         public const string BASE = "/inventories";
         public const string GET_ALL = "";
         public const string GET_BY_ID = $"/{{id}}";
+        public const string GET_FOR_SALE = $"/for-sell/{{inventoryId}}";
+
         public const string CREATE = $"";
         public const string UPDATE = $"/{{id}}";
     }

@@ -27,7 +27,6 @@ public class Detalle_VentaRepository : IDetalle_VentaRepository
                          dv.Id_Producto.ToString().Contains(filtro) ||
                          dv.Precio.ToString().Contains(filtro) ||
                          dv.Cantidad.ToString().Contains(filtro) ||
-                         dv.Descuento.ToString().Contains(filtro) ||
                          dv.Total_Final.ToString().Contains(filtro))
             .Include(dv => dv.Venta)
             .Include(dv => dv.Producto)

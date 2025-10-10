@@ -15,10 +15,10 @@ public class VentaRepository : IVentaRepository
     public async Task<IEnumerable<Venta>> GetAllVentasAsync()
     {
         return await _context.Ventas
-            .Include(v => v.Usuario)              // ← Quién hizo la venta
-            .Include(v => v.DetalleVentas)        // ← Qué se vendió
-                .ThenInclude(dv => dv.Producto) // ← Unidades específicas vendidas
-                    .ThenInclude(pi => pi.Lotes)       // ← Información del producto
+            .Include(v => v.Usuario)
+            .Include(v => v.DetalleVentas)    
+                .ThenInclude(dv => dv.Producto) 
+                    .ThenInclude(pi => pi.Lotes)    
             .AsNoTracking()
             .ToListAsync();
     }
@@ -35,7 +35,7 @@ public class VentaRepository : IVentaRepository
             .ToListAsync();
     }
 
-    public async Task<IEnumerable<Venta>> GetVentasByDatesAsync(DateOnly startDate, DateOnly endDate)
+    public async Task<IEnumerable<Venta>> GetVentasByDatesAsync(DateTime startDate, DateTime endDate)
     {
         return await _context.Ventas
             .Include(v => v.Usuario)

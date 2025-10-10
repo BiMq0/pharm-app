@@ -25,6 +25,12 @@ public class InventarioService : IInventarioService
         return new InventarioGeneralDTO(inventario);
     }
 
+    public async Task<InventarioToVentaDTO> ObtenerInventarioParaVentaAsync(int id)
+    {
+        var inventario = await _inventarioRepository.GetInventarioByIdAsync(id);
+        return new InventarioToVentaDTO(inventario);
+    }
+    
     public async Task<bool> CrearInventarioAsync(InventarioNuevoDTO inventario)
     {
         var nuevoInventario = new Inventario

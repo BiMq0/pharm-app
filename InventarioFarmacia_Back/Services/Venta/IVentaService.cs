@@ -7,7 +7,7 @@ public interface IVentaService
 {
     Task<IEnumerable<Venta>> ObtenerVentasAsync();
     Task<IEnumerable<Venta>> ObtenerVentasPorUsuarioAsync(int userId);
-    Task<IEnumerable<Venta>> ObtenerVentasPorFechasAsync(DateOnly fechaInicio, DateOnly fechaFin);
+    Task<IEnumerable<Venta>> ObtenerVentasPorFechasAsync(DateTime fechaInicio, DateTime fechaFin);
     Task<Venta> ObtenerVentaPorIdAsync(int id);
     Task<bool> CrearVentaAsync(Venta venta);
     Task<bool> ActualizarVentaAsync(Venta venta);

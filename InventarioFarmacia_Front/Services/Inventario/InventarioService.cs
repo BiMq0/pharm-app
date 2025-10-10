@@ -1,7 +1,6 @@
 ﻿using System.Net.Http.Json;
 using InventarioFarmacia_Shared.Endpoints;
 using InventarioFarmacia_Shared.DTOs.Inventarios;
-using InventarioFarmacia_Shared.DTOs.Lotes;
 namespace InventarioFarmacia_Front.Services.Inventarios;
 
 public class InventarioService : IInventarioService
@@ -46,6 +45,24 @@ public class InventarioService : IInventarioService
         {
             Console.WriteLine($"Error al obtener inventario general: {ex.Message}");
             return new InventarioGeneralDTO();
+        }
+    }
+
+    public async Task<InventarioToVentaDTO> ObtenerInventarioParaVentaAsync(int id)
+    {
+        string url = Config.ApiBaseUrl + InventoryEndpoints.BASE + InventoryEndpoints.GET_FOR_SALE.Replace("{inventoryId}", id.ToString());
+
+        try
+        {
+            var response = await _httpClient.GetAsync(url);
+            response.EnsureSuccessStatusCode();
+
+            return await response.Content.ReadFromJsonAsync<InventarioToVentaDTO>() ?? new InventarioToVentaDTO();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al obtener inventario para venta: {ex.Message}");
+            return new InventarioToVentaDTO();
         }
     }
 }

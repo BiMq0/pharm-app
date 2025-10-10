@@ -23,7 +23,7 @@ public class VentaService : IVentaService
         return await _ventaRepository.GetVentasByUserIdAsync(userId);
     }
 
-    public async Task<IEnumerable<Venta>> ObtenerVentasPorFechasAsync(DateOnly fechaInicio, DateOnly fechaFin)
+    public async Task<IEnumerable<Venta>> ObtenerVentasPorFechasAsync(DateTime fechaInicio, DateTime fechaFin)
     {
         return await _ventaRepository.GetVentasByDatesAsync(fechaInicio, fechaFin);
     }

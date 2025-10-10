@@ -33,6 +33,15 @@ namespace InventarioFarmacia_Back.Mappers
             .WithSummary("Obtener inventario por ID")
             .WithDescription("Obtiene un inventario específico con todos sus productos y ubicaciones");
 
+            inventarios.MapGet(InventoryEndpoints.GET_FOR_SALE, async (int idInventario, IInventarioService inventarioService) =>
+            {
+                var lotes = await inventarioService.ObtenerInventarioParaVentaAsync(idInventario);
+                return Results.Ok(lotes);
+            })
+            .WithName("GetLotesForSale")
+            .WithSummary("Obtener un inventario para venta")
+            .WithDescription("Obtiene toda la informacion de lotes y productos de un inventario para realizar una venta");
+
             inventarios.MapPost(InventoryEndpoints.CREATE, async (InventarioNuevoDTO nuevoInventario, IInventarioService inventarioService) =>
             {
                 var inventarioCreado = await inventarioService.CrearInventarioAsync(nuevoInventario);

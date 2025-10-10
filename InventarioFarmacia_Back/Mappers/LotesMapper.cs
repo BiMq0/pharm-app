@@ -40,6 +40,7 @@ namespace InventarioFarmacia_Back.Mappers
             .WithSummary("Obtener lotes para compra")
             .WithDescription("Obtiene lotes de un producto específico optimizados para proceso de compra");
 
+
             lotes.MapGet(LotesEndpoints.GET_BY_ID, async (ILoteService loteService, int id) =>
             {
                 var lote = await loteService.ObtenerLotePorIdAsync(id);
